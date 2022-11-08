@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>D3finite</title>
+<head>
+    <meta charset="UTF-8">
+    <title> D3finite </title>
     <link rel="stylesheet" href="style.css" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <link
-      href="https://fonts.googleapis.com/css?family=Work+Sans:400,700&display=swap"
-      rel="stylesheet"
-    />
+    <script src="js/satelliteTable.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,700&display=swap" rel="stylesheet">
     <!--
        Bootstrap styling if you want to use it:
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -20,15 +18,31 @@
   </head>
   <body>
     <div class="grid-container">
-      <!-- DUFFY  -->
-      <div id="worldview" class="grid-child">
-      </div>
-      <!-- AARON -->
-      <div id="table" class="grid-child"></div>
-      <!-- DUFF? -->
-      <div id="details" class="grid-child"></div>
-      <!-- JORDAN -->
-      <div id="chart" class="grid-child"></div>
+        <!-- DUFFY  -->
+        <div id="worldview" class="grid-child">
+        </div>
+        <!-- AARON -->
+        <div id="table" class="grid-child"> 
+            <table>
+                <thead>
+                    <tr id="columnHeaders">
+                        <th>Test1</th>
+                        <th>Test2</th>
+                        <th>Test3</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableBody">
+        
+                    </tbody>
+            </table>
+        </div>
+        <!-- DUFF? -->
+        <div id="details" class="grid-child"> 
+        </div>
+        <!-- JORDAN -->
+        <div id="chart" class="grid-child">
+        </div>
+
     </div>
   </body>
 </html>

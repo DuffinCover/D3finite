@@ -1,14 +1,11 @@
-﻿
-
 
 async function loadData() {
-    // const satData = await d3.json('data/satellites.json');
-    const satData = 'this is fake'
+    const satData = await d3.json('data/satellites.json');
+
     return satData;
 }
+loadData().then(data => {
+    let SatTable = new SatelliteTable(data);
+    let worldView = new Worldview(data);
+});
 
-let satData = loadData()
-
-const worldView = new Worldview(satData);
-
-// let worldView = new Worldview('this is fake data');
