@@ -1,7 +1,7 @@
 ﻿async function loadData() {
-    const satData = await d3.json('data/satellites.json');
+    // const satData = await d3.json('data/satellites.json');
 
-    return satData;
+    // return satData;
 }
 loadData().then(data => {
     let SatTable = new SatelliteTable(data);
