@@ -5,6 +5,8 @@ async function loadData() {
     return satData;
 }
 loadData().then(data => {
+    console.log(data);
+
     let SatTable = new SatelliteTable(data);
     let worldView = new Worldview(data);
 });
