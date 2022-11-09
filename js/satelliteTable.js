@@ -7,21 +7,21 @@ class SatelliteTable{
      */
     constructor(data) {
         this.data = data;
-        this.fakeData = [{"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
-        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
-        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
-        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
-        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
-        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
-        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
-        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
-        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
-        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"}];
+        // this.fakeData = [{"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        // {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        // {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        // {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        // {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        // {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        // {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        // {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        // {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        // {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"}];
         
         // Stores table body selection and appends table rows
         let rowSelection = d3.select('#tableBody')
         .selectAll('tr')
-        .data(this.fakeData)
+        .data(this.data)
         .join('tr')
         .classed('selectedTable', false);
 
@@ -34,9 +34,9 @@ class SatelliteTable{
         .join('td');
 
         // Adding in cell values
-        cellSelect.filter(d => d.type === 'test1').text(d => d.value);
-        cellSelect.filter(d => d.type === 'test2').text(d=>d.value);
-        cellSelect.filter(d => d.type === 'test3').text(d=>d.value);
+        cellSelect.filter(d => d.type === 'Name of Satellite, Alternate Names').text(d => d.value);
+        // cellSelect.filter(d => d.type === 'test2').text(d=>d.value);
+        // cellSelect.filter(d => d.type === 'test3').text(d=>d.value);
     }
 
 
