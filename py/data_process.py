@@ -21,11 +21,18 @@ named_cols = [name for name in list(df.columns)[:28] if name != 'Date of Launch'
 #for col in named_cols:
 #    print(col)
 
-filtered = df.filter(named_cols,axis = 1)
+filtered = df.filter(named_cols,axis = 1).fillna("")
+
+
 
 df_dict = filtered.T.to_dict()
 
 df_list = [v for v in df_dict.values()]
+
+end = df_list[:-2]
+
+for i in end:
+    print(i)
 
 with open(output_path,'w') as outfile:
 
