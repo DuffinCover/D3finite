@@ -34,7 +34,7 @@ class SatelliteTable{
         .join('td');
 
         // Adding in cell values
-        cellSelect.filter(d => d.type === 'Name of Satellite, Alternate Names').text(d => d.value);
+        cellSelect.filter(d => d.type === 'test1').text(d => d.value);
         // cellSelect.filter(d => d.type === 'test2').text(d=>d.value);
         // cellSelect.filter(d => d.type === 'test3').text(d=>d.value);
     }
@@ -47,9 +47,10 @@ class SatelliteTable{
      * @returns 
      */
     rowToCellDataTransform(d) {
+        console.log(d['Name of Satellite, Alternate Names']);
         let test1 = {
-            type: 'test1',
-            value: d.test1
+            type: 'Name of Satellite, Alternate Names',
+            value: d['Name of Satellite, Alternate Names']
         };
 
         let test2 = {
