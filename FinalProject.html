@@ -5,13 +5,11 @@
     <title> D3finite </title>
     <link rel="stylesheet" href="style.css" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="js/satelliteTable.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,700&display=swap" rel="stylesheet">
     <!--
        Bootstrap styling if you want to use it:
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
-    <script src="js/script.js"></script>
 </head>
 <body>
     <div class="grid-container">
@@ -19,7 +17,7 @@
         <div id="worldview" class="grid-child">
         </div>
         <!-- AARON -->
-        <div id="table" class="grid-child"> 
+        <div id="table" class="scrollable"> 
             <table>
                 <thead>
                     <tr id="columnHeaders">
@@ -47,4 +45,6 @@
 
 
 </body>
+<script src="js/satelliteTable.js"></script>
+<script src="js/script.js"></script>
 </html>

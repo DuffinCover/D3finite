@@ -7,9 +7,16 @@ class SatelliteTable{
      */
     constructor(data) {
         this.data = data;
-        this.fakeData = [{"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"}];
-
-        console.log(this.fakeData);
+        this.fakeData = [{"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"},
+        {"test1": "11", "test2": "12", "test3": "13"}, {"test1": "21", "test2": "22", "test3": "23"}, {"test1": "31", "test2": "32", "test3": "33"}];
         
         // Stores table body selection and appends table rows
         let rowSelection = d3.select('#tableBody')
@@ -18,18 +25,18 @@ class SatelliteTable{
         .join('tr')
         .classed('selectedTable', false);
 
-        // Adding even handler to each row 
-        rowSelection.on('click', d => classed('selectedTable', true));
+        // Adding even handler to each row ---- Should change background when selected
+        rowSelection.on('click', (event, d) => {d.classed('selectedTable', true)});
 
         // Stores individual cell selections
         let cellSelect = rowSelection.selectAll('td')
         .data(this.rowToCellDataTransform)
         .join('td');
 
-        // Adding in column 1 values
+        // Adding in cell values
         cellSelect.filter(d => d.type === 'test1').text(d => d.value);
-
-        console.log(rowSelection);
+        cellSelect.filter(d => d.type === 'test2').text(d=>d.value);
+        cellSelect.filter(d => d.type === 'test3').text(d=>d.value);
     }
 
 

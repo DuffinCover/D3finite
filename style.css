@@ -3,3 +3,16 @@
     grid-template-columns: 1fr 1fr;
     grid-gap: 40px;
 }
+
+.scrollable {
+	height:500px;
+	width:500px;		
+    overflow-y:auto;
+	float:left;
+	position:relative;
+	margin-left:-5px;
+}
+
+.selectedTable {
+    background-color: burlywood;
+}
