@@ -1,7 +1,6 @@
 
 async function loadData() {
-    // const satData = await d3.json('data/satellites.json');
-    let satData = 'this is fake'
+    const satData = await d3.json('data/satellites.json');
     return satData;
 }
 loadData().then(data => {

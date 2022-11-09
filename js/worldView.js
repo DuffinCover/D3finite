@@ -40,7 +40,6 @@ this should show some sample of our satellites, as well as some image of the glo
       .attr("height", this.height);
 
     svg
-    .enter()
       .append("circle")
       .attr("cx", 25)
       .attr("cy", 25)
