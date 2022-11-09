@@ -4,7 +4,7 @@ import json
 
 input_path = '../data/UCS-Satellite-Database-5-1-2022.csv'
 input_csv = '../data/UCS-Satellite-Database-5-1-2022.xls'
-output_path = '../data/satellites.json'
+output_path = '../data/satellites_sample.json'
 
 df = pd.read_excel(input_csv)
 
@@ -29,15 +29,21 @@ df_dict = filtered.T.to_dict()
 
 df_list = [v for v in df_dict.values()]
 
-end = df_list[:-2]
+print(f'list length: {len(df_list)}')
+
+end = df_list[-15:]
+
+print(f'list length: {len(end)}')
+
 
 for i in end:
-    print(i)
+
+    pass
 
 with open(output_path,'w') as outfile:
 
 
-    js_obj = json.dump(df_list,outfile)
+    js_obj = json.dump(end,outfile)
 
 
 #c_data = [df[c] for c in named_cols]
