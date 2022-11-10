@@ -13,6 +13,15 @@
 	margin-left:-5px;
 }
 
+.unselectedTable {
+    background-color: bisque;
+}
+
 .selectedTable {
     background-color: burlywood;
+}
+
+.colHead {
+    background-color: gray;
+    color: chartreuse;
 }

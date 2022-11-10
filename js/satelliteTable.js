@@ -23,7 +23,7 @@ class SatelliteTable{
         .selectAll('tr')
         .data(this.data)
         .join('tr')
-        .classed('selectedTable', false);
+        .classed('unselectedTable', true);
 
         // Adding even handler to each row ---- Should change background when selected
         rowSelection.on('click', (event, d) => {d.classed('selectedTable', true)});
@@ -34,9 +34,10 @@ class SatelliteTable{
         .join('td');
 
         // Adding in cell values
-        cellSelect.filter(d => d.type === 'test1').text(d => d.value);
-        // cellSelect.filter(d => d.type === 'test2').text(d=>d.value);
-        // cellSelect.filter(d => d.type === 'test3').text(d=>d.value);
+        cellSelect.filter(d => d.type === 'Name').text(d => d.value);
+        cellSelect.filter(d => d.type === 'OriginCountry').text(d=>d.value);
+        cellSelect.filter(d => d.type === 'Use').text(d=>d.value);
+        cellSelect.filter(d => d.type ==='Orbit').text(d=>d.value);
     }
 
 
@@ -47,23 +48,27 @@ class SatelliteTable{
      * @returns 
      */
     rowToCellDataTransform(d) {
-        console.log(d['Name of Satellite, Alternate Names']);
-        let test1 = {
-            type: 'Name of Satellite, Alternate Names',
+        let name = {
+            type: 'Name',
             value: d['Name of Satellite, Alternate Names']
         };
 
-        let test2 = {
-            type: 'test2',
-            value: d.test2
+        let origin = {
+            type: 'OriginCountry',
+            value: d['Country of Operator/Owner']
         };
 
-        let test3 = {
-            type: 'test3',
-            value: d.test3
+        let use = {
+            type: 'Use',
+            value: d['Purpose']
         };
 
-        let dataList = [test1, test2, test3];
+        let orbit = {
+            type: 'Orbit',
+            value: d['Type of Orbit']
+        };
+
+        let dataList = [name, origin, use, orbit];
         return dataList;
     }
     
