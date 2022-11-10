@@ -4,3 +4,28 @@
     /* grid-template-columns: 1fr 1fr;
     grid-gap: 40px; */
 }
+.LEO{
+color:blue;
+fill:blue;
+stroke: black;
+stroke-opacity: 0.5;
+}
+.GEO{
+color:green;
+fill:green;
+stroke: black;
+stroke-opacity: 0.5;
+}
+.Elliptical{
+color:purple;
+fill:purple;
+stroke: black;
+stroke-opacity: 0.5;
+}
+.MEO{
+color:yellow;
+fill: yellow;
+stroke: black;
+stroke-opacity: 0.5; 
+
+}
