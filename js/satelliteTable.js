@@ -49,6 +49,16 @@ class SatelliteTable{
                 ascending: false,
                 key: 'Expected Lifetime (yrs.)'
             },
+            {
+                sorted: false,
+                ascending: false,
+                key: 'Launch Site'
+            },
+            {
+                sorted: false,
+                ascending: false,
+                key: 'Launch Vehicle'
+            }
         ]
         
 
