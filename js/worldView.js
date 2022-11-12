@@ -18,13 +18,13 @@ this should show some sample of our satellites, as well as some image of the glo
     this.innerRadius = this.width / 5;
     this.outerRadius = this.width / 2 - this.margin;
 
-    let scale_data = this.sampleSats;
+    let scale_data = this.sats;
 
     // d3.filter(scale_data)
 
     this.x = d3
       .scaleUtc()
-      .domain([Date.UTC(2000, 0, 1), Date.UTC(2022, 0, 1) - 1])
+      .domain([Date.UTC(2000, 0, 1), Date.UTC(2001, 0, 1) - 1])
       .range([0, 2 * Math.PI]);
 
     this.y = d3
