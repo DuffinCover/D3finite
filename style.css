@@ -1,7 +1,64 @@
 .grid-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 40px;
+    justify-content: space-evenly;
+    /* grid-template-columns: 1fr 1fr;
+    grid-gap: 40px; */
+}
+.LEO{
+color:blue;
+fill:blue;
+stroke: black;
+stroke-opacity: 0.5;
+}
+.GEO{
+color:green;
+fill:green;
+stroke: black;
+stroke-opacity: 0.5;
+}
+.Elliptical{
+color:purple;
+fill:purple;
+stroke: black;
+stroke-opacity: 0.5;
+}
+.MEO{
+color:yellow;
+fill: yellow;
+stroke: black;
+stroke-opacity: 0.5; 
+}
+
+.scrollable {
+	height:500px;
+	width:1000px;		
+    overflow-y:auto;
+	float:left;
+	position:relative;
+	margin-left:-5px;
+}
+
+.unselectedTable {
+    background-color: bisque;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.selectedTable {
+    background-color: burlywood;
+    text-align: center;
+    border: 3px solid black;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    cursor: pointer;
+}
+
+.colHead {
+    background-color: gray;
+    color: chartreuse;
 }
 
 .scrollable {

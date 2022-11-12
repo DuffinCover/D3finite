@@ -5,6 +5,8 @@ class VisualSatelliteChart{
 =======
     constructor(global_state) {
         let data = global_state.satelliteData;
+    constructor(data) {
+
         this.max_rows = 300;
 
         let satData = data.filter( (d,i) => i < 300);
@@ -22,6 +24,8 @@ class VisualSatelliteChart{
         this.sel_height = 20;
 
         //console.log('satchart subset', satData);
+=======
+        console.log('satchart subset', satData);
 
         let chart = d3.select('#chart')
         let VSC_svg = chart.append('svg')
