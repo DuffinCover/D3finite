@@ -1,8 +1,15 @@
 class VisualSatelliteChart{
     /*TODO this should be the place where we produce clever visualzations.  */
     //-MINE!
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+=======
+    constructor(global_state) {
+        let data = global_state.satelliteData;
+=======
     constructor(data) {
 
+>>>>>>> 37112d4be3cf8f3916b8c240045de2c7467c8d6c
         this.max_rows = 300;
 
         let satData = data.filter( (d,i) => i < 300);
@@ -19,7 +26,11 @@ class VisualSatelliteChart{
         this.selection = null;
         this.sel_height = 20;
 
+<<<<<<< HEAD
+        //console.log('satchart subset', satData);
+=======
         console.log('satchart subset', satData);
+>>>>>>> 37112d4be3cf8f3916b8c240045de2c7467c8d6c
 
         let chart = d3.select('#chart')
         let VSC_svg = chart.append('svg')
@@ -112,7 +123,11 @@ class VisualSatelliteChart{
                 let output = satData.map(n => {
                     return [n[d.name], i]
                 });
+<<<<<<< HEAD
+                //console.log(output);
+=======
                 console.log(output);
+>>>>>>> 37112d4be3cf8f3916b8c240045de2c7467c8d6c
                 return output;
             })
             .join('rect')
@@ -134,5 +149,9 @@ class VisualSatelliteChart{
     
 
 
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+>>>>>>> 37112d4be3cf8f3916b8c240045de2c7467c8d6c
 
 }

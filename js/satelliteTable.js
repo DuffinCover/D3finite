@@ -5,7 +5,8 @@ class SatelliteTable{
      * Constructor for SatelliteTable object
      * @param {*} data JSON object of data
      */
-    constructor(data) {
+    constructor(global_state) {
+        let data = global_state.satelliteData;
         this.selectedRows = [];
         this.originalData = data;
         this.data = data;
