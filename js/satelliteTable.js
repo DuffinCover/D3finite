@@ -6,11 +6,72 @@ class SatelliteTable{
      * @param {*} data JSON object of data
      */
     constructor(data) {
+        this.selectedRows = [];
+        this.originalData = data;
         this.data = data;
         this.rowSvgWidth = 300;
         this.rowSvgHeight = 50;
         this.rowBarHeight = 40;
+
+        this.headerData = [
+            {
+                sorted: false,
+                ascending: false,
+                key: 'Name of Satellite, Alternate Names'
+            },
+            {
+                sorted: false,
+                ascending: false,
+                key: 'Country of Operator/Owner',
+            },
+            {
+                sorted: false,
+                ascending: false,
+                key: 'Contractor'
+            },
+            {
+                sorted: false,
+                ascending: false,
+                key: 'Purpose'
+            },
+            {
+                sorted: false,
+                ascending: false,
+                key: 'Type of Orbit'
+            },
+            {
+                sorted: false,
+                ascending: false,
+                key: 'Launch Mass (kg.)',
+            },
+            {
+                sorted: false,
+                ascending: false,
+                key: 'Expected Lifetime (yrs.)'
+            },
+        ]
         
+
+        // let lifeSvg = lifeSelect.selectAll('svg').data(d => [d])
+        // .join('svg')
+        // .attr('width', this.rowSvgWidth)
+        // .attr('height', this.rowSvgHeight);
+
+        // let svgSelect = weightSelect.selectAll('svg').data(d => [d])
+        // .join('svg')
+        // .attr('width',this.rowSvgWidht)
+        // .attr('height',this.rowSvgHeight);
+        // Adding in rectangle elements
+        this.buildTable();
+        this.attachSortHandlers();
+        // this.addRectangles(lifeSvg);
+        // this.addRectangles(svgSelect);
+    }
+
+    /**
+     * Fills in all cells in the table
+     */
+    buildTable() {
         // Stores table body selection and appends table rows
         let rowSelection = d3.select('#tableBody')
         .selectAll('tr')
@@ -19,7 +80,15 @@ class SatelliteTable{
         .classed('unselectedTable', true);
 
         // Adding even handler to each row ---- Should change background when selected
-        rowSelection.on('click', (event, d) => {d.classed('selectedTable', true)});
+        rowSelection.on('click', (event, d) => {
+            // If the row is not in the selected rows, add it, else remove it
+            if (this.selectedRows.includes(d['Name of Satellite, Alternate Names'])) {
+                this.selectedRows = this.selectedRows.filter((el) => el !== d['Name of Satellite, Alternate Names']);
+                this.updateRows();
+            } else {
+                this.selectedRows.push(d['Name of Satellite, Alternate Names']);
+                this.updateRows();
+            }});
 
         // Stores individual cell selections
         let cellSelect = rowSelection.selectAll('td')
@@ -27,20 +96,40 @@ class SatelliteTable{
         .join('td');
 
         // Adding in cell values
-        cellSelect.filter(d => d.type === 'Name').text(d => d.value);
-        cellSelect.filter(d => d.type === 'OriginCountry').text(d=>d.value);
+        cellSelect.filter(d => d.type === 'Name').text(d => d.value === '' ? 'Unknown' : d.value);
+        cellSelect.filter(d => d.type === 'OriginCountry').text(d=>d.value === '' ? 'Unknown' : d.value);
+        cellSelect.filter(d => d.type ==='Contractor').text(d => d.value === '' ? 'Unknown' : d.value);
         cellSelect.filter(d => d.type === 'Use').text(d=>d.value === '' ? 'N/A' : d.value);
         cellSelect.filter(d => d.type ==='Orbit').text(d=>d.value === '' ? 'N/A' : d.value);
-        
+        cellSelect.filter(d => d.type === 'LWeight').text(d=>d.value === '' ? 'N/A' : d.value);
+        cellSelect.filter(d => d.type ==='Lifetime').text(d=>d.value === '' ? 'N/A' : d.value);
+    }
 
-        let weightSelect = cellSelect.filter(d => d.type === 'LWeight');
+    /**
+     * Attaches sort handlers for each column in the table. Will sort alphabetically
+     * or numerically depending on data type
+     */
+    attachSortHandlers() 
+    {
 
-        let svgSelect = weightSelect.selectAll('svg').data(d => [d])
-        .join('svg')
-        .attr('width',this.rowSvgWidht)
-        .attr('height',this.rowSvgHeight);
-        // Adding in rectangle elements
-        this.addRectangles(svgSelect);
+        d3.select('#columnHeaders')
+            .selectAll('th')
+            .data(this.headerData)
+            .on('click', (event, d) => 
+            {
+                const sortAscending = d.sorted ? !d.ascending : true; // sort ascending by default, otherwise flip it.
+                this.sortData(d.key, sortAscending, d.alterFunc);
+                // reset state
+                for (let header of this.headerData)
+                {
+                    header.sorted = false;
+                }
+                // set new state for this node
+                d.sorted = true;
+                d.ascending = sortAscending;
+                this.buildTable();
+                this.updateRows();
+            });
     }
 
     /**
@@ -52,7 +141,8 @@ class SatelliteTable{
         .range([0, this.rowSvgWidth]);
 
         selection.selectAll('rect').data(d => d)
-        .join('rect')
+        .enter('rect')
+        .append('rect')
         .attr('x', xScale(0))
         .attr('y', 0)
         .attr('width', d => {console.log(d.value); return xScale(d.value)})
@@ -77,6 +167,11 @@ class SatelliteTable{
             value: d['Country of Operator/Owner']
         };
 
+        let contractor = {
+            type: 'Contractor',
+            value: d['Contractor']
+        };
+
         let use = {
             type: 'Use',
             value: d['Purpose']
@@ -92,8 +187,65 @@ class SatelliteTable{
             value: d['Launch Mass (kg.)']
         };
 
-        let dataList = [name, origin, use, orbit, LWeight];
+        let lifetime = {
+            type: 'Lifetime',
+            value: d['Expected Lifetime (yrs.)']
+        };
+
+        let dataList = [name, origin, contractor, use, orbit, LWeight, lifetime];
         return dataList;
+    }
+
+
+    /**
+     * Updates the row selection
+     */
+    updateRows() {
+        let rowSelection = d3.select('#tableBody')
+        .selectAll('tr')
+        .data(this.data)
+        .join('tr')
+        .classed('selectedTable', true);
+
+        rowSelection.classed('selectedTable', (d) => this.selectedRows.includes(d['Name of Satellite, Alternate Names']));
+        rowSelection.classed('unselectedTable', (d) => !this.selectedRows.includes(d['Name of Satellite, Alternate Names']))
+    }
+
+    /**
+     * Sorts data either alphabetically, or numerically
+     * @param {*} key 
+     * @param {*} ascend 
+     * @param {*} alterFunc 
+     */
+    sortData(key, ascend, alterFunc)
+    {
+        this.data.sort((a, b) =>
+            {
+                let sortKey = key;
+                let x = a[sortKey];
+                let y = b[sortKey];
+                
+
+                if (!ascend)
+                {
+                    [x, y] = [y, x] // swap variables
+                }
+                if (alterFunc)
+                {
+                    x = alterFunc(x);
+                    y = alterFunc(y);
+                }
+                if (x < y)
+                {
+                    return -1
+                }
+                else if (x > y)
+                {
+                    return 1
+                }
+                return 0;
+            }
+        );
     }
     
 }
