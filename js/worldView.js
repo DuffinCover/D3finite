@@ -15,7 +15,7 @@ this should show some sample of our satellites, as well as some image of the glo
 
     // placeholders for scales we define in our axis
     this.innerRadius = this.width / 5;
-    this.outerRadius = this.width / 2 - this.margin;
+    this.outerRadius = this.width/2 - this.margin;
 
     let scale_data = this.sampleSats
 
@@ -23,7 +23,7 @@ this should show some sample of our satellites, as well as some image of the glo
 
     this.x = d3
       .scaleUtc()
-      .domain([Date.UTC(2016, 0, 1), Date.UTC(2022, 0, 1) - 1])
+      .domain([Date.UTC(2000, 0, 1), Date.UTC(2022, 0, 1) - 1])
       .range([0, 2 * Math.PI]);
 
     this.y = d3
@@ -32,7 +32,7 @@ this should show some sample of our satellites, as well as some image of the glo
         d3.min(scale_data, (d) => d["Perigee (km)"]),
         d3.max(scale_data, (d) => d["Perigee (km)"]),
       ])
-      .range([this.innerRadius, this.outerRadius]);
+      .range([this.innerRadius, this.outerRadius+10]);
 
     let launchDensityScale = d3
       .scaleLinear()
@@ -41,7 +41,7 @@ this should show some sample of our satellites, as well as some image of the glo
       .range(["#fff2cd", "#990000"]);
 
     this.drawAxis();
-
+    this.addGlobe();
     this.placeSatellites(scale_data);
   }
 
@@ -185,6 +185,22 @@ this should show some sample of our satellites, as well as some image of the glo
       .on("click", (event, d)=> console.log(d));
 
       // console.log(purpose)
+  }
+
+  addGlobe(){
+    let svg = d3.select("#satDistance")
+    .append("g")
+    .attr("id", "globe")
+
+
+    let globe = d3.select("#globe")
+    .append("circle")
+    .attr("r", this.innerRadius -10)
+    .attr("cx", this.height/2)
+    .attr("cy", this.width/2)
+    .attr("fill", "teal")
+    .attr("transform", "translate(-250, -250)")
+
   }
 //https://stackoverflow.com/questions/9035627/elegant-method-to-generate-array-of-random-dates-within-two-dates
   randomDate(start, end) {
