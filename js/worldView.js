@@ -3,13 +3,16 @@ class Worldview {
 TODO
 this should show some sample of our satellites, as well as some image of the globe. (maybe it spins?) 
 */
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 }
 =======
   constructor(global_state) {
     this.State = global_state;
+=======
   constructor(global_state) {
     this.globalState = global_state;
+>>>>>>> 37112d4be3cf8f3916b8c240045de2c7467c8d6c
     this.sats = global_state.satelliteData;
     this.sampleSats = global_state.sampleSatellites;
 
@@ -213,4 +216,7 @@ this should show some sample of our satellites, as well as some image of the glo
   }
   
 }
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> 37112d4be3cf8f3916b8c240045de2c7467c8d6c

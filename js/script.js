@@ -14,6 +14,7 @@ async function loadData() {
 
     return [satData, satSampleData];
 }
+<<<<<<< HEAD
 loadData().then(data => {
     console.log(data);
 <<<<<<< Updated upstream
@@ -27,6 +28,8 @@ loadData().then(data => {
     globalState.worldView = worldView;
 });
 >>>>>>> Stashed changes
+=======
+>>>>>>> 37112d4be3cf8f3916b8c240045de2c7467c8d6c
 
 
 
