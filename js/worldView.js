@@ -3,16 +3,9 @@ class Worldview {
 TODO
 this should show some sample of our satellites, as well as some image of the globe. (maybe it spins?) 
 */
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-}
-=======
-  constructor(global_state) {
-    this.State = global_state;
-=======
+
   constructor(global_state) {
     this.globalState = global_state;
->>>>>>> 37112d4be3cf8f3916b8c240045de2c7467c8d6c
     this.sats = global_state.satelliteData;
     this.sampleSats = global_state.sampleSatellites;
 
@@ -23,9 +16,9 @@ this should show some sample of our satellites, as well as some image of the glo
 
     // placeholders for scales we define in our axis
     this.innerRadius = this.width / 5;
-    this.outerRadius = this.width/2 - this.margin;
+    this.outerRadius = this.width / 2 - this.margin;
 
-    let scale_data = this.sampleSats
+    let scale_data = this.sampleSats;
 
     // d3.filter(scale_data)
 
@@ -40,7 +33,7 @@ this should show some sample of our satellites, as well as some image of the glo
         d3.min(scale_data, (d) => d["Perigee (km)"]),
         d3.max(scale_data, (d) => d["Perigee (km)"]),
       ])
-      .range([this.innerRadius, this.outerRadius+10]);
+      .range([this.innerRadius, this.outerRadius + 10]);
 
     let launchDensityScale = d3
       .scaleLinear()
@@ -171,52 +164,45 @@ this should show some sample of our satellites, as well as some image of the glo
   placeSatellites(satellites) {
     // http://bl.ocks.org/eesur/2ac63b3d0ece6682a42c0f9d3a6bfabc
     let svg = d3.select("#satDistance").append("g").attr("id", "satellites");
-    let purpose = new Set()
+    let angles = satellites.map((d) => Math.random() * Math.PI * 2);
+    let purpose = new Set();
     let sats = d3
       .select("#satellites")
       .selectAll("circle")
       .data(satellites)
       .join("circle")
-      .attr("cx", (d)=> {
-        let date = this.randomDate(new Date(Date.UTC(2016, 0, 1)), new Date(Date.UTC(2022)));
-        // console.log(date)
-        return this.x(date);
+      .attr("cx", (d, i) => {
+        return Math.cos(angles[i]) * this.y(d["Perigee (km)"]);
       })
-      .attr(
-        "cy",
-        (d) => this.y(d["Perigee (km)"]))
+      .attr("cy", (d, i) => {
+        return Math.sin(angles[i]) * this.y(d["Perigee (km)"]);
+      })
       .attr("r", 5)
       // .attr("class", (d)=> purpose.add(d["Class of Orbit"]))
-      .attr('class', (d)=>d["Class of Orbit"])
+      .attr("class", (d) => d["Class of Orbit"])
       .attr("fill", "red")
       // .attr("transform", "translate(0, -20)")
-      .on("click", (event, d)=> console.log(d));
+      .on("click", (event, d) => console.log(d));
 
-      // console.log(purpose)
+    // console.log(purpose)
   }
 
-  addGlobe(){
-    let svg = d3.select("#satDistance")
-    .append("g")
-    .attr("id", "globe")
+  addGlobe() {
+    let svg = d3.select("#satDistance").append("g").attr("id", "globe");
 
-
-    let globe = d3.select("#globe")
-    .append("circle")
-    .attr("r", this.innerRadius -10)
-    .attr("cx", this.height/2)
-    .attr("cy", this.width/2)
-    .attr("fill", "teal")
-    .attr("transform", "translate(-250, -250)")
-
+    let globe = d3
+      .select("#globe")
+      .append("circle")
+      .attr("r", this.innerRadius - 10)
+      .attr("cx", this.height / 2)
+      .attr("cy", this.width / 2)
+      .attr("fill", "teal")
+      .attr("transform", "translate(-250, -250)");
   }
-//https://stackoverflow.com/questions/9035627/elegant-method-to-generate-array-of-random-dates-within-two-dates
+  //https://stackoverflow.com/questions/9035627/elegant-method-to-generate-array-of-random-dates-within-two-dates
   randomDate(start, end) {
-    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    return new Date(
+      start.getTime() + Math.random() * (end.getTime() - start.getTime())
+    );
   }
-  
 }
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> 37112d4be3cf8f3916b8c240045de2c7467c8d6c
