@@ -5,7 +5,8 @@ import json
 
 input_path = '../data/UCS-Satellite-Database-5-1-2022.csv'
 input_csv = '../data/UCS-Satellite-Database-5-1-2022.xls'
-output_path = '../data/satellites_sample.json'
+output_path = '../data/satellites.json'
+output_sample_path = '../data/satellites_sample.json'
 
 df = pd.read_excel(input_csv)
 
@@ -48,6 +49,10 @@ with open(output_path,'w') as outfile:
     #js_obj = json.dump(end,outfile)
     js_obj = json.dump(df_list,outfile)
 
+with open(output_sample_path,'w') as outfile:
+
+    #js_obj = json.dump(end,outfile)
+    js_obj = json.dump(end,outfile)
 
 #c_data = [df[c] for c in named_cols]
 #c_zip = zip(c_data)
