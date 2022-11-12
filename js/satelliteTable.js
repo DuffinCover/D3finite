@@ -103,6 +103,8 @@ class SatelliteTable{
         cellSelect.filter(d => d.type ==='Orbit').text(d=>d.value === '' ? 'N/A' : d.value);
         cellSelect.filter(d => d.type === 'LWeight').text(d=>d.value === '' ? 'N/A' : d.value);
         cellSelect.filter(d => d.type ==='Lifetime').text(d=>d.value === '' ? 'N/A' : d.value);
+        cellSelect.filter(d => d.type === 'LaunchSite').text(d => d.value === '' ? 'Unknown' : d.value);
+        cellSelect.filter(d => d.type === 'LaunchVehicle').text(d => d.value === '' ? 'Unknown' : d.value);
     }
 
     /**
@@ -192,7 +194,17 @@ class SatelliteTable{
             value: d['Expected Lifetime (yrs.)']
         };
 
-        let dataList = [name, origin, contractor, use, orbit, LWeight, lifetime];
+        let launchSite = {
+            type: 'LaunchSite',
+            value: d['Launch Site']
+        };
+
+        let launchVehicle = {
+            type: 'LaunchVehicle',
+            value: d['Launch Vehicle']
+        };
+
+        let dataList = [name, origin, contractor, use, orbit, LWeight, lifetime, launchSite, launchVehicle];
         return dataList;
     }
 
