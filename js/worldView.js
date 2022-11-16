@@ -183,7 +183,6 @@ this should show some sample of our satellites, as well as some image of the glo
       .attr("r", 5)
       // .attr("class", (d)=> purpose.add(d["Class of Orbit"]))
       .attr("class", (d) => d["Class of Orbit"])
-      // .attr("transform", "translate(0, -20)")
       .on("click", (event, d) => {
         let satSubset = satellites.filter(n=>n["Class of Orbit"] === d["Class of Orbit"])
         this.redraw(satSubset);
