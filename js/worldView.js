@@ -18,7 +18,7 @@ this should show some sample of our satellites, as well as some image of the glo
     this.innerRadius = this.width / 5;
     this.outerRadius = this.width / 2 - this.margin;
 
-    let scale_data = this.sats;
+    let scale_data = this.sampleSats;
 
     // d3.filter(scale_data)
 
@@ -30,7 +30,7 @@ this should show some sample of our satellites, as well as some image of the glo
     this.y = d3
       .scaleLinear()
       .domain([
-        d3.min(scale_data, (d) => d["Perigee (km)"]),
+        d3.min(scale_data,  (d) => d["Perigee (km)"]),
         d3.max(scale_data, (d) => d["Perigee (km)"]),
       ])
       .range([this.innerRadius, this.outerRadius + 10]);
@@ -162,6 +162,12 @@ this should show some sample of our satellites, as well as some image of the glo
   }
 
   placeSatellites(satellites) {
+
+    this.y
+    .domain([
+      d3.min(satellites, (d) => d["Perigee (km)"]),
+      d3.max(satellites, (d) => d["Perigee (km)"]),
+    ])
     // http://bl.ocks.org/eesur/2ac63b3d0ece6682a42c0f9d3a6bfabc
     let svg = d3.select("#satDistance").append("g").attr("id", "satellites");
     let angles = satellites.map((d) => Math.random() * Math.PI * 2);
