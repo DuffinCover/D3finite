@@ -7,6 +7,7 @@ class SatelliteTable{
      */
     constructor(global_state) {
         let data = global_state.satelliteData;
+        this.global_state = global_state;
         this.selectedRows = [];
         this.originalData = data;
         this.data = data;
@@ -83,6 +84,13 @@ class SatelliteTable{
      * Fills in all cells in the table
      */
     buildTable() {
+        // Sets data based on global state grouping
+        if(this.global_state.group.length > 0) {
+            this.data = this.global_state.group;
+        }
+        else {
+            this.data = this.originalData;
+        }
         // Stores table body selection and appends table rows
         let rowSelection = d3.select('#tableBody')
         .selectAll('tr')
@@ -93,12 +101,15 @@ class SatelliteTable{
         // Adding even handler to each row ---- Should change background when selected
         rowSelection.on('click', (event, d) => {
             // If the row is not in the selected rows, add it, else remove it
-            if (this.selectedRows.includes(d['Name of Satellite, Alternate Names'])) {
-                this.selectedRows = this.selectedRows.filter((el) => el !== d['Name of Satellite, Alternate Names']);
-                this.updateRows();
+            if (this.global_state.selection.includes(d['Name of Satellite, Alternate Names'])) {
+                this.global_state.selection = this.global_state.selection.filter((el) => el !== d['Name of Satellite, Alternate Names']);
+                updateAllSelection();
             } else {
-                this.selectedRows.push(d['Name of Satellite, Alternate Names']);
-                this.updateRows();
+                if(this.global_state.selection.length > 0) {
+                    this.global_state.selection = [];
+                }
+                this.global_state.selection.push(d['Name of Satellite, Alternate Names']);
+                updateAllSelection();
             }});
 
         // Stores individual cell selections
@@ -124,12 +135,30 @@ class SatelliteTable{
      */
     attachSortHandlers() 
     {
+        // Filters data for selections
+        d3.select('#groupButtons')
+            .selectAll('td')
+            .data(this.headerData)
+            .text('group')
+            .on('click', (event, d) => 
+            {
+                if(d.key === 'Country of Operator/Owner') {
+                    this.global_state.group = this.originalData.filter(n => n[d.key] === 'USA');
+                }
+                else {
+                    this.global_state.group = [];
+                }
+                updateAllGroup();
+                // this.buildTable();
+                // this.updateRows();
+            });
 
         d3.select('#columnHeaders')
             .selectAll('th')
             .data(this.headerData)
             .on('click', (event, d) => 
             {
+
                 const sortAscending = d.sorted ? !d.ascending : true; // sort ascending by default, otherwise flip it.
                 this.sortData(d.key, sortAscending, d.alterFunc);
                 // reset state
@@ -230,8 +259,8 @@ class SatelliteTable{
         .join('tr')
         .classed('selectedTable', true);
 
-        rowSelection.classed('selectedTable', (d) => this.selectedRows.includes(d['Name of Satellite, Alternate Names']));
-        rowSelection.classed('unselectedTable', (d) => !this.selectedRows.includes(d['Name of Satellite, Alternate Names']))
+        rowSelection.classed('selectedTable', (d) => this.global_state.selection.includes(d['Name of Satellite, Alternate Names']));
+        rowSelection.classed('unselectedTable', (d) => !this.global_state.selection.includes(d['Name of Satellite, Alternate Names']))
     }
 
     /**
@@ -269,6 +298,15 @@ class SatelliteTable{
                 return 0;
             }
         );
+    }
+
+    updateGroup() {
+        this.buildTable();
+        this.updateRows();
+    }
+
+    updateSelection() {
+        this.updateRows();
     }
     
 }

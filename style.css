@@ -59,36 +59,5 @@ table, th, td {
 .colHead {
     background-color: gray;
     color: chartreuse;
-}
-
-.scrollable {
-	height:500px;
-	width:1000px;		
-    overflow-y:auto;
-	float:left;
-	position:relative;
-	margin-left:-5px;
-}
-
-.unselectedTable {
-    background-color: bisque;
     text-align: center;
-    border-collapse: collapse;
-}
-
-.selectedTable {
-    background-color: burlywood;
-    text-align: center;
-    border: 3px solid black;
-}
-
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-    cursor: pointer;
-}
-
-.colHead {
-    background-color: gray;
-    color: chartreuse;
 }
