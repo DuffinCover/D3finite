@@ -18,7 +18,7 @@ this should show some sample of our satellites, as well as some image of the glo
     this.innerRadius = this.width / 5;
     this.outerRadius = this.width / 2 - this.margin;
 
-    let scale_data = this.sampleSats;
+    let scale_data = this.sats;
 
     // d3.filter(scale_data)
 
@@ -40,34 +40,42 @@ this should show some sample of our satellites, as well as some image of the glo
       // need actual json data to do stuff here, ill plan on something clever here.
       // .domain(this.satellites, (d) => console.log(d))
       .range(["#fff2cd", "#990000"]);
+    
+    let worldviewsvg = d3
+    .select("#worldview")
+    .append("svg")
+    .attr("id", "satDistance")
+    .attr("width", this.width)
+    .attr("height", this.height)
+    .attr("viewBox", [
+      -this.width / 2,
+      -this.height / 2,
+      this.width,
+      this.height,
+    ])
+    .attr("stroke-linejoin", "round")
+    .attr("stroke-linecap", "round");
 
-    this.drawAxis();
+
+    let satDistance = d3.select("#satDistance");
+    satDistance.append("g").attr("id", 'x')
+    satDistance.append("g").attr("id", 'y')
+    satDistance.append("g").attr("id", "satellites")
+    
+
+    this.drawAxis(worldviewsvg);
     this.addGlobe();
     this.placeSatellites(scale_data);
   }
 
   // potential cool visualizaion? http://bl.ocks.org/emeeks/068ef3e4106e155467a3
 
-  drawAxis() {
+  drawAxis(svg) {
     // https://bl.ocks.org/atanumallick/8d18989cd538c72ae1ead1c3b18d7b54
 
     // radial chart
     // https://observablehq.com/@d3/radial-area-chart
     // I've adapted the above code for our purposes.
-    const svg = d3
-      .select("#worldview")
-      .append("svg")
-      .attr("id", "satDistance")
-      .attr("width", this.width)
-      .attr("height", this.height)
-      .attr("viewBox", [
-        -this.width / 2,
-        -this.height / 2,
-        this.width,
-        this.height,
-      ])
-      .attr("stroke-linejoin", "round")
-      .attr("stroke-linecap", "round");
 
     let xAxis = (g) =>
       g
@@ -156,39 +164,38 @@ this should show some sample of our satellites, as well as some image of the glo
             )
         );
 
-    svg.append("g").call(xAxis);
+    svg.select("#x").call(xAxis);
 
-    svg.append("g").call(yAxis);
+    svg.select("#y").call(yAxis);
   }
 
   placeSatellites(satellites) {
 
-    this.y
-    .domain([
-      d3.min(satellites, (d) => d["Perigee (km)"]),
-      d3.max(satellites, (d) => d["Perigee (km)"]),
-    ])
+
     // http://bl.ocks.org/eesur/2ac63b3d0ece6682a42c0f9d3a6bfabc
-    let svg = d3.select("#satDistance").append("g").attr("id", "satellites");
+    let svg = d3.select("#satellites");
     let angles = satellites.map((d) => Math.random() * Math.PI * 2);
     let purpose = new Set();
-    let sats = d3
-      .select("#satellites")
+    svg
       .selectAll("circle")
       .data(satellites)
       .join("circle")
+      .attr("r", 5)
+      // .attr("class", (d)=> purpose.add(d["Class of Orbit"]))
+      .attr("class", (d) => d["Class of Orbit"])
+      // .attr("transform", "translate(0, -20)")
+      .on("click", (event, d) => {
+        let satSubset = satellites.filter(n=>n["Class of Orbit"] === d["Class of Orbit"])
+        this.redraw(satSubset);
+      })
+      .transition()
+      .duration(1000)
       .attr("cx", (d, i) => {
         return Math.cos(angles[i]) * this.y(d["Perigee (km)"]);
       })
       .attr("cy", (d, i) => {
         return Math.sin(angles[i]) * this.y(d["Perigee (km)"]);
-      })
-      .attr("r", 5)
-      // .attr("class", (d)=> purpose.add(d["Class of Orbit"]))
-      .attr("class", (d) => d["Class of Orbit"])
-      .attr("fill", "red")
-      // .attr("transform", "translate(0, -20)")
-      .on("click", (event, d) => console.log(d));
+      });
 
     // console.log(purpose)
   }
@@ -210,5 +217,18 @@ this should show some sample of our satellites, as well as some image of the glo
     return new Date(
       start.getTime() + Math.random() * (end.getTime() - start.getTime())
     );
+  }
+
+  redraw(satellites){
+    this.y
+    .domain([
+      d3.min(satellites, (d) => d["Perigee (km)"]),
+      d3.max(satellites, (d) => d["Perigee (km)"]),
+    ])
+    d3.select("#x").selectAll("g").remove();
+    d3.select("#y").selectAll("g").remove();
+    let svg = d3.select("#satDistance")
+    this.drawAxis(svg);
+    this.placeSatellites(satellites);
   }
 }
