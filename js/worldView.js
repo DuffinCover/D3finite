@@ -8,23 +8,41 @@ this should show some sample of our satellites, as well as some image of the glo
     this.globalState = global_state;
     this.sats = global_state.satelliteData;
     this.sampleSats = ''//global_state.sampleSatellites;
+    this.satAngles =''
 
+    //take a smaller sample size of our data to initally display
     let sampleSize = 200
     let sampleArray = []
     for( let i = 0; i < sampleSize; i++){
-      sampleArray.push(this.sats[i])
+      sampleArray.push(this.sats[Math.floor(Math.random() * sampleSize)])
     }
     this.sampleSats = sampleArray
-    console.log(this.sampleSats)
 
     // basic svg params
     this.width = 500;
     this.height = 500;
     this.margin = 20;
 
-    // placeholders for scales we define in our axis
+
     this.innerRadius = this.width / 5;
     this.outerRadius = this.width / 2 - this.margin;
+
+
+    let angles = this.sats.map((d) => Math.random() * Math.PI * 2);
+    // console.log(angles)
+    let angleSets = {};
+    for (let i = 0; i < this.sats.length; i++){
+    //   // console.log(this.sats[i])
+    //   // console.log(angles[i])
+    let cosparName = this.sats[i]["COSPAR Number"]
+    // console.log(cosparName)
+      angleSets[cosparName] = angles[i];
+    }
+    // console.log(Object.keys(angleSets).length);
+    this.satAngles = angleSets;
+
+
+
 
     let scale_data = this.sampleSats;
 
@@ -182,7 +200,7 @@ this should show some sample of our satellites, as well as some image of the glo
 
     // http://bl.ocks.org/eesur/2ac63b3d0ece6682a42c0f9d3a6bfabc
     let svg = d3.select("#satellites");
-    let angles = satellites.map((d) => Math.random() * Math.PI * 2);
+    // let angles = satellites.map((d) => Math.random() * Math.PI * 2);
     let purpose = new Set();
     svg
       .selectAll("circle")
@@ -198,10 +216,10 @@ this should show some sample of our satellites, as well as some image of the glo
       .transition()
       .duration(1000)
       .attr("cx", (d, i) => {
-        return Math.cos(angles[i]) * this.y(d["Perigee (km)"]);
+        return Math.cos(this.satAngles[d["COSPAR Number"]]) * this.y(d["Perigee (km)"]);
       })
       .attr("cy", (d, i) => {
-        return Math.sin(angles[i]) * this.y(d["Perigee (km)"]);
+        return Math.sin(this.satAngles[d["COSPAR Number"]]) * this.y(d["Perigee (km)"]);
       });
 
     // console.log(purpose)
