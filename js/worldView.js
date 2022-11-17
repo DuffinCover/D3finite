@@ -7,7 +7,15 @@ this should show some sample of our satellites, as well as some image of the glo
   constructor(global_state) {
     this.globalState = global_state;
     this.sats = global_state.satelliteData;
-    this.sampleSats = global_state.sampleSatellites;
+    this.sampleSats = ''//global_state.sampleSatellites;
+
+    let sampleSize = 200
+    let sampleArray = []
+    for( let i = 0; i < sampleSize; i++){
+      sampleArray.push(this.sats[i])
+    }
+    this.sampleSats = sampleArray
+    console.log(this.sampleSats)
 
     // basic svg params
     this.width = 500;
@@ -18,7 +26,7 @@ this should show some sample of our satellites, as well as some image of the glo
     this.innerRadius = this.width / 5;
     this.outerRadius = this.width / 2 - this.margin;
 
-    let scale_data = this.sats;
+    let scale_data = this.sampleSats;
 
     // d3.filter(scale_data)
 
@@ -209,7 +217,8 @@ this should show some sample of our satellites, as well as some image of the glo
       .attr("cx", this.height / 2)
       .attr("cy", this.width / 2)
       .attr("fill", "teal")
-      .attr("transform", "translate(-250, -250)");
+      .attr("transform", "translate(-250, -250)")
+      .on("click",(event, d) => this.redraw(this.sats));
   }
   //https://stackoverflow.com/questions/9035627/elegant-method-to-generate-array-of-random-dates-within-two-dates
   randomDate(start, end) {
