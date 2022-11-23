@@ -30,11 +30,12 @@ loadData().then(data => {
 
 function updateAllGroup() {
     globalState.table.updateGroup();
-    // globalState.worldView.updateGroup();
-    // globalState.lineChart.updateGroup();
+    //globalState.worldView.updateGroup();
+    globalState.lineChart.updateGroup();
 }
 
 function updateAllSelection() {
-    console.log("Updating Selection");
+    console.log("Updating Selection",globalState.selection);
     globalState.table.updateSelection();
+    globalState.lineChart.updateSelection();
 }
