@@ -255,11 +255,11 @@ class Worldview {
       .default(new Date(1998, 0, 1))
       .on('onchange', val => {
         d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
-        console.log(d3.timeFormat('%Y')(val).slice(-2))
-        let selectedYear = satellites.filter(d=>parseInt(d["Date of Launch"].slice(-2)) < 6
+        let cuttoffYear = d3.timeFormat('%Y')(val).slice(-2)
+        let selectedYear = satellites.filter(d=>parseInt(d["Date of Launch"].slice(-2)) <= parseInt(cuttoffYear)
           // console.log(this.convertToLaunchDate(d))
         )
-        console.log(selectedYear)
+        this.redraw(selectedYear)
 
       });
   
