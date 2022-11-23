@@ -8,6 +8,12 @@ const globalState = {
     lineChart: null,
     group: [],
     selection: [],
+    color_pallette: [
+        '#f36688', '#da3182', '#9e316b',
+        '#bb3ad3', '#684dda', '#5033db',
+        '#261a5a', '#1a1044', '#4c5c87',
+        '#69809e','#95c5ac'
+    ]
 };
 
 async function loadData() {
@@ -28,14 +34,20 @@ loadData().then(data => {
 
 });
 
+
+
 function updateAllGroup() {
     globalState.table.updateGroup();
     //globalState.worldView.updateGroup();
-    globalState.lineChart.updateGroup();
+    globalState.lineChart.update();
 }
 
 function updateAllSelection() {
     console.log("Updating Selection",globalState.selection);
     globalState.table.updateSelection();
-    globalState.lineChart.updateSelection();
+    globalState.lineChart.update();
+}
+
+function updateSort() {
+    globalState.lineChart.update();
 }

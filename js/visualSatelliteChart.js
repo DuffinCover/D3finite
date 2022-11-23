@@ -7,6 +7,8 @@ class VisualSatelliteChart{
 
         this.global_state = global_state;
 
+        let colors = global_state.color_pallette;
+
         /*this.max_rows = 300;*/
 
         //let satData = data.filter( (d,i) => i < 2000);
@@ -47,23 +49,28 @@ class VisualSatelliteChart{
             {
                 name: 'Expected Lifetime (yrs.)',
                 scale: null,
-                color: '#82d7d9'
+                //color: '#82d7d9'
+                color: colors[10]
             }, {
                 name: 'Dry Mass (kg.)',
                 scale: null,
-                color: '#ebc48d'
+                //color: '#ebc48d'
+                color: colors[1]
             }, {
                 name: 'Launch Mass (kg.)',
                 scale: null,
-                color: '#8d70ba'
+                //color: '#8d70ba'
+                color: colors[2]
             }, {
                 name: 'Period (minutes)',
                 scale: null,
-                color: '#cf5f91'
+                //color: '#cf5f91'
+                color: colors[3]
             }, {
                 name: 'Inclination (degrees)',
                 scale: null,
-                color: '#cf5f91'
+                //color: '#cf5f91'
+                color: colors[4]
             }];
 
         let top_cols = chart_top.selectAll('g')
@@ -132,7 +139,7 @@ class VisualSatelliteChart{
             satData = global_state.group;
         }
 
-        satData = satData.filter((d, i) => i < 2001);
+        //satData = satData.filter((d, i) => i < 2001);
 
         
 
@@ -208,13 +215,24 @@ class VisualSatelliteChart{
         
 
         if (sel_finder.length > 0) {
-            console.log('sel finder', sel_finder);
+            //console.log('sel finder', sel_finder);
 
             let sel_idx = sel_finder[0][1];
-            console.log(sel_idx);
-
+            //console.log(sel_idx);
+            //console.log(this.alt_yScale.invert(sel_idx))
 
             let sel_data = satData.filter((d, i) => i === sel_idx);
+
+            let y_loc = this.alt_yScale.invert(sel_idx);
+
+            let scroll = 0;
+
+            if (y_loc > this.MIN_HEIGHT) {
+                scroll = y_loc - (this.MIN_HEIGHT / 2);
+            }
+
+            document.getElementById("chart-body").scrollTop = scroll;
+
 
             let bars = barContainer.selectAll('rect')
                 .data((d, i) => {
@@ -246,7 +264,7 @@ class VisualSatelliteChart{
                     let output = sel_data.map(n => {
                         return [n[d.name], i];
                     });
-                    console.log('hl',output);
+                    //console.log('hl',output);
                     return output;
                 })
                 .join('rect')
@@ -286,6 +304,10 @@ class VisualSatelliteChart{
 
         }
 
+    }
+
+    update() {
+        this.drawChart();
     }
 
     updateGroup() {
