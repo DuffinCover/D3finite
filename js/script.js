@@ -22,7 +22,7 @@ loadData().then(data => {
 
     globalState.satelliteData = data[0]; 
     globalState.sampleSatellites = data[1];
-    globalState.table = new SatelliteTable(globalState);
+    // globalState.table = new SatelliteTable(globalState);
     globalState.worldView = new Worldview(globalState);
     globalState.lineChart = new VisualSatelliteChart(globalState);
 

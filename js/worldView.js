@@ -1,8 +1,6 @@
+// import { sliderBottom } from 'd3-simple-slider';
 class Worldview {
-  /*
-TODO
-this should show some sample of our satellites, as well as some image of the globe. (maybe it spins?) 
-*/
+
 
   constructor(global_state) {
     this.globalState = global_state;
@@ -91,7 +89,8 @@ this should show some sample of our satellites, as well as some image of the glo
 
     this.drawAxis(worldviewsvg);
     this.addGlobe();
-    this.placeSatellites(scale_data);
+    this.placeSatellites(scale_data)
+    this.addYearSlider(scale_data);
   }
 
   // potential cool visualizaion? http://bl.ocks.org/emeeks/068ef3e4106e155467a3
@@ -223,6 +222,88 @@ this should show some sample of our satellites, as well as some image of the glo
       });
 
     // console.log(purpose)
+  }
+
+  addYearSlider(satellites){
+    // Found slider code here: https://bl.ocks.org/johnwalley/raw/e1d256b81e51da68f7feb632a53c3518/?raw=true
+    // console.log(satellites)
+    d3.select("#worldview")
+    .append("div")
+    .append("p")
+    .attr("id", "value-time");
+    
+    
+    d3.select("#worldview")
+    .append("div")
+    .attr("id", "slider-time");
+
+    
+
+    let dataTime = this.getLaunchDates(satellites);
+    // let dataTime = d3.range(0, 10).map(function(d) {
+    //   return new Date(1995 + d, 10, 3);
+    // });
+  
+    let sliderTime = d3.sliderBottom()
+      .min(d3.min(dataTime))
+      .max(d3.max(dataTime))
+      .step(1000 * 60 * 60 * 24 * 365)
+      .width(450)
+      .tickFormat(d3.timeFormat('%y'))
+      .tickValues(dataTime)
+      .ticks(10)
+      .default(new Date(1998, 0, 1))
+      .on('onchange', val => {
+        d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
+        console.log(d3.timeFormat('%Y')(val).slice(-2))
+        let selectedYear = satellites.filter(d=>parseInt(d["Date of Launch"].slice(-2)) < 6
+          // console.log(this.convertToLaunchDate(d))
+        )
+        console.log(selectedYear)
+
+      });
+  
+    let gTime = d3
+      .select('div#slider-time')
+      .append('svg')
+      .attr('width', 500)
+      .attr('height', 100)
+      .append('g')
+      .attr('transform', 'translate(30,30)');
+  
+    gTime.call(sliderTime);
+  
+    d3.select('p#value-time').text(d3.timeFormat('%Y')(sliderTime.value()));
+  }
+
+  convertToLaunchDate(satelliteSelection){
+    let launchDate = satelliteSelection["Date of Launch"].slice(-2);
+    if(parseInt(launchDate) <= 22){
+      launchDate = "20" + launchDate;
+    }
+    else{
+      launchDate = "19" + launchDate;
+    }
+    return new Date(launchDate, 1, 0);
+  }
+
+  getLaunchDates(satellites){
+    let cuttoff = new Date(1990, 0, 1);
+    let launchYears = new Set();
+    for(let i = 0; i < satellites.length; i++){
+      let launchDate = this.convertToLaunchDate(satellites[i])
+        
+      if(launchDate < cuttoff){
+        continue;
+      }
+      else{
+        launchYears.add(launchDate);
+      }
+           
+    }
+    let launchData = Array.from(launchYears).sort();
+
+   return launchData
   }
 
   addGlobe() {
