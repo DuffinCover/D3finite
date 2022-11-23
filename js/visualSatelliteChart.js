@@ -23,7 +23,7 @@ class VisualSatelliteChart{
         this.MIN_HEIGHT = 600 - 4;
 
         this.CHART_HEIGHT = c_size;
-        this.CHART_WIDTH = 800;
+        this.CHART_WIDTH = 1000;
 
         this.selection = null;
         this.min_sel_height = 20;
@@ -58,6 +58,10 @@ class VisualSatelliteChart{
                 color: '#8d70ba'
             }, {
                 name: 'Period (minutes)',
+                scale: null,
+                color: '#cf5f91'
+            }, {
+                name: 'Inclination (degrees)',
                 scale: null,
                 color: '#cf5f91'
             }];
@@ -107,6 +111,9 @@ class VisualSatelliteChart{
 
         let barContainer = visuals.append('g')
             .attr('id', 'bar-container');
+
+        let hlContainer = visuals.append('g')
+            .attr('id', 'highlight-container');
 
         this.drawChart();
     }
@@ -185,6 +192,7 @@ class VisualSatelliteChart{
 
         let barContainer = visuals.select('#bar-container');
 
+        let hlContainer = visuals.select('#highlight-container');
 
         let selection = globalState.selection;
 
@@ -195,13 +203,19 @@ class VisualSatelliteChart{
 
 
         //Draw the bars:
+
+        
         
 
         if (sel_finder.length > 0) {
-            console.log(sel_finder);
+            console.log('sel finder', sel_finder);
 
             let sel_idx = sel_finder[0][1];
             console.log(sel_idx);
+
+
+            let sel_data = satData.filter((d, i) => i === sel_idx);
+
             let bars = barContainer.selectAll('rect')
                 .data((d, i) => {
                     let output = satData.map(n => {
@@ -224,11 +238,34 @@ class VisualSatelliteChart{
                 .attr('y', this.alt_yScale(sel_idx) + 1)
                 .attr('stroke-width', '1px')
                 .attr('stroke', 'black')
-            
 
+
+
+            let row_highlight = hlContainer.selectAll('rect')
+                .data((d, i) => {
+                    let output = sel_data.map(n => {
+                        return [n[d.name], i];
+                    });
+                    console.log('hl',output);
+                    return output;
+                })
+                .join('rect')
+                .attr('x', (d) => 1 + (d[1] * this.vizWidth1) + this.h_pad + this.sat_columns[d[1]].scale(d[0]))
+                .attr('y', this.alt_yScale(sel_idx) + 1)
+                .attr('height', sel_height - 2)
+                .attr('width', d => this.vizWidth1 - (this.sat_columns[d[1]].scale(d[0]) + (2 * this.h_pad) + this.h_Margin))
+                .attr('fill', '#EAEAEA')
+                .attr('stroke-width', '0px')
+
+
+
+            
+            
 
                 //.attr('stroke', 'black')
         } else {
+
+            hlContainer.selectAll('rect').remove();
 
             let bars = barContainer.selectAll('rect')
                 .data((d, i) => {
