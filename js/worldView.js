@@ -183,8 +183,9 @@ class Worldview {
         console.log(d)
       })
       .on("click", (event, d) => {
-        let satSubset = satellites.filter(n=>n["Class of Orbit"] === d["Class of Orbit"])
-        this.redraw(satSubset);
+        let satSubset = this.globalState.satelliteData.filter(n=>n["Class of Orbit"] === d["Class of Orbit"])
+        this.globalState.group = satSubset;
+        updateAllGroup();
       })
       .transition()
       .duration(1000)
@@ -244,19 +245,9 @@ class Worldview {
       .on('onchange', val => {
         d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
         let cuttoffYear = d3.timeFormat('%Y')(val).slice(-4)
-        let selectedYear = this.globalState.satelliteData.filter(d=>{
-          let thisLaunch = d["Date of Launch"].slice(-2)
-          if(thisLaunch <=22){
-            thisLaunch = "20" + thisLaunch
-          }
-          else{
-            thisLaunch = "19" + thisLaunch
-          }
-          return parseInt(thisLaunch) <= parseInt(cuttoffYear)
-        }
-        )
-
-        this.redraw(selectedYear) 
+        this.globalState.cuttoffYear = cuttoffYear;
+        this.fliterByYear();
+        updateAllGroup();
 
       });
   
@@ -271,6 +262,22 @@ class Worldview {
     gTime.call(sliderTime);
   
     d3.select('p#value-time').text(d3.timeFormat('%Y')(sliderTime.value()));
+  }
+
+  fliterByYear(){
+    let selectedYear = this.globalState.satelliteData.filter(d=>{
+      let thisLaunch = d["Date of Launch"].slice(-2)
+      if(thisLaunch <=22){
+        thisLaunch = "20" + thisLaunch
+      }
+      else{
+        thisLaunch = "19" + thisLaunch
+      }
+      return parseInt(thisLaunch) <= parseInt(this.globalState.cuttoffYear)
+    }
+    )
+
+    this.globalState.group = selectedYear;
   }
 
   addSampleSlider(){
@@ -357,7 +364,10 @@ class Worldview {
       .attr("fill", "teal")
       // .attr("transform", "translate(-250, -250)")
       .html("Click here to reset")
-      .on("click",(event, d) => this.redraw(satellites));
+      .on("click",(event, d) => {
+        this.globalState.group = [];
+        updateAllGroup();
+      });
   }
 
 
@@ -384,7 +394,7 @@ class Worldview {
 
   updateGroup(){
     if(this.globalState.group.length == 0){
-      this.redraw(this.sats)
+      this.redraw(this.globalState.satelliteData)
     }
     else{
       this.redraw(this.globalState.group)
@@ -393,6 +403,9 @@ class Worldview {
   }
 
   newSampleUpdate(){
-    this.redraw(this.globalState.satelliteData)
+    
+    // this.redraw(this.globalState.satelliteData)
+    this.fliterByYear();
+    updateAllGroup();
   }
 }
