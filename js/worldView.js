@@ -322,7 +322,7 @@ class Worldview {
       .attr("fill", "teal")
       // .attr("transform", "translate(-250, -250)")
       .html("Click here to reset")
-      .on("click",(event, d) => this.redraw(satellites));
+      .on("click",(event, d) => updateAllGroup());
   }
 
 
