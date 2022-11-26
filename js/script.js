@@ -7,6 +7,7 @@ const globalState = {
     table: null,
     worldView: null,
     lineChart: null,
+    cuttoffYear: null,
     group: [],
     selection: [],
     color_pallette: [
@@ -41,6 +42,7 @@ function takeSample(sampleSize){
     for( let i = 0; i < sampleSize; i++){
       sampleSet.add(globalState.originalData[Math.floor(Math.random() * sampleSize)])
     }
+    if(globalState.group)
     return [...sampleSet]
 }
 
