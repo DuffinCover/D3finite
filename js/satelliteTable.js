@@ -6,6 +6,7 @@ class SatelliteTable{
      * @param {*} data JSON object of data
      */
     constructor(global_state) {
+        console.log(globalState);
         let data = global_state.satelliteData;
         this.global_state = global_state;
         this.selectedRows = [];
@@ -19,47 +20,56 @@ class SatelliteTable{
             {
                 sorted: false,
                 ascending: false,
-                key: 'Name of Satellite, Alternate Names'
+                key: 'Name of Satellite, Alternate Names',
+                id: 'SatName'
             },
             {
                 sorted: false,
                 ascending: false,
                 key: 'Country of Operator/Owner',
+                id: 'Country'
             },
             {
                 sorted: false,
                 ascending: false,
-                key: 'Contractor'
+                key: 'Contractor',
+                id: 'Contractor'
             },
             {
                 sorted: false,
                 ascending: false,
-                key: 'Purpose'
+                key: 'Purpose',
+                id: 'Use'
             },
             {
                 sorted: false,
                 ascending: false,
-                key: 'Type of Orbit'
+                key: 'Type of Orbit',
+                id: 'Orbit'
             },
             {
                 sorted: false,
                 ascending: false,
                 key: 'Launch Mass (kg.)',
+                id: 'LaunchMass'
             },
             {
                 sorted: false,
                 ascending: false,
-                key: 'Expected Lifetime (yrs.)'
+                key: 'Expected Lifetime (yrs.)',
+                id: 'Lifetime'
             },
             {
                 sorted: false,
                 ascending: false,
-                key: 'Launch Site'
+                key: 'Launch Site',
+                id: 'LaunchSite'
             },
             {
                 sorted: false,
                 ascending: false,
-                key: 'Launch Vehicle'
+                key: 'Launch Vehicle',
+                id: 'LaunchVehicle'
             }
         ]
         
@@ -76,6 +86,8 @@ class SatelliteTable{
         // Adding in rectangle elements
         this.buildTable();
         this.attachSortHandlers();
+        d3.select('#Country').on('change', event => this.update(event));
+        d3.select('#Use').on('change', event => this.update(event));
         // this.addRectangles(lifeSvg);
         // this.addRectangles(svgSelect);
     }
@@ -135,23 +147,40 @@ class SatelliteTable{
      */
     attachSortHandlers() 
     {
-        // Filters data for selections
+        //Filters data for selections
+        // d3.select('#groupButtons')
+        //     .selectAll('td')
+        //     .data(this.headerData)
+        //     .text('group')
+        //     .on('click', (event, d) => 
+        //     {
+        //         if(d.key === 'Country of Operator/Owner') {
+        //             this.global_state.group = this.originalData.filter(n => n[d.key] === 'USA');
+        //         }
+        //         else {
+        //             this.global_state.group = [];
+        //         }
+        //         updateAllGroup();
+        //         // this.buildTable();
+        //         // this.updateRows();
+        //     });
+
         d3.select('#groupButtons')
-            .selectAll('td')
-            .data(this.headerData)
-            .text('group')
-            .on('click', (event, d) => 
-            {
-                if(d.key === 'Country of Operator/Owner') {
-                    this.global_state.group = this.originalData.filter(n => n[d.key] === 'USA');
-                }
-                else {
-                    this.global_state.group = [];
-                }
-                updateAllGroup();
-                // this.buildTable();
-                // this.updateRows();
-            });
+        .selectAll('td')
+        .data(this.headerData)
+        .attr('id', d => d.key)
+        .append('select')
+        .attr('id', d => d.id);
+        let that = this;
+
+
+
+
+        //document.querySelector('#Country').addEventListener('change', console.log("this ran"));
+        // console.log(that);
+        this.addFilters();
+
+
 
         d3.select('#columnHeaders')
             .selectAll('th')
@@ -174,23 +203,6 @@ class SatelliteTable{
             });
     }
 
-    /**
-     * Adds rectangles to the chart
-     * @param {*} selection 
-     */
-    addRectangles(selection) {
-        let xScale = d3.scaleLinear().domain([0, d3.max(this.data.map(d => d['Launch Mass (kg.)']))])
-        .range([0, this.rowSvgWidth]);
-
-        selection.selectAll('rect').data(d => d)
-        .enter('rect')
-        .append('rect')
-        .attr('x', xScale(0))
-        .attr('y', 0)
-        .attr('width', d => {console.log(d.value); return xScale(d.value)})
-        .attr('height', 40)
-        .attr('fill', 'black');
-    }
 
     /**
      * Takes in a JSON object and translates it into separate containers 
@@ -199,6 +211,14 @@ class SatelliteTable{
      * @returns 
      */
     rowToCellDataTransform(d) {
+
+        /**
+         * ********************************************
+         * DATA TO ADD
+         * ********************************************
+         * 
+         * 
+         */
         let name = {
             type: 'Name',
             value: d['Name of Satellite, Alternate Names']
@@ -307,6 +327,73 @@ class SatelliteTable{
 
     updateSelection() {
         this.updateRows();
+    }
+
+    addFilters() {
+        let newData = [... new Set(this.data.map(d => d['Country of Operator/Owner']))];
+        let nn = [...new Set(this.data.map(d=>d['Purpose']))];
+        console.log(nn)
+
+        let CountrySelect = d3.select('#Country');
+        let PurposeSelect = d3.select('#Use');
+        CountrySelect
+        .selectAll('option')
+        .data([...new Set(this.data.map(d => d['Country of Operator/Owner'] === '' ? 'All' : d['Country of Operator/Owner']))].sort())
+        .join('option')
+        .text(d=> d);
+
+        PurposeSelect
+        .selectAll('option')
+        .data([...new Set(this.data.map(d => d['Purpose'] === '' ? 'All' : d['Purpose']))].sort())
+        .join('option')
+        .text(d=> d);
+    }
+
+    update(event) {
+        console.log(event);
+        /*
+            Work this out so it can filter multiple selections together
+        */
+        // let country = d3.select('#Country').property('value');
+        // let purpose = d3.select('#Use').property('value');
+        let filter = d3.select(`#${event.path[0].__data__.id}`).property('value');
+
+        // if(purpose === '') {
+        //     purpose === 'All';
+        // }
+        // if(purpose === 'All') {
+        //     // Old code
+        //     // globalState.group = [];
+        //     globalState.group = globalState.satelliteData;
+        // }
+        // else {
+        //     // Old code
+        //     // globalState.group = globalState.satelliteData.filter(d => d['Purpose'] === purpose);
+        //     globalState.group = globalState.group.filter(d => d['Purpose'] === purpose);
+        // }
+
+        if(filter === '') {
+            filter = 'All';
+        }
+        //console.log(table);
+        console.log(filter);
+
+
+        if(filter === 'All') {
+            //console.log(table.global_state);
+
+            // Old code
+            // globalState.group = [];
+
+            globalState.group = [];
+        }
+        else {
+            //console.log(table);
+            // Old code
+            // globalState.group = globalState.satelliteData.filter(d => d['Country of Operation/Owner'] === country);
+            globalState.group = globalState.satelliteData.filter(d => d[`${event.path[1].__data__.key}`] === filter);
+        }
+        updateAllGroup();
     }
     
 }
