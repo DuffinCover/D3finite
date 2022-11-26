@@ -122,7 +122,10 @@ class SatelliteTable{
                 }
                 this.global_state.selection.push(d['Name of Satellite, Alternate Names']);
                 updateAllSelection();
-            }});
+            }
+        });
+
+
 
         // Stores individual cell selections
         let cellSelect = rowSelection.selectAll('td')
@@ -318,6 +321,9 @@ class SatelliteTable{
                 return 0;
             }
         );
+
+        this.global_state.satelliteData = this.data;
+        updateSort();
     }
 
     updateGroup() {

@@ -38,6 +38,15 @@ stroke-opacity: 0.5;
 	margin-left:-5px;
 }
 
+.scrollable2 {
+    height: 600px;
+    width: 1000px;
+    overflow-y: auto;
+    float: left;
+    position: relative;
+    /*margin-left: -5px;*/
+}
+
 .unselectedTable {
     background-color: bisque;
     text-align: center;
