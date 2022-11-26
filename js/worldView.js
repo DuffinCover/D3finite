@@ -348,6 +348,12 @@ class Worldview {
   }
 
   updateGroup(){
-
+    if(this.globalState.group.length == 0){
+      this.redraw(this.sats)
+    }
+    else{
+      this.redraw(this.globalState.group)
+    }
+    
   }
 }
