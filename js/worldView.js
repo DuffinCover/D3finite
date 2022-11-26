@@ -4,8 +4,8 @@ class Worldview {
 
   constructor(global_state) {
     this.globalState = global_state;
-    this.sats = global_state.satelliteData;
-    this.sampleSats = global_state.sampleSatellites;
+    this.sats = global_state.originalData;
+    this.sampleSats = global_state.satelliteData;
 
     // basic svg params
     this.width = 500;
@@ -244,7 +244,7 @@ class Worldview {
       .on('onchange', val => {
         d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
         let cuttoffYear = d3.timeFormat('%Y')(val).slice(-4)
-        let selectedYear = satellites.filter(d=>{
+        let selectedYear = this.globalState.satelliteData.filter(d=>{
           let thisLaunch = d["Date of Launch"].slice(-2)
           if(thisLaunch <=22){
             thisLaunch = "20" + thisLaunch
@@ -255,13 +255,8 @@ class Worldview {
           return parseInt(thisLaunch) <= parseInt(cuttoffYear)
         }
         )
-        let svg = d3.select("#satellites")
-        .selectAll("circle")
-        .attr("opacity", 0.2)
-
 
         this.redraw(selectedYear) 
-        // this.changeYearFocus(selectedYear)
 
       });
   
@@ -283,19 +278,23 @@ class Worldview {
     .append("div")
     .attr("id", "slider-sample");
 
-    let dataTime = [0, 25, 50, 75, 100];
+    let dataTime = [.05, .1, .2, .5, 1];
 
   
     let sliderTime = d3.sliderRight()
       .min(d3.min(dataTime))
       .max(d3.max(dataTime))
-      .step(25)
+      .step(10)
       .width(50)
       .height(400)
-      // .tickFormat(d3.timeFormat('%y'))
+      .tickFormat(d3.format(".0%"))
       .tickValues(dataTime)
       .ticks(10)
-      .default(25)
+      .default(.1)
+      .marks(dataTime)
+      .on("onchange", (val)=>{
+        updateSample(val)
+      })
 
   
     let gTime = d3
@@ -391,5 +390,9 @@ class Worldview {
       this.redraw(this.globalState.group)
     }
     
+  }
+
+  newSampleUpdate(){
+    this.redraw(this.globalState.satelliteData)
   }
 }
