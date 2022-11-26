@@ -10,7 +10,7 @@ class SatelliteTable{
         let data = global_state.satelliteData;
         this.global_state = global_state;
         this.selectedRows = [];
-        this.originalData = data;
+        this.originalData = globalState.satelliteData;
         this.data = data;
         this.rowSvgWidth = 300;
         this.rowSvgHeight = 50;
