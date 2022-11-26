@@ -7,7 +7,7 @@ class SatelliteTable{
      */
     constructor(global_state) {
         console.log(globalState);
-        let data = global_state.sampleSatellites;
+        let data = global_state.satelliteData;
         this.global_state = global_state;
         this.selectedRows = [];
         this.originalData = globalState.satelliteData;
