@@ -55,11 +55,14 @@ class Worldview {
     satDistance.append("g").attr("id", 'y')
     satDistance.append("g").attr("id", "satellites")
     
+    
+    
     this.addGlobe(scale_data);
     this.drawAxis(worldviewsvg);
-    
-    this.placeSatellites(scale_data)
+    this.addSampleSlider();
+    this.placeSatellites(scale_data);
     this.addYearSlider(scale_data);
+    
   }
 
   // potential cool visualizaion? http://bl.ocks.org/emeeks/068ef3e4106e155467a3
@@ -273,6 +276,39 @@ class Worldview {
     gTime.call(sliderTime);
   
     d3.select('p#value-time').text(d3.timeFormat('%Y')(sliderTime.value()));
+  }
+
+  addSampleSlider(){
+    d3.select("#worldview")
+    .append("div")
+    .attr("id", "slider-sample");
+
+    let dataTime = [0, 25, 50, 75, 100];
+
+  
+    let sliderTime = d3.sliderRight()
+      .min(d3.min(dataTime))
+      .max(d3.max(dataTime))
+      .step(25)
+      .width(50)
+      .height(400)
+      // .tickFormat(d3.timeFormat('%y'))
+      .tickValues(dataTime)
+      .ticks(10)
+      .default(25)
+
+  
+    let gTime = d3
+      .select('div#slider-sample')
+      .append('svg')
+      .attr('width', 100)
+      .attr('height', 500)
+      .append('g')
+      .attr('transform', 'translate(10,30)');
+  
+    gTime.call(sliderTime);
+
+
   }
 
   convertToLaunchDate(satelliteSelection){
