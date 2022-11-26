@@ -4,26 +4,26 @@
     grid-gap: 40px;
 }
 .LEO{
-color:#bb3ad3;
-fill:blue;
+color:#684dda;
+fill:#684dda;
 stroke: black;
 stroke-opacity: 0.5;
 }
 .GEO{
-color:green;
-fill:green;
+color:#da3182;
+fill:#da3182;
 stroke: black;
 stroke-opacity: 0.5;
 }
 .Elliptical{
-color:purple;
-fill:purple;
+color:#69809e;
+fill:#69809e;
 stroke: black;
 stroke-opacity: 0.5;
 }
 .MEO{
-color:yellow;
-fill: yellow;
+color:#95c5ac;
+fill: #95c5ac;
 stroke: black;
 stroke-opacity: 0.5; 
 }
@@ -47,13 +47,13 @@ stroke-opacity: 0.5;
 }
 
 .unselectedTable {
-    background-color: bisque;
+    background-color: #bee4d0;
     text-align: center;
     border-collapse: collapse;
 }
 
 .selectedTable {
-    background-color: burlywood;
+    background-color: #69809e;
     text-align: center;
     border: 3px solid black;
 }
@@ -65,8 +65,8 @@ table, th, td {
 }
 
 .colHead {
-    background-color: gray;
-    color: chartreuse;
+    background-color: #5033db;
+    color: white;
     text-align: center;
 }
 #slider-sample{

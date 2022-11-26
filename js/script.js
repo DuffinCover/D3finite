@@ -1,6 +1,7 @@
 
 
 const globalState = {
+    originalData: null,
     satelliteData: null,
     sampleSatellites: null,
     table: null,
@@ -16,31 +17,32 @@ const globalState = {
     ]
 };
 
+
+
 async function loadData() {
     const satData = await d3.json('data/satellites.json');
     // const satSampleData =  await d3.json("data/satellites_sample.json")
-    let sampleSize = 200
-    let sampleSet = new Set()
-    for( let i = 0; i < sampleSize; i++){
-      sampleSet.add(satData[Math.floor(Math.random() * sampleSize)])
-    }
-
-    const satSampleData = [...sampleSet]
-    return [satData, satSampleData];
+    return satData;
 }
 
 loadData().then(data => {
     console.log(data);
 
-    globalState.satelliteData = data[0]; 
-    globalState.sampleSatellites = data[1];
+    globalState.originalData = data; 
+    globalState.satelliteData = takeSample(200);
     globalState.table = new SatelliteTable(globalState);
     globalState.worldView = new Worldview(globalState);
     globalState.lineChart = new VisualSatelliteChart(globalState);
 
 });
 
-
+function takeSample(sampleSize){
+    let sampleSet = new Set()
+    for( let i = 0; i < sampleSize; i++){
+      sampleSet.add(globalState.originalData[Math.floor(Math.random() * sampleSize)])
+    }
+    return [...sampleSet]
+}
 
 function updateAllGroup() {
     globalState.table.updateGroup();
@@ -57,3 +59,9 @@ function updateAllSelection() {
 function updateSort() {
     globalState.lineChart.update();
 }
+
+function updateSample(percent){
+    globalState.satelliteData = takeSample(globalState.originalData.length*percent)
+    globalState.lineChart.update()
+    globalState.worldView.newSampleUpdate()
+};
