@@ -5,15 +5,7 @@ class Worldview {
   constructor(global_state) {
     this.globalState = global_state;
     this.sats = global_state.satelliteData;
-    this.sampleSats = ''//global_state.sampleSatellites;
-
-    //take a smaller sample size of our data to initally display
-    let sampleSize = 200
-    let sampleArray = []
-    for( let i = 0; i < sampleSize; i++){
-      sampleArray.push(this.sats[Math.floor(Math.random() * sampleSize)])
-    }
-    this.sampleSats = sampleArray
+    this.sampleSats = global_state.sampleSatellites;
 
     // basic svg params
     this.width = 500;
@@ -41,11 +33,6 @@ class Worldview {
       ])
       .range([this.innerRadius, this.outerRadius + 10]);
 
-    let launchDensityScale = d3
-      .scaleLinear()
-      // need actual json data to do stuff here, ill plan on something clever here.
-      // .domain(this.satellites, (d) => console.log(d))
-      .range(["#fff2cd", "#990000"]);
     
     let worldviewsvg = d3
     .select("#worldview")
@@ -318,7 +305,6 @@ class Worldview {
   }
 
 
-
   redraw(satellites){
     this.y
     .domain([
@@ -338,5 +324,9 @@ class Worldview {
     .data(satellites)
       .selectAll("circle")
       .attr("opacity", 0.8)
+  }
+
+  updateGroup(){
+
   }
 }

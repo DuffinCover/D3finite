@@ -12,8 +12,14 @@ const globalState = {
 
 async function loadData() {
     const satData = await d3.json('data/satellites.json');
-    const satSampleData =  await d3.json("data/satellites_sample.json")
+    // const satSampleData =  await d3.json("data/satellites_sample.json")
+    let sampleSize = 200
+    let sampleSet = new Set()
+    for( let i = 0; i < sampleSize; i++){
+      sampleSet.add(satData[Math.floor(Math.random() * sampleSize)])
+    }
 
+    const satSampleData = [...sampleSet]
     return [satData, satSampleData];
 }
 
@@ -30,7 +36,7 @@ loadData().then(data => {
 
 function updateAllGroup() {
     globalState.table.updateGroup();
-    // globalState.worldView.updateGroup();
+    globalState.worldView.updateGroup();
     // globalState.lineChart.updateGroup();
 }
 
