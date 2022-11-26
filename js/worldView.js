@@ -55,9 +55,9 @@ class Worldview {
     satDistance.append("g").attr("id", 'y')
     satDistance.append("g").attr("id", "satellites")
     
-
-    this.drawAxis(worldviewsvg);
     this.addGlobe(scale_data);
+    this.drawAxis(worldviewsvg);
+    
     this.placeSatellites(scale_data)
     this.addYearSlider(scale_data);
   }
@@ -200,9 +200,25 @@ class Worldview {
 
     d3.select("#worldview")
     .append("div")
+    .attr("id", "helper-text")
     .append("p")
-    .attr("id", "value-time");
+    .html("Adjust the slider to see how many satellites were launched up through the selected year.");
+
+
+    d3.select("#helper-text")
+    .append("p")
+    .html("Click the Earth to Reset the satellites.");
+
+
+    // d3.select("#helper-text")
+    // .append("p")
+    // .html("Select by Launch Year");
     
+  
+    d3.select("#worldview")
+    .append("div")
+    .append("p")
+    .attr("id", "value-time");  
     
     d3.select("#worldview")
     .append("div")
@@ -221,7 +237,7 @@ class Worldview {
       .tickFormat(d3.timeFormat('%y'))
       .tickValues(dataTime)
       .ticks(10)
-      .default(new Date(2022, 0, 1))
+      .default(new Date(2022, 1, 0))
       .on('onchange', val => {
         d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
         let cuttoffYear = d3.timeFormat('%Y')(val).slice(-4)
@@ -294,13 +310,18 @@ class Worldview {
 
     let globe = d3
       .select("#globe")
+      // .append("image")
+      // .attr('src', 'D3finite/assets/586-5863993_planet-earth-png-nasa-seeing-earth-from-space.png')
+      // .attr('width', 200)
+      // .attr('height', 200)
+
       .append("circle")
       .attr("r", this.innerRadius - 10)
-      .attr("cx", this.height / 2)
-      .attr("cy", this.width / 2)
+      .attr("x", this.height / 2)
+      .attr("y", this.width / 2)
       .attr("fill", "teal")
-      .attr("transform", "translate(-250, -250)")
-      .text("Click here to reset")
+      // .attr("transform", "translate(-250, -250)")
+      .html("Click here to reset")
       .on("click",(event, d) => this.redraw(satellites));
   }
 
