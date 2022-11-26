@@ -1,6 +1,5 @@
 .grid-container {
     display: grid;
-    justify-content: space-evenly;
     grid-template-columns: 1fr 1fr;
     grid-gap: 40px;
 }
