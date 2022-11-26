@@ -3,7 +3,7 @@ class VisualSatelliteChart{
     //-MINE!
 
     constructor(global_state) {
-        let data = global_state.satelliteData;
+        let data = global_state.sampleSatellites;
 
         this.global_state = global_state;
 
