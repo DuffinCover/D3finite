@@ -6,7 +6,6 @@ class Worldview {
     this.globalState = global_state;
     this.sats = global_state.satelliteData;
     this.sampleSats = ''//global_state.sampleSatellites;
-    this.satAngles =''
 
     //take a smaller sample size of our data to initally display
     let sampleSize = 200
@@ -25,26 +24,9 @@ class Worldview {
     this.innerRadius = this.width / 5;
     this.outerRadius = this.width / 2 - this.margin;
 
-
-    let angles = this.sats.map((d) => Math.random() * Math.PI * 2);
-    // console.log(angles)
-    let angleSets = {};
-    for (let i = 0; i < this.sats.length; i++){
-    //   // console.log(this.sats[i])
-    //   // console.log(angles[i])
-    let cosparName = this.sats[i]["COSPAR Number"]
-    // console.log(cosparName)
-      angleSets[cosparName] = angles[i];
-    }
-    // console.log(Object.keys(angleSets).length);
-    this.satAngles = angleSets;
-
-
-
-
     let scale_data = this.sampleSats;
 
-    // d3.filter(scale_data)
+
 
     this.x = d3
       .scaleUtc()
@@ -88,7 +70,7 @@ class Worldview {
     
 
     this.drawAxis(worldviewsvg);
-    this.addGlobe();
+    this.addGlobe(scale_data);
     this.placeSatellites(scale_data)
     this.addYearSlider(scale_data);
   }
@@ -195,19 +177,21 @@ class Worldview {
   }
 
   placeSatellites(satellites) {
-
-
     // http://bl.ocks.org/eesur/2ac63b3d0ece6682a42c0f9d3a6bfabc
     let svg = d3.select("#satellites");
-    // let angles = satellites.map((d) => Math.random() * Math.PI * 2);
+    let angles = satellites.map((d) => Math.random() * Math.PI * 2);
     let purpose = new Set();
     svg
       .selectAll("circle")
       .data(satellites)
       .join("circle")
       .attr("r", 5)
+      .attr("opacity", 0.5)
       // .attr("class", (d)=> purpose.add(d["Class of Orbit"]))
       .attr("class", (d) => d["Class of Orbit"])
+      .on("mouseover", (event, d)=> {
+        console.log(d)
+      })
       .on("click", (event, d) => {
         let satSubset = satellites.filter(n=>n["Class of Orbit"] === d["Class of Orbit"])
         this.redraw(satSubset);
@@ -215,10 +199,10 @@ class Worldview {
       .transition()
       .duration(1000)
       .attr("cx", (d, i) => {
-        return Math.cos(this.satAngles[d["COSPAR Number"]]) * this.y(d["Perigee (km)"]);
+        return Math.cos(angles[i]) * this.y(d["Perigee (km)"]);
       })
       .attr("cy", (d, i) => {
-        return Math.sin(this.satAngles[d["COSPAR Number"]]) * this.y(d["Perigee (km)"]);
+        return Math.sin(angles[i]) * this.y(d["Perigee (km)"]);
       });
 
     // console.log(purpose)
@@ -226,7 +210,7 @@ class Worldview {
 
   addYearSlider(satellites){
     // Found slider code here: https://bl.ocks.org/johnwalley/raw/e1d256b81e51da68f7feb632a53c3518/?raw=true
-    // console.log(satellites)
+
     d3.select("#worldview")
     .append("div")
     .append("p")
@@ -240,9 +224,7 @@ class Worldview {
     
 
     let dataTime = this.getLaunchDates(satellites);
-    // let dataTime = d3.range(0, 10).map(function(d) {
-    //   return new Date(1995 + d, 10, 3);
-    // });
+
   
     let sliderTime = d3.sliderBottom()
       .min(d3.min(dataTime))
@@ -252,7 +234,7 @@ class Worldview {
       .tickFormat(d3.timeFormat('%y'))
       .tickValues(dataTime)
       .ticks(10)
-      .default(new Date(1998, 0, 1))
+      .default(new Date(2022, 0, 1))
       .on('onchange', val => {
         d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
         let cuttoffYear = d3.timeFormat('%Y')(val).slice(-4)
@@ -267,7 +249,13 @@ class Worldview {
           return parseInt(thisLaunch) <= parseInt(cuttoffYear)
         }
         )
-        this.redraw(selectedYear)
+        let svg = d3.select("#satellites")
+        .selectAll("circle")
+        .attr("opacity", 0.2)
+
+
+        this.redraw(selectedYear) 
+        // this.changeYearFocus(selectedYear)
 
       });
   
@@ -314,7 +302,7 @@ class Worldview {
    return launchData
   }
 
-  addGlobe() {
+  addGlobe(satellites) {
     let svg = d3.select("#satDistance").append("g").attr("id", "globe");
 
     let globe = d3
@@ -325,14 +313,11 @@ class Worldview {
       .attr("cy", this.width / 2)
       .attr("fill", "teal")
       .attr("transform", "translate(-250, -250)")
-      .on("click",(event, d) => this.redraw(this.sats));
+      .text("Click here to reset")
+      .on("click",(event, d) => this.redraw(satellites));
   }
-  //https://stackoverflow.com/questions/9035627/elegant-method-to-generate-array-of-random-dates-within-two-dates
-  randomDate(start, end) {
-    return new Date(
-      start.getTime() + Math.random() * (end.getTime() - start.getTime())
-    );
-  }
+
+
 
   redraw(satellites){
     this.y
@@ -345,5 +330,13 @@ class Worldview {
     let svg = d3.select("#satDistance")
     this.drawAxis(svg);
     this.placeSatellites(satellites);
+  }
+
+  changeYearFocus(satellites){
+    let svg = d3.select("#satellites")
+    svg
+    .data(satellites)
+      .selectAll("circle")
+      .attr("opacity", 0.8)
   }
 }
