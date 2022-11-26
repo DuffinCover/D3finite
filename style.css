@@ -69,3 +69,6 @@ table, th, td {
     color: chartreuse;
     text-align: center;
 }
+#slider-sample{
+    float: right;
+}
