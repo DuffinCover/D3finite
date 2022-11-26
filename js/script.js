@@ -59,7 +59,7 @@ function updateAllSelection() {
 }
 
 function updateSort() {
-    globalState.lineChart.update();
+    //globalState.lineChart.update();
 }
 
 function updateSample(percent){
