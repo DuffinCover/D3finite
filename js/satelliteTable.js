@@ -220,6 +220,10 @@ class SatelliteTable{
          * DATA TO ADD
          * ********************************************
          * 
+         * Dry Mass
+         * Period
+         * Inclination
+         * Date of Launch
          * 
          */
         let name = {
@@ -359,6 +363,7 @@ class SatelliteTable{
         console.log(event);
         /*
             Work this out so it can filter multiple selections together
+            Need to have filters for Orbit and Launch Site?
         */
         // let country = d3.select('#Country').property('value');
         // let purpose = d3.select('#Use').property('value');
