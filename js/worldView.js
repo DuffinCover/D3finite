@@ -252,6 +252,7 @@ class Worldview {
   }
 
   fliterByYear() {
+    // if(this.globalState.group.length === 0){
     let selectedYear = this.globalState.satelliteData.filter((d) => {
       let thisLaunch = d["Date of Launch"].slice(-2);
       if (thisLaunch <= 22) {
@@ -263,6 +264,18 @@ class Worldview {
     });
 
     this.globalState.group = selectedYear;
+  // }
+  // else{
+  //   this.globalState.group = this.globalState.group.filter((d) => {
+  //     let thisLaunch = d["Date of Launch"].slice(-2);
+  //     if (thisLaunch <= 22) {
+  //       thisLaunch = "20" + thisLaunch;
+  //     } else {
+  //       thisLaunch = "19" + thisLaunch;
+  //     }
+  //     return parseInt(thisLaunch) <= parseInt(this.globalState.cuttoffYear);
+  //   });
+  // }
   }
 
   addSampleSlider() {
