@@ -6,7 +6,7 @@ class SatelliteTable{
      * @param {*} data JSON object of data
      */
     constructor(global_state) {
-        console.log(globalState);
+        //console.log(globalState);
         let data = global_state.satelliteData;
         this.global_state = global_state;
         this.selectedRows = [];
@@ -126,11 +126,11 @@ class SatelliteTable{
      */
     buildTable() {
         // Sets data based on global state grouping
-        if(this.global_state.group.length > 0) {
-            this.data = this.global_state.group;
+        if(globalState.group.length > 0) {
+            this.data = globalState.group;
         }
         else {
-            this.data = this.originalData;
+            this.data = globalState.originalData;
         }
         // Stores table body selection and appends table rows
         let rowSelection = d3.select('#tableBody')
@@ -142,14 +142,14 @@ class SatelliteTable{
         // Adding even handler to each row ---- Should change background when selected
         rowSelection.on('click', (event, d) => {
             // If the row is not in the selected rows, add it, else remove it
-            if (this.global_state.selection.includes(d['Name of Satellite, Alternate Names'])) {
-                this.global_state.selection = this.global_state.selection.filter((el) => el !== d['Name of Satellite, Alternate Names']);
+            if (globalState.selection.includes(d['Name of Satellite, Alternate Names'])) {
+                globalState.selection = globalState.selection.filter((el) => el !== d['Name of Satellite, Alternate Names']);
                 updateAllSelection();
             } else {
-                if(this.global_state.selection.length > 0) {
-                    this.global_state.selection = [];
+                if(globalState.selection.length > 0) {
+                    globalState.selection = [];
                 }
-                this.global_state.selection.push(d['Name of Satellite, Alternate Names']);
+                globalState.selection.push(d['Name of Satellite, Alternate Names']);
                 updateAllSelection();
             }
         });
@@ -184,13 +184,18 @@ class SatelliteTable{
      */
     attachSortHandlers() 
     {
+
+        /**
+         * ***************************
+         * FIX THIS
+         * ***************************
+         */
+        d3.select('#FilterReset').on('click', event => {console.log(globalState.originalData);
+            console.log(globalState.satelliteData); 
+            globalState.satelliteData = globalState.originalData; 
+            globalState.group = [];
+            console.log(globalState.satelliteData); updateAllGroup()});
         
-        // d3.select('#groupButtons')
-        // .selectAll('td')
-        // .data(this.headerData)
-        // .attr('id', d => d.key)
-        // .append('select')
-        // .attr('id', d => d.id);
 
         const dropData = this.dropdownData;
         for(let index in this.headerData) {
@@ -327,8 +332,8 @@ class SatelliteTable{
         .join('tr')
         .classed('selectedTable', true);
 
-        rowSelection.classed('selectedTable', (d) => this.global_state.selection.includes(d['Name of Satellite, Alternate Names']));
-        rowSelection.classed('unselectedTable', (d) => !this.global_state.selection.includes(d['Name of Satellite, Alternate Names']))
+        rowSelection.classed('selectedTable', (d) => globalState.selection.includes(d['Name of Satellite, Alternate Names']));
+        rowSelection.classed('unselectedTable', (d) => !globalState.selection.includes(d['Name of Satellite, Alternate Names']))
     }
 
     /**
@@ -367,11 +372,12 @@ class SatelliteTable{
             }
         );
 
-        this.global_state.satelliteData = this.data;
+        globalState.satelliteData = this.data;
         updateSort();
     }
 
     updateGroup() {
+        this.data = globalState.group;
         this.buildTable();
         this.updateRows();
     }
@@ -386,7 +392,7 @@ class SatelliteTable{
     addFilters() {
         let newData = [... new Set(this.data.map(d => d['Country of Operator/Owner']))];
         let nn = [...new Set(this.data.map(d=>d['Purpose']))];
-        console.log(nn)
+        //console.log(nn)
 
         let CountrySelect = d3.select('#Country');
         let PurposeSelect = d3.select('#Use');
@@ -444,9 +450,10 @@ class SatelliteTable{
         }
         else {
             console.log(event.path[1].id)
-            globalState.group = globalState.satelliteData.filter(d => d[`${event.path[1].id}`] === filter);
-            console.log(globalState.group);
-            console.log(globalState);
+            globalState.group = this.data.filter(d => d[`${event.path[1].id}`] === filter);
+            // console.log(this.data);
+            // console.log(globalState.group);
+            // console.log(globalState);
         }
         updateAllGroup();
     }

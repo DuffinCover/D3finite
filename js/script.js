@@ -27,7 +27,7 @@ async function loadData() {
 }
 
 loadData().then(data => {
-    console.log(data);
+    //console.log(data);
 
     globalState.originalData = data; 
     globalState.satelliteData = takeSample(200);
@@ -48,12 +48,12 @@ function takeSample(sampleSize){
 
 function updateAllGroup() {
     globalState.table.updateGroup();
-   globalState.worldView.updateGroup();
+    globalState.worldView.updateGroup();
     globalState.lineChart.update();
 }
 
 function updateAllSelection() {
-    console.log("Updating Selection",globalState.selection);
+    //console.log("Updating Selection",globalState.selection);
     globalState.table.updateSelection();
     globalState.lineChart.update();
 }
