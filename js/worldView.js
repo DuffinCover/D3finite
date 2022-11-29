@@ -59,6 +59,7 @@ class Worldview {
     this.addSampleSlider();
     this.placeSatellites(scale_data);
     this.addYearSlider(scale_data);
+    this.orbitSelector();
   }
 
 
@@ -176,7 +177,7 @@ class Worldview {
       .attr("opacity", 0.5)
       .attr("class", (d) => d["Class of Orbit"])
       .on("mouseover", (event, d) => {
-        console.log(d);
+        console.log(d["Class of Orbit"]);
       })
       // if we have no other filters applied, this sets the filter. Otherwise it additionally filters
       // our already selected Data. 
@@ -201,6 +202,10 @@ class Worldview {
       .attr("cy", (d, i) => {
         return Math.sin(angles[i]) * this.y(d["Perigee (km)"]);
       });
+  }
+
+  orbitSelector(){
+
   }
   /**Creates the slider under the Radial chart for launch year. Shows all satellites that were launched on the selected year or earlier 
    * sourced from: https://bl.ocks.org/johnwalley/raw/e1d256b81e51da68f7feb632a53c3518/?raw=true
@@ -305,6 +310,39 @@ class Worldview {
 
     gTime.call(sliderTime);
   }
+
+  addRadiusSlider(){
+    d3.select("#worldview").append("div").attr("id", "slider-radius");
+
+    let dataTime = [500, 1000, 5000, 10000];
+
+    let sliderTime = d3
+      .sliderRight()
+      .min(d3.min(dataTime))
+      .max(d3.max(dataTime))
+      .step(10)
+      .width(50)
+      .height(400)
+      .tickFormat(d3.format(".0%"))
+      .tickValues(dataTime)
+      .ticks(10)
+      .default(0.1)
+      .marks(dataTime)
+      .on("onchange", (val) => {
+        updateSample(val);
+      });
+
+    let gTime = d3
+      .select("div#slider-sample")
+      .append("svg")
+      .attr("width", 100)
+      .attr("height", 500)
+      .append("g")
+      .attr("transform", "translate(10,30)");
+
+    gTime.call(sliderTime);
+  }
+
   /**Helper method to generalize input launch dates into easier to quantify launch years */
   convertToLaunchDate(satelliteSelection) {
     let launchDate = satelliteSelection["Date of Launch"].slice(-2);
