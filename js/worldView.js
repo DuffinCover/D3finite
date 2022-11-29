@@ -14,6 +14,8 @@ class Worldview {
 
     // initial data choice for drawing the chart and determining scale sizes. 
     let scale_data = this.sampleSats;
+    this.innerRadius = this.width / 5;
+    this.outerRadius = this.width / 2 - this.margin;
 
     // scales for the radial chart
     this.x = d3
@@ -29,12 +31,8 @@ class Worldview {
       ])
       .range([this.innerRadius, this.outerRadius + 10]);
 
-
     
     // Parameters for and html elements of the radial chart. 
-    this.innerRadius = this.width / 5;
-    this.outerRadius = this.width / 2 - this.margin;
-
     let worldviewsvg = d3
       .select("#worldview")
       .append("svg")
