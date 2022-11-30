@@ -1,7 +1,5 @@
 // import { sliderBottom } from 'd3-simple-slider';
 class Worldview {
-
-
   constructor(global_state) {
     this.globalState = global_state;
     this.sats = global_state.originalData;
@@ -12,13 +10,10 @@ class Worldview {
     this.height = 500;
     this.margin = 20;
 
-
     this.innerRadius = this.width / 5;
     this.outerRadius = this.width / 2 - this.margin;
 
     let scale_data = this.sampleSats;
-
-
 
     this.x = d3
       .scaleUtc()
@@ -28,41 +23,36 @@ class Worldview {
     this.y = d3
       .scaleLinear()
       .domain([
-        d3.min(scale_data,  (d) => d["Perigee (km)"]),
+        d3.min(scale_data, (d) => d["Perigee (km)"]),
         d3.max(scale_data, (d) => d["Perigee (km)"]),
       ])
       .range([this.innerRadius, this.outerRadius + 10]);
 
-    
     let worldviewsvg = d3
-    .select("#worldview")
-    .append("svg")
-    .attr("id", "satDistance")
-    .attr("width", this.width)
-    .attr("height", this.height)
-    .attr("viewBox", [
-      -this.width / 2,
-      -this.height / 2,
-      this.width,
-      this.height,
-    ])
-    .attr("stroke-linejoin", "round")
-    .attr("stroke-linecap", "round");
-
+      .select("#worldview")
+      .append("svg")
+      .attr("id", "satDistance")
+      .attr("width", this.width)
+      .attr("height", this.height)
+      .attr("viewBox", [
+        -this.width / 2,
+        -this.height / 2,
+        this.width,
+        this.height,
+      ])
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round");
 
     let satDistance = d3.select("#satDistance");
-    satDistance.append("g").attr("id", 'x')
-    satDistance.append("g").attr("id", 'y')
-    satDistance.append("g").attr("id", "satellites")
-    
-    
-    
+    satDistance.append("g").attr("id", "x");
+    satDistance.append("g").attr("id", "y");
+    satDistance.append("g").attr("id", "satellites");
+
     this.addGlobe(scale_data);
     this.drawAxis(worldviewsvg);
     this.addSampleSlider();
     this.placeSatellites(scale_data);
     this.addYearSlider(scale_data);
-    
   }
 
   // potential cool visualizaion? http://bl.ocks.org/emeeks/068ef3e4106e155467a3
@@ -179,12 +169,21 @@ class Worldview {
       .attr("opacity", 0.5)
       // .attr("class", (d)=> purpose.add(d["Class of Orbit"]))
       .attr("class", (d) => d["Class of Orbit"])
-      .on("mouseover", (event, d)=> {
-        console.log(d)
+      .on("mouseover", (event, d) => {
+        console.log(d);
       })
       .on("click", (event, d) => {
-        let satSubset = this.globalState.satelliteData.filter(n=>n["Class of Orbit"] === d["Class of Orbit"])
-        this.globalState.group = satSubset;
+        if(this.globalState.group.length === 0){
+          let satSubset = this.globalState.satelliteData.filter(
+            (n) => n["Class of Orbit"] === d["Class of Orbit"]
+          );
+          this.globalState.group = satSubset;
+        }
+        else{
+          this.globalState.group = this.globalState.group.filter(
+            (n) => n["Class of Orbit"] === d["Class of Orbit"]
+          );
+        }
         updateAllGroup();
       })
       .transition()
@@ -196,99 +195,96 @@ class Worldview {
         return Math.sin(angles[i]) * this.y(d["Perigee (km)"]);
       });
 
-    // console.log(purpose)
+
   }
 
-  addYearSlider(satellites){
+  addYearSlider(satellites) {
     // Found slider code here: https://bl.ocks.org/johnwalley/raw/e1d256b81e51da68f7feb632a53c3518/?raw=true
 
     d3.select("#worldview")
-    .append("div")
-    .attr("id", "helper-text")
-    .append("p")
-    .html("Adjust the slider to see how many satellites were launched up through the selected year.");
-
+      .append("div")
+      .attr("id", "helper-text")
+      .append("p")
+      .html(
+        "Adjust the slider to see how many satellites were launched up through the selected year."
+      );
 
     d3.select("#helper-text")
-    .append("p")
-    .html("Click the Earth to Reset the satellites.");
+      .append("p")
+      .html("Click the Earth to Reset the satellites.");
 
 
-    // d3.select("#helper-text")
-    // .append("p")
-    // .html("Select by Launch Year");
-    
-  
-    d3.select("#worldview")
-    .append("div")
-    .append("p")
-    .attr("id", "value-time");  
-    
-    d3.select("#worldview")
-    .append("div")
-    .attr("id", "slider-time");
+    d3.select("#worldview").append("div").append("p").attr("id", "value-time");
 
-    
+    d3.select("#worldview").append("div").attr("id", "slider-time");
 
     let dataTime = this.getLaunchDates(satellites);
 
-  
-    let sliderTime = d3.sliderBottom()
+    let sliderTime = d3
+      .sliderBottom()
       .min(d3.min(dataTime))
       .max(d3.max(dataTime))
       .step(1000 * 60 * 60 * 24 * 365)
       .width(450)
-      .tickFormat(d3.timeFormat('%y'))
+      .tickFormat(d3.timeFormat("%y"))
       .tickValues(dataTime)
       .ticks(10)
       .default(new Date(2022, 1, 0))
-      .on('onchange', val => {
-        d3.select('p#value-time').text(d3.timeFormat('%Y')(val));
-        let cuttoffYear = d3.timeFormat('%Y')(val).slice(-4)
+      .on("onchange", (val) => {
+        d3.select("p#value-time").text(d3.timeFormat("%Y")(val));
+        let cuttoffYear = d3.timeFormat("%Y")(val).slice(-4);
         this.globalState.cuttoffYear = cuttoffYear;
         this.fliterByYear();
         updateAllGroup();
-
       });
-  
+
     let gTime = d3
-      .select('div#slider-time')
-      .append('svg')
-      .attr('width', 500)
-      .attr('height', 100)
-      .append('g')
-      .attr('transform', 'translate(30,30)');
-  
+      .select("div#slider-time")
+      .append("svg")
+      .attr("width", 500)
+      .attr("height", 100)
+      .append("g")
+      .attr("transform", "translate(30,30)");
+
     gTime.call(sliderTime);
-  
-    d3.select('p#value-time').text(d3.timeFormat('%Y')(sliderTime.value()));
+
+    d3.select("p#value-time").text(d3.timeFormat("%Y")(sliderTime.value()));
   }
 
-  fliterByYear(){
-    let selectedYear = this.globalState.satelliteData.filter(d=>{
-      let thisLaunch = d["Date of Launch"].slice(-2)
-      if(thisLaunch <=22){
-        thisLaunch = "20" + thisLaunch
+  fliterByYear() {
+    // if(this.globalState.group.length === 0){
+    let selectedYear = this.globalState.satelliteData.filter((d) => {
+      let thisLaunch = d["Date of Launch"].slice(-2);
+      if (thisLaunch <= 22) {
+        thisLaunch = "20" + thisLaunch;
+      } else {
+        thisLaunch = "19" + thisLaunch;
       }
-      else{
-        thisLaunch = "19" + thisLaunch
-      }
-      return parseInt(thisLaunch) <= parseInt(this.globalState.cuttoffYear)
-    }
-    )
+      return parseInt(thisLaunch) <= parseInt(this.globalState.cuttoffYear);
+    });
 
     this.globalState.group = selectedYear;
+  // }
+  // else{
+  //   this.globalState.group = this.globalState.group.filter((d) => {
+  //     let thisLaunch = d["Date of Launch"].slice(-2);
+  //     if (thisLaunch <= 22) {
+  //       thisLaunch = "20" + thisLaunch;
+  //     } else {
+  //       thisLaunch = "19" + thisLaunch;
+  //     }
+  //     return parseInt(thisLaunch) <= parseInt(this.globalState.cuttoffYear);
+  //   });
+  // }
   }
 
-  addSampleSlider(){
-    d3.select("#worldview")
-    .append("div")
-    .attr("id", "slider-sample");
+  addSampleSlider() {
+    d3.select("#worldview").append("div").attr("id", "slider-sample");
 
-    let dataTime = [.05, .1, .2, .5, 1];
+    let dataTime = [0.05, 0.1, 0.2, 0.5, 1];
 
-  
-    let sliderTime = d3.sliderRight()
+    let sliderTime = d3
+      .sliderRight()
       .min(d3.min(dataTime))
       .max(d3.max(dataTime))
       .step(10)
@@ -297,54 +293,48 @@ class Worldview {
       .tickFormat(d3.format(".0%"))
       .tickValues(dataTime)
       .ticks(10)
-      .default(.1)
+      .default(0.1)
       .marks(dataTime)
-      .on("onchange", (val)=>{
-        updateSample(val)
-      })
+      .on("onchange", (val) => {
+        updateSample(val);
+      });
 
-  
     let gTime = d3
-      .select('div#slider-sample')
-      .append('svg')
-      .attr('width', 100)
-      .attr('height', 500)
-      .append('g')
-      .attr('transform', 'translate(10,30)');
-  
+      .select("div#slider-sample")
+      .append("svg")
+      .attr("width", 100)
+      .attr("height", 500)
+      .append("g")
+      .attr("transform", "translate(10,30)");
+
     gTime.call(sliderTime);
-
-
   }
 
-  convertToLaunchDate(satelliteSelection){
+  convertToLaunchDate(satelliteSelection) {
     let launchDate = satelliteSelection["Date of Launch"].slice(-2);
-    if(parseInt(launchDate) <= 22){
+    if (parseInt(launchDate) <= 22) {
       launchDate = "20" + launchDate;
-    }
-    else{
+    } else {
       launchDate = "19" + launchDate;
     }
     return new Date(launchDate, 1, 0);
   }
 
-  getLaunchDates(satellites){
+  getLaunchDates(satellites) {
     let cuttoff = new Date(1990, 0, 1);
     let launchYears = new Set();
-    for(let i = 0; i < satellites.length; i++){
-      let launchDate = this.convertToLaunchDate(satellites[i])
-        
-      if(launchDate < cuttoff){
+    for (let i = 0; i < satellites.length; i++) {
+      let launchDate = this.convertToLaunchDate(satellites[i]);
+
+      if (launchDate < cuttoff) {
         continue;
-      }
-      else{
+      } else {
         launchYears.add(launchDate);
       }
-           
     }
     let launchData = Array.from(launchYears).sort();
 
-   return launchData
+    return launchData;
   }
 
   addGlobe(satellites) {
@@ -364,46 +354,38 @@ class Worldview {
       .attr("fill", "teal")
       // .attr("transform", "translate(-250, -250)")
       .html("Click here to reset")
-      .on("click",(event, d) => {
+      .on("click", (event, d) => {
         this.globalState.group = [];
         updateAllGroup();
       });
   }
 
-
-  redraw(satellites){
-    this.y
-    .domain([
+  redraw(satellites) {
+    this.y.domain([
       d3.min(satellites, (d) => d["Perigee (km)"]),
       d3.max(satellites, (d) => d["Perigee (km)"]),
-    ])
+    ]);
     d3.select("#x").selectAll("g").remove();
     d3.select("#y").selectAll("g").remove();
-    let svg = d3.select("#satDistance")
+    let svg = d3.select("#satDistance");
     this.drawAxis(svg);
     this.placeSatellites(satellites);
   }
 
-  changeYearFocus(satellites){
-    let svg = d3.select("#satellites")
-    svg
-    .data(satellites)
-      .selectAll("circle")
-      .attr("opacity", 0.8)
+  changeYearFocus(satellites) {
+    let svg = d3.select("#satellites");
+    svg.data(satellites).selectAll("circle").attr("opacity", 0.8);
   }
 
-  updateGroup(){
-    if(this.globalState.group.length == 0){
-      this.redraw(this.globalState.satelliteData)
+  updateGroup() {
+    if (this.globalState.group.length == 0) {
+      this.redraw(this.globalState.satelliteData);
+    } else {
+      this.redraw(this.globalState.group);
     }
-    else{
-      this.redraw(this.globalState.group)
-    }
-    
   }
 
-  newSampleUpdate(){
-    
+  newSampleUpdate() {
     // this.redraw(this.globalState.satelliteData)
     this.fliterByYear();
     updateAllGroup();
