@@ -8,7 +8,12 @@ const globalState = {
     worldView: null,
     lineChart: null,
     cuttoffYear: null,
-    group: [],
+    group: {
+        "Class of Orbit": null,
+        "Date of Launch": null,
+        "Country of Operator/Owner": null,
+        "Purpose": null,
+    },
     selection: [],
     color_pallette: [
         '#f36688', '#da3182', '#9e316b',
@@ -61,6 +66,48 @@ function updateAllSelection() {
 function updateSort() {
     globalState.lineChart.update();
 }
+
+function applyGrouping() {
+    let group = globalState.group;
+
+    //let groupedData = globalState.satelliteData.filter( d => )
+    let groupedData = [...globalState.satelliteData]
+
+
+    for (let [key, value] of group.entries()) {
+        if (value === null) {
+
+        } else {
+            let newData = groupedData.filter(d => d[key] === value);
+            groupedData = newData;
+        }
+    }
+
+    return filterByYear(groupedData);
+
+
+    // Map of pairs {key , condition}
+
+
+    // E.g. ['Class of Orbit','LEO']
+
+
+}
+function filterByYear(groupData) {
+    let selectedYear = groupData.filter((d) => {
+      let thisLaunch = d["Date of Launch"].slice(-2);
+      if (thisLaunch <= 22) {
+        thisLaunch = "20" + thisLaunch;
+      } else {
+        thisLaunch = "19" + thisLaunch;
+      }
+      return parseInt(thisLaunch) <= parseInt(globalState.cuttoffYear);
+    });
+
+    return selectedYear;
+
+  }
+
 
 function updateSample(percent){
     globalState.satelliteData = takeSample(globalState.originalData.length*percent)
