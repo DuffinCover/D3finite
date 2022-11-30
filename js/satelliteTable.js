@@ -130,7 +130,7 @@ class SatelliteTable{
             this.data = globalState.group;
         }
         else {
-            this.data = globalState.originalData;
+            this.data = globalState.satelliteData;
         }
         // Stores table body selection and appends table rows
         let rowSelection = d3.select('#tableBody')
@@ -159,7 +159,7 @@ class SatelliteTable{
         // Stores individual cell selections
         let cellSelect = rowSelection.selectAll('td')
         .data(this.rowToCellDataTransform)
-        .join('td');
+        .join('td').attr('class', 'tableRow');
 
         // Adding in cell values
         cellSelect.filter(d => d.type === 'Name').text(d => d.value === '' ? 'Unknown' : d.value);
@@ -190,11 +190,8 @@ class SatelliteTable{
          * FIX THIS
          * ***************************
          */
-        d3.select('#FilterReset').on('click', event => {console.log(globalState.originalData);
-            console.log(globalState.satelliteData); 
-            globalState.satelliteData = globalState.originalData; 
-            globalState.group = [];
-            console.log(globalState.satelliteData); updateAllGroup()});
+        d3.select('#FilterReset').on('click', event => {
+            globalState.group = []; updateAllGroup()});
         
 
         const dropData = this.dropdownData;
@@ -380,6 +377,7 @@ class SatelliteTable{
         this.data = globalState.group;
         this.buildTable();
         this.updateRows();
+        this.attachSortHandlers();
     }
 
     updateSelection() {
@@ -400,35 +398,38 @@ class SatelliteTable{
         let LaunchSselect = d3.select('#LaunchSite');
         let LaunchVSelect = d3.select('#LaunchVehicle');
 
+
         CountrySelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Country of Operator/Owner'] === '' ? 'All' : d['Country of Operator/Owner']))].sort())
+        .data([...new Set(globalState.satelliteData.map(d => d['Country of Operator/Owner'] === '' ? 'Unknown' : d['Country of Operator/Owner'])), 'All'].sort())
         .join('option')
         .text(d=> d);
 
         PurposeSelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Purpose'] === '' ? 'All' : d['Purpose']))].sort())
+        .data([...new Set(this.data.map(d => d['Purpose'] === '' ? 'Unknown' : d['Purpose'])), 'All'].sort())
         .join('option')
         .text(d=> d);
 
+
         OrbitSelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Type of Orbit'] === '' ? 'All' : d['Type of Orbit']))].sort())
+        .data([...new Set(this.data.map(d => d['Type of Orbit'] === '' ? 'Unknown' : d['Type of Orbit'])), 'All'].sort())
         .join('option')
         .text(d=> d);
 
         LaunchSselect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Launch Site'] === '' ? 'All' : d['Launch Site']))].sort())
+        .data([...new Set(this.data.map(d => d['Launch Site'] === '' ? 'Unknown' : d['Launch Site'])), 'All'].sort())
         .join('option')
         .text(d=> d);
 
         LaunchVSelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Launch Vehicle'] === '' ? 'All' : d['Launch Vehicle']))].sort())
+        .data([...new Set(this.data.map(d => d['Launch Vehicle'] === '' ? 'Unknown' : d['Launch Vehicle'])), 'All'].sort())
         .join('option')
         .text(d=> d);
+
     }
 
     update(event) {

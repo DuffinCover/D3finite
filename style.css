@@ -72,3 +72,7 @@ table, th, td {
 #slider-sample{
     float: right;
 }
+
+.tableRow {
+    width: 5%;
+}
