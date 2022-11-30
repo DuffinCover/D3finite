@@ -8,12 +8,12 @@ const globalState = {
     worldView: null,
     lineChart: null,
     cuttoffYear: null,
-    group: {
-        "Class of Orbit": null,
-        "Date of Launch": null,
-        "Country of Operator/Owner": null,
-        "Purpose": null,
-    },
+    group: [
+        ["Class of Orbit", null],
+        ["Date of Launch", null],
+        ["Country of Operator/Owner", null],
+        ["Purpose", null],
+    ],
     selection: [],
     color_pallette: [
         '#f36688', '#da3182', '#9e316b',
@@ -52,8 +52,9 @@ function takeSample(sampleSize){
 }
 
 function updateAllGroup() {
+    //console.log("Apply Grouping");
     globalState.table.updateGroup();
-    globalState.worldView.updateGroup();
+    //globalState.worldView.updateGroup();
     globalState.lineChart.update();
 }
 
@@ -72,13 +73,15 @@ function applyGrouping() {
 
     //let groupedData = globalState.satelliteData.filter( d => )
     let groupedData = [...globalState.satelliteData]
-
-
-    for (let [key, value] of group.entries()) {
+    //console.log(groupedData);
+    for (let [key, value] of group) {
+        console.log(key);
+        console.log(value);
         if (value === null) {
 
         } else {
             let newData = groupedData.filter(d => d[key] === value);
+            console.log(newData);
             groupedData = newData;
         }
     }

@@ -126,12 +126,14 @@ class SatelliteTable{
      */
     buildTable() {
         // Sets data based on global state grouping
-        if(globalState.group.length > 0) {
-            this.data = globalState.group;
-        }
-        else {
-            this.data = globalState.satelliteData;
-        }
+        // if(globalState.group.length > 0) {
+        //     this.data = globalState.group;
+        // }
+        // else {
+        //     this.data = globalState.satelliteData;
+        // }
+        this.data = applyGrouping();
+        //console.log(applyGrouping());
         // Stores table body selection and appends table rows
         let rowSelection = d3.select('#tableBody')
         .selectAll('tr')
@@ -191,7 +193,10 @@ class SatelliteTable{
          * ***************************
          */
         d3.select('#FilterReset').on('click', event => {
-            globalState.group = []; updateAllGroup()});
+            for (let [key, value] of globlaState.group.entries()) {
+                globalState.group[key] = null;
+            }; 
+            updateAllGroup()});
         
 
         const dropData = this.dropdownData;
@@ -374,7 +379,7 @@ class SatelliteTable{
     }
 
     updateGroup() {
-        this.data = globalState.group;
+        
         this.buildTable();
         this.updateRows();
         this.attachSortHandlers();
@@ -388,6 +393,13 @@ class SatelliteTable{
      * Adding in the dropdown menu filters
      */
     addFilters() {
+
+        /**
+         * **********************************
+         * Add on click that checks if col is already filtered
+         * and reset if it has, otherwise allow the dropdown
+         * **********************************
+         */
         let newData = [... new Set(this.data.map(d => d['Country of Operator/Owner']))];
         let nn = [...new Set(this.data.map(d=>d['Purpose']))];
         //console.log(nn)
@@ -401,32 +413,32 @@ class SatelliteTable{
 
         CountrySelect
         .selectAll('option')
-        .data([...new Set(globalState.satelliteData.map(d => d['Country of Operator/Owner'] === '' ? 'Unknown' : d['Country of Operator/Owner'])), 'All'].sort())
+        .data([...new Set(this.data.map(d => d['Country of Operator/Owner'] === '' ? 'Unknown' : d['Country of Operator/Owner'])), ' All'].sort())
         .join('option')
         .text(d=> d);
 
         PurposeSelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Purpose'] === '' ? 'Unknown' : d['Purpose'])), 'All'].sort())
+        .data([...new Set(this.data.map(d => d['Purpose'] === '' ? 'Unknown' : d['Purpose'])), ' All'].sort())
         .join('option')
         .text(d=> d);
 
 
         OrbitSelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Type of Orbit'] === '' ? 'Unknown' : d['Type of Orbit'])), 'All'].sort())
+        .data([...new Set(this.data.map(d => d['Type of Orbit'] === '' ? 'Unknown' : d['Type of Orbit'])), ' All'].sort())
         .join('option')
         .text(d=> d);
 
         LaunchSselect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Launch Site'] === '' ? 'Unknown' : d['Launch Site'])), 'All'].sort())
+        .data([...new Set(this.data.map(d => d['Launch Site'] === '' ? 'Unknown' : d['Launch Site'])), ' All'].sort())
         .join('option')
         .text(d=> d);
 
         LaunchVSelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Launch Vehicle'] === '' ? 'Unknown' : d['Launch Vehicle'])), 'All'].sort())
+        .data([...new Set(this.data.map(d => d['Launch Vehicle'] === '' ? 'Unknown' : d['Launch Vehicle'])), ' All'].sort())
         .join('option')
         .text(d=> d);
 
@@ -437,25 +449,43 @@ class SatelliteTable{
             Work this out so it can filter multiple selections together
             Need to have filters for Orbit and Launch Site?
         */
+        //console.log(event);
         let filter = d3.select(`#${event.path[0].id}`).property('value');
-
+        //console.log(filter);
+        let tempKey = event.path[1].id;
+        //console.log(tempKey);
 
         if(filter === '') {
             filter = 'All';
         }
-        console.log(filter);
+        //console.log(filter);
+        
 
+        for(let g of globalState.group) {
+            if(g[0] === tempKey) {
+                if(filter === 'All') {
+                    g[1] = null;
+                }
+                else {
+                    g[1] = filter;
+                }
+            }
+        }
+        //console.log(globalState.group)
 
-        if(filter === 'All') {
-            globalState.group = [];
-        }
-        else {
-            console.log(event.path[1].id)
-            globalState.group = this.data.filter(d => d[`${event.path[1].id}`] === filter);
-            // console.log(this.data);
-            // console.log(globalState.group);
-            // console.log(globalState);
-        }
+        // if(filter === 'All') {
+        //     for(let g of globalState.group) {
+        //         if(g[0] === tempKey) {
+        //             globalState.group[1] = null;
+        //         }
+        //     }
+        // }
+        // else {
+        //     globalState.group[tempkey] = filter;
+        //     // console.log(this.data);
+        //     // console.log(globalState.group);
+        //     // console.log(globalState);
+        // }
         updateAllGroup();
     }
     
