@@ -129,15 +129,18 @@ class VisualSatelliteChart{
         //let chart = this;
         let global_state = this.global_state;
 
-        let data = global_state.satelliteData;
+        //let data = global_state.satelliteData;
+        let data = applyGrouping();
 
         this.max_rows = 300;
 
         let satData = data;
 
-        if (global_state.group.length > 0) {
-            satData = global_state.group;
-        }
+        //if (global_state.group.length > 0) {
+        //    satData = global_state.group;
+        //}
+
+
 
         //satData = satData.filter((d, i) => i < 2001);
 
