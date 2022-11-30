@@ -181,16 +181,21 @@ class Worldview {
       // if we have no other filters applied, this sets the filter. Otherwise it additionally filters
       // our already selected Data. 
       .on("click", (event, d) => {
-        if (this.globalState.group.length === 0) {
-          let satSubset = this.globalState.satelliteData.filter(
-            (n) => n["Class of Orbit"] === d["Class of Orbit"]
-          );
-          this.globalState.group = satSubset;
-        } else {
-          this.globalState.group = this.globalState.group.filter(
-            (n) => n["Class of Orbit"] === d["Class of Orbit"]
-          );
-        }
+
+        this.globalState.group[0][1] = d["Class of Orbit"] 
+        // if (this.globalState.group.length === 0) {
+        //   let satSubset = this.globalState.satelliteData.filter(
+        //     (n) => n["Class of Orbit"] === d["Class of Orbit"]
+        //   );
+          
+        //   this.globalState.group = satSubset;
+        // } else {
+        //   this.globalState.group = this.globalState.group.filter(
+        //     (n) => n["Class of Orbit"] === d["Class of Orbit"]
+        //   );
+        // }
+
+        //need to update this for my method. 
         updateAllGroup();
       })
       .transition()
@@ -239,7 +244,7 @@ class Worldview {
         d3.select("p#value-time").text(d3.timeFormat("%Y")(val));
         let cuttoffYear = d3.timeFormat("%Y")(val).slice(-4);
         this.globalState.cuttoffYear = cuttoffYear;
-        this.fliterByYear();
+        // filterByYear();
         updateAllGroup();
       });
 
@@ -375,16 +380,17 @@ class Worldview {
 
   /** Helper method for redrawing the visualization based on the status of our filter*/
   updateGroup() {
-    if (this.globalState.group.length == 0) {
-      this.redraw(this.globalState.satelliteData);
-    } else {
-      this.redraw(this.globalState.group);
-    }
+    // if (this.globalState.group.length == 0) {
+    //   this.redraw(this.globalState.satelliteData);
+    // } else {
+    //   this.redraw(this.globalState.group);
+    // }
+    this.redraw(applyGrouping())
   }
 
   /**Updates the visualization based on new sample size selections.  */
   newSampleUpdate() {
-    this.fliterByYear();
+    // filterByYear();
     updateAllGroup();
   }
 }
