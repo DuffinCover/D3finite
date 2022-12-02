@@ -27,7 +27,6 @@ const globalState = {
 
 async function loadData() {
     const satData = await d3.json('data/satellites.json');
-    // const satSampleData =  await d3.json("data/satellites_sample.json")
     return satData;
 }
 
