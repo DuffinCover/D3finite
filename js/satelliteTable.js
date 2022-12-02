@@ -18,23 +18,28 @@ class SatelliteTable{
         this.dropdownData = [
             {
                 name: 'Country of Operator/Owner',
-                filtered: false
+                filtered: false,
+                clicks: 0
             },
             {
                 name: 'Purpose',
-                filtered: false
+                filtered: false,
+                clicks: 0
             },
             {
                 name: 'Type of Orbit',
-                filtered: false
+                filtered: false,
+                clicks: 0
             },
             {
                 name: 'Launch Site',
-                filtered: false
+                filtered: false,
+                clicks: 0
             }, 
             {
                 name: 'Launch Vehicle',
-                filtered: false
+                filtered: false,
+                clicks: 0
             }
         ];
 
@@ -146,7 +151,13 @@ class SatelliteTable{
                 //console.log(el);
                 if(el.name === key) {
                     if(el.filtered) {
-                        this.resetFilter(key);
+                        if(el.clicks > 1) {
+                            this.resetFilter(key);
+                            el.clicks = 0;
+                        }
+                        else{
+                            el.clicks = el.clicks + 1;
+                        }
                     }
                 }
             }
@@ -173,7 +184,7 @@ class SatelliteTable{
             this.data = this.originalData;
         }
         console.log(applyGrouping());
-        console.log(this.data);
+        //console.log(this.data);
         // Stores table body selection and appends table rows
         let rowSelection = d3.select('#tableBody')
         .selectAll('tr')
@@ -528,6 +539,7 @@ class SatelliteTable{
 
 
     resetFilter(key) {
+        console.log("I ran");
         for(let g of globalState.group) {
             if(g[0] === key) {
                 g[1] = null;
