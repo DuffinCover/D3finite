@@ -15,7 +15,28 @@ class SatelliteTable{
         this.rowSvgWidth = 300;
         this.rowSvgHeight = 50;
         this.rowBarHeight = 40;
-        this.dropdownData = ['Country of Operator/Owner', 'Purpose', 'Type of Orbit', 'Launch Site', 'Launch Vehicle'];
+        this.dropdownData = [
+            {
+                name: 'Country of Operator/Owner',
+                filtered: false
+            },
+            {
+                name: 'Purpose',
+                filtered: false
+            },
+            {
+                name: 'Type of Orbit',
+                filtered: false
+            },
+            {
+                name: 'Launch Site',
+                filtered: false
+            }, 
+            {
+                name: 'Launch Vehicle',
+                filtered: false
+            }
+        ];
 
         this.headerData = [
             {
@@ -114,7 +135,22 @@ class SatelliteTable{
         // Adding in rectangle elements
         this.buildTable();
         this.attachSortHandlers();
-        d3.select('#Country').on('change', event => this.update(event));
+        /**
+         * **************************
+         * FIX THIS
+         * **************************
+         */
+        d3.select('#Country').on('change', event => this.update(event)).on('click', event => {
+            let key = event.path[1].id;
+            for(let el of this.dropdownData) {
+                console.log(el);
+                if(el.name === key) {
+                    if(el.filtered) {
+                        this.resetFilter(key);
+                    }
+                }
+            }
+        });
         d3.select('#Use').on('change', event => this.update(event));
         d3.select('#Orbit').on('change', event => this.update(event));
         d3.select('#LaunchSite').on('change', event => this.update(event));
@@ -199,7 +235,7 @@ class SatelliteTable{
             updateAllGroup()});
         
 
-        const dropData = this.dropdownData;
+        const dropData = this.dropdownData.map(d => d.name);
         for(let index in this.headerData) {
             let item = this.headerData[index];
             if(dropData.includes(item.key)){
@@ -413,32 +449,32 @@ class SatelliteTable{
 
         CountrySelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Country of Operator/Owner'] === '' ? 'Unknown' : d['Country of Operator/Owner'])), ' All'].sort())
+        .data([...new Set(this.data.map(d => d['Country of Operator/Owner'] === '' ? 'Unknown' : d['Country of Operator/Owner']))].sort())
         .join('option')
         .text(d=> d);
 
         PurposeSelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Purpose'] === '' ? 'Unknown' : d['Purpose'])), ' All'].sort())
+        .data([...new Set(this.data.map(d => d['Purpose'] === '' ? 'Unknown' : d['Purpose']))].sort())
         .join('option')
         .text(d=> d);
 
 
         OrbitSelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Type of Orbit'] === '' ? 'Unknown' : d['Type of Orbit'])), ' All'].sort())
+        .data([...new Set(this.data.map(d => d['Type of Orbit'] === '' ? 'Unknown' : d['Type of Orbit']))].sort())
         .join('option')
         .text(d=> d);
 
         LaunchSselect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Launch Site'] === '' ? 'Unknown' : d['Launch Site'])), ' All'].sort())
+        .data([...new Set(this.data.map(d => d['Launch Site'] === '' ? 'Unknown' : d['Launch Site']))].sort())
         .join('option')
         .text(d=> d);
 
         LaunchVSelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Launch Vehicle'] === '' ? 'Unknown' : d['Launch Vehicle'])), ' All'].sort())
+        .data([...new Set(this.data.map(d => d['Launch Vehicle'] === '' ? 'Unknown' : d['Launch Vehicle']))].sort())
         .join('option')
         .text(d=> d);
 
@@ -468,24 +504,31 @@ class SatelliteTable{
                 }
                 else {
                     g[1] = filter;
+                    
                 }
             }
         }
-        //console.log(globalState.group)
 
-        // if(filter === 'All') {
-        //     for(let g of globalState.group) {
-        //         if(g[0] === tempKey) {
-        //             globalState.group[1] = null;
-        //         }
-        //     }
-        // }
-        // else {
-        //     globalState.group[tempkey] = filter;
-        //     // console.log(this.data);
-        //     // console.log(globalState.group);
-        //     // console.log(globalState);
-        // }
+        /**
+         * ***********************************
+         * FIX THIS
+         * ***********************************
+         */
+        for(let el of this.dropdownData) {
+            if(el.name === tempKey) {
+                el.filtered = true;
+            }
+        }
+        updateAllGroup();
+    }
+
+
+    resetFilter(key) {
+        for(let g of globalState.group) {
+            if(g[0] === key) {
+                g[1] = null;
+            }
+        }
         updateAllGroup();
     }
     
