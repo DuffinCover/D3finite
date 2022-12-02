@@ -27,7 +27,6 @@ const globalState = {
 
 async function loadData() {
     const satData = await d3.json('data/satellites.json');
-    // const satSampleData =  await d3.json("data/satellites_sample.json")
     return satData;
 }
 
@@ -86,7 +85,7 @@ function applyGrouping() {
         }
     }
 
-    return groupedData;
+    return filterByYear(groupedData);
 
 
     // Map of pairs {key , condition}
@@ -96,6 +95,21 @@ function applyGrouping() {
 
 
 }
+function filterByYear(groupData) {
+    let selectedYear = groupData.filter((d) => {
+      let thisLaunch = d["Date of Launch"].slice(-2);
+      if (thisLaunch <= 22) {
+        thisLaunch = "20" + thisLaunch;
+      } else {
+        thisLaunch = "19" + thisLaunch;
+      }
+      return parseInt(thisLaunch) <= parseInt(globalState.cuttoffYear);
+    });
+
+    return selectedYear;
+
+  }
+
 
 function updateSample(percent){
     globalState.satelliteData = takeSample(globalState.originalData.length*percent)
