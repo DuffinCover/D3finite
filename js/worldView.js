@@ -282,19 +282,19 @@ class Worldview {
   }
 
   /** Helper method to filter the satellites according to the year selected by the slider. */
-  fliterByYear() {
-    let selectedYear = this.globalState.satelliteData.filter((d) => {
-      let thisLaunch = d["Date of Launch"].slice(-2);
-      if (thisLaunch <= 22) {
-        thisLaunch = "20" + thisLaunch;
-      } else {
-        thisLaunch = "19" + thisLaunch;
-      }
-      return parseInt(thisLaunch) <= parseInt(this.globalState.cuttoffYear);
-    });
+  // fliterByYear() {
+  //   let selectedYear = this.globalState.satelliteData.filter((d) => {
+  //     let thisLaunch = d["Date of Launch"].slice(-2);
+  //     if (thisLaunch <= 22) {
+  //       thisLaunch = "20" + thisLaunch;
+  //     } else {
+  //       thisLaunch = "19" + thisLaunch;
+  //     }
+  //     return parseInt(thisLaunch) <= parseInt(this.globalState.cuttoffYear);
+  //   });
 
-    this.globalState.group = selectedYear;
-  }
+  //   this.globalState.group = selectedYear;
+  // }
 
   /** Method for creating the slider that allows for selection of satellites displayed on the chart.
    * Sourced from: https://bl.ocks.org/johnwalley/raw/e1d256b81e51da68f7feb632a53c3518/?raw=true
@@ -314,7 +314,7 @@ class Worldview {
       .tickFormat(d3.format(".0%"))
       .tickValues(dataTime)
       .ticks(10)
-      .default(0.1)
+      .default(0.05)
       .marks(dataTime)
       .on("onchange", (val) => {
         updateSample(val);

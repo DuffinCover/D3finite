@@ -10,7 +10,10 @@
       href="https://fonts.googleapis.com/css?family=Work+Sans:400,700&display=swap"
       rel="stylesheet"
     />
-
+    <!--
+       Bootstrap styling if you want to use it:
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
   </head>
 
   <body>
@@ -18,11 +21,11 @@
       <h1>D3FINITE Visual Satellites</h1>
     </header>
     <div class="grid-container">
-
-      <div id="worldview">
-      </div>
-
+      <!-- DUFFY  -->
+      <div id="worldview"></div>
+      <!-- AARON -->
      <div id="table" class="scrollable">
+      <button id="FilterReset">ResetFilters</button>
         <table>
           <thead>
             <tr id="columnHeaders">
@@ -35,13 +38,21 @@
               <th class="colHead">Expected Lifetime</th>
               <th class="colHead">Launch Site</th>
               <th class="colHead">Launch Vehicle</th>
+              <th class="colHead">Dry Mass (kg.)</th>
+              <th class="colHead">Period (Minutes)</th>
+              <th class="colHead">Inclination (degrees)</th>
+              <th class="colHead">Launch Date</th>
             </tr>
             <tr id="groupButtons">
               <td class="colHead"></td>
+              <td id="DropCountry" class="colHead"></td>
+              <td class="colHead"></td>
+              <td id="DropUse" class="colHead"></td>
+              <td id="DropOrbit" class="colHead"></td>
               <td class="colHead"></td>
               <td class="colHead"></td>
-              <td class="colHead"></td>
-              <td class="colHead"></td>
+              <td id="DropSite" class="colHead"></td>
+              <td id="DropVehicle" class="colHead"></td>
               <td class="colHead"></td>
               <td class="colHead"></td>
               <td class="colHead"></td>
@@ -51,13 +62,14 @@
           <tbody id="tableBody"></tbody>
         </table>
       </div>
-
+      <!-- DUFF? -->
       <div id="details" class="grid-child">
         <div style="width: 600px; height: 100px; border: 1px solid #000">
           This is a (details) rectangle!
         </div>
       </div>
 
+      <!-- JORDAN -->
       <div id="chart" class="grid-child">
           <div id="chart-header"></div>
           <div id="chart-body" class="scrollable2"></div>
