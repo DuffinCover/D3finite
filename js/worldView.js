@@ -49,9 +49,11 @@ class Worldview {
       .attr("stroke-linecap", "round");
 
     let satDistance = d3.select("#satDistance");
+    satDistance.append("g").attr("id", "globe");
     satDistance.append("g").attr("id", "x");
     satDistance.append("g").attr("id", "y");
     satDistance.append("g").attr("id", "satellites");
+   
 
     //construct the visualization
     this.addGlobe(scale_data);
@@ -60,6 +62,7 @@ class Worldview {
     this.placeSatellites(scale_data);
     this.addYearSlider(scale_data);
     this.orbitSelector();
+
   }
 
 
@@ -380,21 +383,17 @@ class Worldview {
 
   /**Draws the "globe" in the middle of the radial chart.  */
   addGlobe(satellites) {
-    let svg = d3.select("#satDistance").append("g").attr("id", "globe");
+
+
+  
 
     let globe = d3
       .select("#globe")
-      // .append("image")
-      // .attr('src', 'D3finite/assets/586-5863993_planet-earth-png-nasa-seeing-earth-from-space.png')
-      // .attr('width', 200)
-      // .attr('height', 200)
-
-      .append("circle")
-      .attr("r", this.innerRadius - 10)
-      .attr("x", this.height / 2)
-      .attr("y", this.width / 2)
-      .attr("fill", "teal")
-      // .attr("transform", "translate(-250, -250)")
+      .append("image")
+      .attr('xlink:href', 'assets/globe2.png')
+      .attr('width', 200)
+      .attr('height', 200)
+      .attr("transform", "translate(-100, -100)")
       .html("Click here to reset")
       .on("click", (event, d) => {
         this.globalState.group = [];
