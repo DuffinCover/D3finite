@@ -12,6 +12,7 @@ class Worldview {
     this.height = 500;
     this.margin = 20;
 
+    this.fullWidth = 650
 
     // initial data choice for drawing the chart and determining scale sizes. 
     let scale_data = this.sampleSats;
@@ -38,12 +39,12 @@ class Worldview {
       .select("#worldview")
       .append("svg")
       .attr("id", "satDistance")
-      .attr("width", this.width)
+      .attr("width", this.fullWidth)
       .attr("height", this.height)
       .attr("viewBox", [
-        -this.width / 2,
+        (-this.width / 2)-50, 
         -this.height / 2,
-        this.width,
+        this.width+150,
         this.height,
       ])
       .attr("stroke-linejoin", "round")
@@ -54,6 +55,8 @@ class Worldview {
     satDistance.append("g").attr("id", "x");
     satDistance.append("g").attr("id", "y");
     satDistance.append("g").attr("id", "satellites");
+
+    
    
 
     //construct the visualization
@@ -244,63 +247,63 @@ class Worldview {
       .append("p")
       .html("Click the Earth to Reset the satellites.");
 
-    d3.select("#worldview").append("div").append("p").attr("id", "value-time");
+    // d3.select("#worldview").append("div").append("p").attr("id", "value-time");
 
-    d3.select("#worldview").append("div").attr("id", "slider-time");
+    d3.select("#satDistance")
+    .append("g")
+    .append("text")
+    .attr("id", "slider-time")
+    .attr("transform", "translate(290, -235)")
+    .text("");
 
     let dataTime = this.getLaunchDates(satellites);
 
     let sliderTime = d3
-      .sliderBottom()
+      .sliderRight()
       .min(d3.min(dataTime))
       .max(d3.max(dataTime))
       .step(1000 * 60 * 60 * 24 * 365)
-      .width(450)
+      .height(400)
+      .width(10)
       .tickFormat(d3.timeFormat("%y"))
       .tickValues(dataTime)
       .ticks(10)
       .default(new Date(2022, 1, 0))
       .on("onchange", (val) => {
-        d3.select("p#value-time").text(d3.timeFormat("%Y")(val));
+        d3.select("#slider-time").text(d3.timeFormat("%Y")(val));
         let cuttoffYear = d3.timeFormat("%Y")(val).slice(-4);
         this.globalState.cuttoffYear = cuttoffYear;
-        // filterByYear();
         updateAllGroup();
       });
 
     let gTime = d3
-      .select("div#slider-time")
-      .append("svg")
-      .attr("width", 500)
-      .attr("height", 100)
+      .select("#satDistance")
+      // .append("svg")
+      // .attr("width", 500)
+      // .attr("height", 100)
       .append("g")
-      .attr("transform", "translate(30,30)");
+      .attr("transform", "translate(290,-215)");
 
     gTime.call(sliderTime);
 
-    d3.select("p#value-time").text(d3.timeFormat("%Y")(sliderTime.value()));
+    d3.select("#slider-time").text(d3.timeFormat("%Y")(sliderTime.value()));
   }
 
-  /** Helper method to filter the satellites according to the year selected by the slider. */
-  // fliterByYear() {
-  //   let selectedYear = this.globalState.satelliteData.filter((d) => {
-  //     let thisLaunch = d["Date of Launch"].slice(-2);
-  //     if (thisLaunch <= 22) {
-  //       thisLaunch = "20" + thisLaunch;
-  //     } else {
-  //       thisLaunch = "19" + thisLaunch;
-  //     }
-  //     return parseInt(thisLaunch) <= parseInt(this.globalState.cuttoffYear);
-  //   });
 
-  //   this.globalState.group = selectedYear;
-  // }
 
   /** Method for creating the slider that allows for selection of satellites displayed on the chart.
    * Sourced from: https://bl.ocks.org/johnwalley/raw/e1d256b81e51da68f7feb632a53c3518/?raw=true
    */
   addSampleSlider() {
-    d3.select("#worldview").append("div").attr("id", "slider-sample");
+    // d3.select("#worldview").append("div").attr("id", "slider-sample");
+
+    d3.select("#satDistance")
+    .append("g")
+    .append("text")
+    .attr("id", "slider-sample")
+    .attr("transform", "translate(-290, -235)")
+    .text("Sample of Total")
+    .text("Satellites");
 
     let dataTime = [0.05, 0.1, 0.2, 0.5, 1];
 
@@ -321,44 +324,13 @@ class Worldview {
       });
 
     let gTime = d3
-      .select("div#slider-sample")
-      .append("svg")
-      .attr("width", 100)
-      .attr("height", 500)
+      .select("#satDistance")
+      // .append("svg")
+      // .attr("id", "slider-svg")
+      // .attr("width", 100)
+      // .attr("height", 500)
       .append("g")
-      .attr("transform", "translate(10,30)");
-
-    gTime.call(sliderTime);
-  }
-
-  addRadiusSlider(){
-    d3.select("#worldview").append("div").attr("id", "slider-radius");
-
-    let dataTime = [500, 1000, 5000, 10000];
-
-    let sliderTime = d3
-      .sliderRight()
-      .min(d3.min(dataTime))
-      .max(d3.max(dataTime))
-      .step(10)
-      .width(50)
-      .height(400)
-      .tickFormat(d3.format(".0%"))
-      .tickValues(dataTime)
-      .ticks(10)
-      .default(0.1)
-      .marks(dataTime)
-      .on("onchange", (val) => {
-        updateSample(val);
-      });
-
-    let gTime = d3
-      .select("div#slider-sample")
-      .append("svg")
-      .attr("width", 100)
-      .attr("height", 500)
-      .append("g")
-      .attr("transform", "translate(10,30)");
+      .attr("transform", "translate(-290,-215)");
 
     gTime.call(sliderTime);
   }
