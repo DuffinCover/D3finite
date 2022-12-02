@@ -5,6 +5,7 @@ class Worldview {
     this.globalState = global_state;
     this.sats = global_state.originalData;
     this.sampleSats = global_state.satelliteData;
+    this.animate = true;
 
     // basic svg params
     this.width = 500;
@@ -49,9 +50,11 @@ class Worldview {
       .attr("stroke-linecap", "round");
 
     let satDistance = d3.select("#satDistance");
+    satDistance.append("g").attr("id", "globe");
     satDistance.append("g").attr("id", "x");
     satDistance.append("g").attr("id", "y");
     satDistance.append("g").attr("id", "satellites");
+   
 
     //construct the visualization
     this.addGlobe(scale_data);
@@ -60,6 +63,7 @@ class Worldview {
     this.placeSatellites(scale_data);
     this.addYearSlider(scale_data);
     this.orbitSelector();
+
   }
 
 
@@ -168,8 +172,8 @@ class Worldview {
   
     let svg = d3.select("#satellites");
     let angles = satellites.map((d) => Math.random() * Math.PI * 2);
-
-    svg
+   
+    let sats = svg
       .selectAll("circle")
       .data(satellites)
       .join("circle")
@@ -177,26 +181,12 @@ class Worldview {
       .attr("opacity", 0.5)
       .attr("class", (d) => d["Class of Orbit"])
       .on("mouseover", (event, d) => {
-        console.log(d["Class of Orbit"]);
+       this.animate = false;
       })
       // if we have no other filters applied, this sets the filter. Otherwise it additionally filters
       // our already selected Data. 
       .on("click", (event, d) => {
-
         this.globalState.group[0][1] = d["Class of Orbit"] 
-        // if (this.globalState.group.length === 0) {
-        //   let satSubset = this.globalState.satelliteData.filter(
-        //     (n) => n["Class of Orbit"] === d["Class of Orbit"]
-        //   );
-          
-        //   this.globalState.group = satSubset;
-        // } else {
-        //   this.globalState.group = this.globalState.group.filter(
-        //     (n) => n["Class of Orbit"] === d["Class of Orbit"]
-        //   );
-        // }
-
-        //need to update this for my method. 
         updateAllGroup();
       })
       .transition()
@@ -206,7 +196,32 @@ class Worldview {
       })
       .attr("cy", (d, i) => {
         return Math.sin(angles[i]) * this.y(d["Perigee (km)"]);
-      });
+      })
+      // .each("end", (d,i)=>{
+      //   console.log("about to orbit", d )
+      //   if( this.animate){
+          
+      //     // orbit(i, this.y, d)
+      //   }
+      // });
+
+
+      function orbit(n, r, data){
+        angles[n] += Math.pi/2
+        let singleSat = sats.filter((d, i)=> i===n)
+        singleSat
+        .data(data)
+        .transition()
+        .duration(5000)
+        .attr("cx", (d) => {
+          return Math.cos(angles[n]) * r(d["Perigee (km)"]);
+        })
+        .attr("cy", (d) => {
+          return Math.sin(angles[n]) * r(d["Perigee (km)"]);
+        })
+        .on("end", orbit);
+      }
+      
   }
 
   orbitSelector(){
@@ -267,19 +282,19 @@ class Worldview {
   }
 
   /** Helper method to filter the satellites according to the year selected by the slider. */
-  fliterByYear() {
-    let selectedYear = this.globalState.satelliteData.filter((d) => {
-      let thisLaunch = d["Date of Launch"].slice(-2);
-      if (thisLaunch <= 22) {
-        thisLaunch = "20" + thisLaunch;
-      } else {
-        thisLaunch = "19" + thisLaunch;
-      }
-      return parseInt(thisLaunch) <= parseInt(this.globalState.cuttoffYear);
-    });
+  // fliterByYear() {
+  //   let selectedYear = this.globalState.satelliteData.filter((d) => {
+  //     let thisLaunch = d["Date of Launch"].slice(-2);
+  //     if (thisLaunch <= 22) {
+  //       thisLaunch = "20" + thisLaunch;
+  //     } else {
+  //       thisLaunch = "19" + thisLaunch;
+  //     }
+  //     return parseInt(thisLaunch) <= parseInt(this.globalState.cuttoffYear);
+  //   });
 
-    this.globalState.group = selectedYear;
-  }
+  //   this.globalState.group = selectedYear;
+  // }
 
   /** Method for creating the slider that allows for selection of satellites displayed on the chart.
    * Sourced from: https://bl.ocks.org/johnwalley/raw/e1d256b81e51da68f7feb632a53c3518/?raw=true
@@ -299,7 +314,7 @@ class Worldview {
       .tickFormat(d3.format(".0%"))
       .tickValues(dataTime)
       .ticks(10)
-      .default(0.1)
+      .default(0.05)
       .marks(dataTime)
       .on("onchange", (val) => {
         updateSample(val);
@@ -380,21 +395,17 @@ class Worldview {
 
   /**Draws the "globe" in the middle of the radial chart.  */
   addGlobe(satellites) {
-    let svg = d3.select("#satDistance").append("g").attr("id", "globe");
+
+
+  
 
     let globe = d3
       .select("#globe")
-      // .append("image")
-      // .attr('src', 'D3finite/assets/586-5863993_planet-earth-png-nasa-seeing-earth-from-space.png')
-      // .attr('width', 200)
-      // .attr('height', 200)
-
-      .append("circle")
-      .attr("r", this.innerRadius - 10)
-      .attr("x", this.height / 2)
-      .attr("y", this.width / 2)
-      .attr("fill", "teal")
-      // .attr("transform", "translate(-250, -250)")
+      .append("image")
+      .attr('xlink:href', 'assets/globe2.png')
+      .attr('width', 200)
+      .attr('height', 200)
+      .attr("transform", "translate(-100, -100)")
       .html("Click here to reset")
       .on("click", (event, d) => {
         this.globalState.group = [];
@@ -404,6 +415,13 @@ class Worldview {
 
   /**Method for changing the visualization when new data is selected */
   redraw(satellites) {
+    if(satellites.length < 500){
+      this.animate = true;
+    }
+    else{
+      this.animate = false;
+    }
+
     this.y.domain([
       d3.min(satellites, (d) => d["Perigee (km)"]),
       d3.max(satellites, (d) => d["Perigee (km)"]),

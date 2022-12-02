@@ -7,7 +7,7 @@ const globalState = {
     table: null,
     worldView: null,
     lineChart: null,
-    cuttoffYear: null,
+    cuttoffYear: 2022,
     group: [
         ["Class of Orbit", null],
         ["Date of Launch", null],
@@ -53,7 +53,7 @@ function takeSample(sampleSize){
 function updateAllGroup() {
     //console.log("Apply Grouping");
     globalState.table.updateGroup();
-    //globalState.worldView.updateGroup();
+    globalState.worldView.updateGroup();
     globalState.lineChart.update();
 }
 
@@ -84,7 +84,7 @@ function applyGrouping() {
             groupedData = newData;
         }
     }
-    //console.log(groupedData);
+    // console.log(groupedData);
     return filterByYear(groupedData);
 
 
@@ -106,12 +106,14 @@ function filterByYear(groupData) {
       return parseInt(thisLaunch) <= parseInt(globalState.cuttoffYear);
     });
 
+    console.log(selectedYear)
     return selectedYear;
 
   }
 
 
 function updateSample(percent){
+    globalState.cuttoffYear = 2022
     globalState.satelliteData = takeSample(globalState.originalData.length*percent)
     globalState.lineChart.update()
     globalState.worldView.newSampleUpdate()
