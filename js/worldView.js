@@ -197,11 +197,11 @@ class Worldview {
       .attr("cy", (d, i) => {
         return Math.sin(angles[i]) * this.y(d["Perigee (km)"]);
       })
-      .on("end", (d,i)=>{
+      .each("end", (d,i)=>{
         console.log("about to orbit", d )
         if( this.animate){
           
-          orbit(i, this.y, d)
+          // orbit(i, this.y, d)
         }
       });
 
