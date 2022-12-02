@@ -172,8 +172,8 @@ class SatelliteTable{
         if(this.data.length === 0) {
             this.data = this.originalData;
         }
-        console.log(applyGrouping());
-        console.log(this.data);
+        // console.log(applyGrouping());
+        // console.log(this.data);
         // Stores table body selection and appends table rows
         let rowSelection = d3.select('#tableBody')
         .selectAll('tr')
