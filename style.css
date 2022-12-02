@@ -65,10 +65,11 @@ table, th, td {
 }
 
 .colHead {
-    background-color: #5033db;
+    background-color: #34495e;
     color: white;
     text-align: center;
 }
 #slider-sample{
     float: right;
 }
+
