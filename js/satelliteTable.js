@@ -6,6 +6,12 @@ class SatelliteTable{
      * @param {*} data JSON object of data
      */
     constructor(global_state) {
+        /**
+         * *************************************
+         * Make it so you can do two selections
+         * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         * *************************************
+         */
         //console.log(globalState);
         let data = global_state.satelliteData;
         this.global_state = global_state;
@@ -503,11 +509,6 @@ class SatelliteTable{
             }
         }
 
-        /**
-         * ***********************************
-         * FIX THIS
-         * ***********************************
-         */
         for(let el of this.dropdownData) {
             if(el.name === tempKey) {
                 el.filtered = true;
