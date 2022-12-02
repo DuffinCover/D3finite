@@ -302,8 +302,7 @@ class Worldview {
     .append("text")
     .attr("id", "slider-sample")
     .attr("transform", "translate(-290, -235)")
-    .text("Sample of Total")
-    .text("Satellites");
+    .text("Sample of Total Satellites");
 
     let dataTime = [0.05, 0.1, 0.2, 0.5, 1];
 
