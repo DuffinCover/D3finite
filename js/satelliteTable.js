@@ -143,7 +143,7 @@ class SatelliteTable{
         d3.select('#Country').on('change', event => this.update(event)).on('click', event => {
             let key = event.path[1].id;
             for(let el of this.dropdownData) {
-                console.log(el);
+                //console.log(el);
                 if(el.name === key) {
                     if(el.filtered) {
                         this.resetFilter(key);
@@ -169,7 +169,11 @@ class SatelliteTable{
         //     this.data = globalState.satelliteData;
         // }
         this.data = applyGrouping();
-        //console.log(applyGrouping());
+        if(this.data.length === 0) {
+            this.data = this.originalData;
+        }
+        console.log(applyGrouping());
+        console.log(this.data);
         // Stores table body selection and appends table rows
         let rowSelection = d3.select('#tableBody')
         .selectAll('tr')

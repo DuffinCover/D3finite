@@ -74,17 +74,17 @@ function applyGrouping() {
     let groupedData = [...globalState.satelliteData]
     //console.log(groupedData);
     for (let [key, value] of group) {
-        console.log(key);
-        console.log(value);
+        //console.log(key);
+        //console.log(value);
         if (value === null) {
 
         } else {
             let newData = groupedData.filter(d => d[key] === value);
-            console.log(newData);
+            //console.log(newData);
             groupedData = newData;
         }
     }
-
+    //console.log(groupedData);
     return filterByYear(groupedData);
 
 
