@@ -485,9 +485,9 @@ class SatelliteTable{
         */
         //console.log(event);
         let filter = d3.select(`#${event.path[0].id}`).property('value');
-        console.log(filter);
+        //console.log(filter);
         let tempKey = event.path[1].id;
-        console.log(tempKey);
+        //console.log(tempKey);
         //console.log(filter);
         
 
@@ -527,6 +527,7 @@ class SatelliteTable{
                         el.clicks = 0;
                     }
                     else{
+                        console.log(el.clicks)
                         el.clicks = el.clicks + 1;
                     }
                 }
@@ -535,7 +536,7 @@ class SatelliteTable{
     }
 
     resetFilter(key) {
-        console.log("I ran");
+
         for(let g of globalState.group) {
             if(g[0] === key) {
                 g[1] = null;
