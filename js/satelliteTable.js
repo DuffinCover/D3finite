@@ -145,27 +145,11 @@ class SatelliteTable{
          * FIX THIS
          * **************************
          */
-        d3.select('#Country').on('change', event => this.update(event)).on('click', event => {
-            let key = event.path[1].id;
-            for(let el of this.dropdownData) {
-                //console.log(el);
-                if(el.name === key) {
-                    if(el.filtered) {
-                        if(el.clicks > 1) {
-                            this.resetFilter(key);
-                            el.clicks = 0;
-                        }
-                        else{
-                            el.clicks = el.clicks + 1;
-                        }
-                    }
-                }
-            }
-        });
-        d3.select('#Use').on('change', event => this.update(event));
-        d3.select('#Orbit').on('change', event => this.update(event));
-        d3.select('#LaunchSite').on('change', event => this.update(event));
-        d3.select('#LaunchVehicle').on('change', event => this.update(event));
+        d3.select('#Country').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
+        d3.select('#Use').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
+        d3.select('#Orbit').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
+        d3.select('#LaunchSite').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
+        d3.select('#LaunchVehicle').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
     }
 
     /**
@@ -461,7 +445,7 @@ class SatelliteTable{
         let LaunchSselect = d3.select('#LaunchSite');
         let LaunchVSelect = d3.select('#LaunchVehicle');
 
-
+        
         CountrySelect
         .selectAll('option')
         .data([...new Set(this.data.map(d => d['Country of Operator/Owner'] === '' ? 'Unknown' : d['Country of Operator/Owner']))].sort())
@@ -473,7 +457,6 @@ class SatelliteTable{
         .data([...new Set(this.data.map(d => d['Purpose'] === '' ? 'Unknown' : d['Purpose']))].sort())
         .join('option')
         .text(d=> d);
-
 
         OrbitSelect
         .selectAll('option')
@@ -502,13 +485,9 @@ class SatelliteTable{
         */
         //console.log(event);
         let filter = d3.select(`#${event.path[0].id}`).property('value');
-        //console.log(filter);
+        console.log(filter);
         let tempKey = event.path[1].id;
-        //console.log(tempKey);
-
-        if(filter === '') {
-            filter = 'All';
-        }
+        console.log(tempKey);
         //console.log(filter);
         
 
@@ -537,6 +516,23 @@ class SatelliteTable{
         updateAllGroup();
     }
 
+    dropDownUpdate(event) {
+        let key = event.path[1].id;
+        for(let el of this.dropdownData) {
+            //console.log(el);
+            if(el.name === key) {
+                if(el.filtered) {
+                    if(el.clicks > 0) {
+                        this.resetFilter(key);
+                        el.clicks = 0;
+                    }
+                    else{
+                        el.clicks = el.clicks + 1;
+                    }
+                }
+            }
+        }
+    }
 
     resetFilter(key) {
         console.log("I ran");
