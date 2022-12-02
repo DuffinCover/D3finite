@@ -5,6 +5,7 @@ class Worldview {
     this.globalState = global_state;
     this.sats = global_state.originalData;
     this.sampleSats = global_state.satelliteData;
+    this.animate = true;
 
     // basic svg params
     this.width = 500;
@@ -403,6 +404,13 @@ class Worldview {
 
   /**Method for changing the visualization when new data is selected */
   redraw(satellites) {
+    if(satellites.length < 500){
+      this.animate = true;
+    }
+    else{
+      this.animate = false;
+    }
+
     this.y.domain([
       d3.min(satellites, (d) => d["Perigee (km)"]),
       d3.max(satellites, (d) => d["Perigee (km)"]),
