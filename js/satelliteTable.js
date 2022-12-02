@@ -18,23 +18,28 @@ class SatelliteTable{
         this.dropdownData = [
             {
                 name: 'Country of Operator/Owner',
-                filtered: false
+                filtered: false,
+                clicks: 0
             },
             {
                 name: 'Purpose',
-                filtered: false
+                filtered: false,
+                clicks: 0
             },
             {
                 name: 'Type of Orbit',
-                filtered: false
+                filtered: false,
+                clicks: 0
             },
             {
                 name: 'Launch Site',
-                filtered: false
+                filtered: false,
+                clicks: 0
             }, 
             {
                 name: 'Launch Vehicle',
-                filtered: false
+                filtered: false,
+                clicks: 0
             }
         ];
 
@@ -140,21 +145,11 @@ class SatelliteTable{
          * FIX THIS
          * **************************
          */
-        d3.select('#Country').on('change', event => this.update(event)).on('click', event => {
-            let key = event.path[1].id;
-            for(let el of this.dropdownData) {
-                //console.log(el);
-                if(el.name === key) {
-                    if(el.filtered) {
-                        this.resetFilter(key);
-                    }
-                }
-            }
-        });
-        d3.select('#Use').on('change', event => this.update(event));
-        d3.select('#Orbit').on('change', event => this.update(event));
-        d3.select('#LaunchSite').on('change', event => this.update(event));
-        d3.select('#LaunchVehicle').on('change', event => this.update(event));
+        d3.select('#Country').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
+        d3.select('#Use').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
+        d3.select('#Orbit').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
+        d3.select('#LaunchSite').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
+        d3.select('#LaunchVehicle').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
     }
 
     /**
@@ -173,7 +168,7 @@ class SatelliteTable{
             this.data = this.originalData;
         }
         // console.log(applyGrouping());
-        // console.log(this.data);
+        // //console.log(this.data);
         // Stores table body selection and appends table rows
         let rowSelection = d3.select('#tableBody')
         .selectAll('tr')
@@ -450,7 +445,7 @@ class SatelliteTable{
         let LaunchSselect = d3.select('#LaunchSite');
         let LaunchVSelect = d3.select('#LaunchVehicle');
 
-
+        
         CountrySelect
         .selectAll('option')
         .data([...new Set(this.data.map(d => d['Country of Operator/Owner'] === '' ? 'Unknown' : d['Country of Operator/Owner']))].sort())
@@ -462,7 +457,6 @@ class SatelliteTable{
         .data([...new Set(this.data.map(d => d['Purpose'] === '' ? 'Unknown' : d['Purpose']))].sort())
         .join('option')
         .text(d=> d);
-
 
         OrbitSelect
         .selectAll('option')
@@ -494,10 +488,6 @@ class SatelliteTable{
         //console.log(filter);
         let tempKey = event.path[1].id;
         //console.log(tempKey);
-
-        if(filter === '') {
-            filter = 'All';
-        }
         //console.log(filter);
         
 
@@ -526,8 +516,27 @@ class SatelliteTable{
         updateAllGroup();
     }
 
+    dropDownUpdate(event) {
+        let key = event.path[1].id;
+        for(let el of this.dropdownData) {
+            //console.log(el);
+            if(el.name === key) {
+                if(el.filtered) {
+                    if(el.clicks > 0) {
+                        this.resetFilter(key);
+                        el.clicks = 0;
+                    }
+                    else{
+                        console.log(el.clicks)
+                        el.clicks = el.clicks + 1;
+                    }
+                }
+            }
+        }
+    }
 
     resetFilter(key) {
+
         for(let g of globalState.group) {
             if(g[0] === key) {
                 g[1] = null;

@@ -9,10 +9,12 @@ const globalState = {
     lineChart: null,
     cuttoffYear: 2022,
     group: [
-        ["Class of Orbit", null],
+        ["Type of Orbit", null],
         ["Date of Launch", null],
         ["Country of Operator/Owner", null],
         ["Purpose", null],
+        ["Launch Site", null],
+        ["Launch Vehicle", null]
     ],
     selection: [],
     color_pallette: [
@@ -107,7 +109,7 @@ function filterByYear(groupData) {
       return parseInt(thisLaunch) <= parseInt(globalState.cuttoffYear);
     });
 
-    console.log(selectedYear)
+    //console.log(selectedYear)
     return selectedYear;
 
   }
