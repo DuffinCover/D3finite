@@ -233,7 +233,7 @@ class SatelliteTable{
          * ***************************
          */
         d3.select('#FilterReset').on('click', event => {
-            for (let [key, value] of globlaState.group.entries()) {
+            for (let [key, value] of globalState.group.entries()) {
                 globalState.group[key] = null;
             }; 
             updateAllGroup()});
