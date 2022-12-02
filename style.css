@@ -73,3 +73,6 @@ table, th, td {
     float: right;
 }
 
+.tableRow {
+    width: 5%;
+}
