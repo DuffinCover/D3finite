@@ -172,8 +172,8 @@ class Worldview {
   
     let svg = d3.select("#satellites");
     let angles = satellites.map((d) => Math.random() * Math.PI * 2);
-
-    svg
+   
+    let sats = svg
       .selectAll("circle")
       .data(satellites)
       .join("circle")
@@ -181,26 +181,12 @@ class Worldview {
       .attr("opacity", 0.5)
       .attr("class", (d) => d["Class of Orbit"])
       .on("mouseover", (event, d) => {
-        console.log(d["Class of Orbit"]);
+       this.animate = false;
       })
       // if we have no other filters applied, this sets the filter. Otherwise it additionally filters
       // our already selected Data. 
       .on("click", (event, d) => {
-
         this.globalState.group[0][1] = d["Class of Orbit"] 
-        // if (this.globalState.group.length === 0) {
-        //   let satSubset = this.globalState.satelliteData.filter(
-        //     (n) => n["Class of Orbit"] === d["Class of Orbit"]
-        //   );
-          
-        //   this.globalState.group = satSubset;
-        // } else {
-        //   this.globalState.group = this.globalState.group.filter(
-        //     (n) => n["Class of Orbit"] === d["Class of Orbit"]
-        //   );
-        // }
-
-        //need to update this for my method. 
         updateAllGroup();
       })
       .transition()
@@ -210,7 +196,32 @@ class Worldview {
       })
       .attr("cy", (d, i) => {
         return Math.sin(angles[i]) * this.y(d["Perigee (km)"]);
+      })
+      .on("end", (d,i)=>{
+        console.log("about to orbit", d )
+        if( this.animate){
+          
+          orbit(i, this.y, d)
+        }
       });
+
+
+      function orbit(n, r, data){
+        angles[n] += Math.pi/2
+        let singleSat = sats.filter((d, i)=> i===n)
+        singleSat
+        .data(data)
+        .transition()
+        .duration(5000)
+        .attr("cx", (d) => {
+          return Math.cos(angles[n]) * r(d["Perigee (km)"]);
+        })
+        .attr("cy", (d) => {
+          return Math.sin(angles[n]) * r(d["Perigee (km)"]);
+        })
+        .on("end", orbit);
+      }
+      
   }
 
   orbitSelector(){
