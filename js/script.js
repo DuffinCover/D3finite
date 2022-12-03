@@ -73,21 +73,20 @@ function updateSort() {
 function applyGrouping() {
     let group = globalState.group;
 
-    //let groupedData = globalState.satelliteData.filter( d => )
+
     let groupedData = [...globalState.satelliteData]
-    //console.log(groupedData);
+
     for (let [key, value] of group) {
-        //console.log(key);
-        //console.log(value);
+
         if (value === null) {
 
         } else {
             let newData = groupedData.filter(d => d[key] === value);
-            //console.log(newData);
+
             groupedData = newData;
         }
     }
-    // console.log(groupedData);
+
     return filterByYear(groupedData);
 
 
