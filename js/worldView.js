@@ -243,20 +243,12 @@ class Worldview {
    */
   addSampleSlider() {
     d3.select("#satDistance")
-<<<<<<< HEAD
-    .append("g")
-    .append("text")
-    .attr("id", "slider-sample")
-    .attr("transform", "translate(-290, -235)")
-    .text("Sample of Total Satellites");
-=======
       .append("g")
       .append("text")
       .attr("id", "slider-sample")
       .attr("transform", "translate(-290, -235)")
       .text("Sample of Total")
       .text("Satellites");
->>>>>>> main
 
     let dataTime = [0.05, 0.1, 0.2, 0.5, 1];
 
@@ -369,17 +361,11 @@ class Worldview {
 
   /** Helper method for redrawing the visualization based on the status of our filter*/
   updateGroup() {
-    // if (this.globalState.group.length == 0) {
-    //   this.redraw(this.globalState.satelliteData);
-    // } else {
-    //   this.redraw(this.globalState.group);
-    // }
     this.redraw(applyGrouping());
   }
 
   /**Updates the visualization based on new sample size selections.  */
   newSampleUpdate() {
-    // filterByYear();
     updateAllGroup();
   }
 }
