@@ -12,9 +12,9 @@ class Worldview {
     this.height = 500;
     this.margin = 20;
 
-    this.fullWidth = 650
+    this.fullWidth = 650;
 
-    // initial data choice for drawing the chart and determining scale sizes. 
+    // initial data choice for drawing the chart and determining scale sizes.
     let scale_data = this.sampleSats;
     this.innerRadius = this.width / 5;
     this.outerRadius = this.width / 2 - this.margin;
@@ -33,8 +33,7 @@ class Worldview {
       ])
       .range([this.innerRadius, this.outerRadius + 10]);
 
-    
-    // Parameters for and html elements of the radial chart. 
+    // Parameters for and html elements of the radial chart.
     let worldviewsvg = d3
       .select("#worldview")
       .append("svg")
@@ -42,9 +41,9 @@ class Worldview {
       .attr("width", this.fullWidth)
       .attr("height", this.height)
       .attr("viewBox", [
-        (-this.width / 2)-50, 
+        -this.width / 2 - 50,
         -this.height / 2,
-        this.width+150,
+        this.width + 150,
         this.height,
       ])
       .attr("stroke-linejoin", "round")
@@ -56,23 +55,17 @@ class Worldview {
     satDistance.append("g").attr("id", "y");
     satDistance.append("g").attr("id", "satellites");
 
-    
-   
-
     //construct the visualization
-    this.addGlobe(scale_data);
+    this.addGlobe();
     this.drawAxis(worldviewsvg);
     this.addSampleSlider();
     this.placeSatellites(scale_data);
     this.addYearSlider(scale_data);
-    this.orbitSelector();
-
   }
-
 
   /** Method for creating the radial chart axis and scales according to global sample data.
    *  Sourced from: https://observablehq.com/@d3/radial-area-chart and adapted to fit our
-   * purposes. 
+   * purposes.
    */
   drawAxis(svg) {
     // https://bl.ocks.org/atanumallick/8d18989cd538c72ae1ead1c3b18d7b54
@@ -168,14 +161,13 @@ class Worldview {
 
     svg.select("#y").call(yAxis);
   }
- /**Takes a selection of satellite JSON objects and draws them as circles on the radial chart according to their
-  * perigee. Satellites are colored by type of orbit. When a satellite is clicked, the chart focuses on satelites in the same orbit. 
-  */
+  /**Takes a selection of satellite JSON objects and draws them as circles on the radial chart according to their
+   * perigee. Satellites are colored by type of orbit. When a satellite is clicked, the chart focuses on satelites in the same orbit.
+   */
   placeSatellites(satellites) {
-  
     let svg = d3.select("#satellites");
     let angles = satellites.map((d) => Math.random() * Math.PI * 2);
-   
+
     let sats = svg
       .selectAll("circle")
       .data(satellites)
@@ -184,12 +176,12 @@ class Worldview {
       .attr("opacity", 0.5)
       .attr("class", (d) => d["Class of Orbit"])
       .on("mouseover", (event, d) => {
-       this.animate = false;
+        this.animate = false;
       })
       // if we have no other filters applied, this sets the filter. Otherwise it additionally filters
-      // our already selected Data. 
+      // our already selected Data.
       .on("click", (event, d) => {
-        this.globalState.group[0][1] = d["Class of Orbit"] 
+        this.globalState.group[0][1] = d["Class of Orbit"];
         updateAllGroup();
       })
       .transition()
@@ -199,62 +191,21 @@ class Worldview {
       })
       .attr("cy", (d, i) => {
         return Math.sin(angles[i]) * this.y(d["Perigee (km)"]);
-      })
-      // .each("end", (d,i)=>{
-      //   console.log("about to orbit", d )
-      //   if( this.animate){
-          
-      //     // orbit(i, this.y, d)
-      //   }
-      // });
-
-
-      function orbit(n, r, data){
-        angles[n] += Math.pi/2
-        let singleSat = sats.filter((d, i)=> i===n)
-        singleSat
-        .data(data)
-        .transition()
-        .duration(5000)
-        .attr("cx", (d) => {
-          return Math.cos(angles[n]) * r(d["Perigee (km)"]);
-        })
-        .attr("cy", (d) => {
-          return Math.sin(angles[n]) * r(d["Perigee (km)"]);
-        })
-        .on("end", orbit);
-      }
-      
+      });
   }
 
-  orbitSelector(){
-
-  }
-  /**Creates the slider under the Radial chart for launch year. Shows all satellites that were launched on the selected year or earlier 
+  /**Creates the slider under the Radial chart for launch year. Shows all satellites that were launched on the selected year or earlier
    * sourced from: https://bl.ocks.org/johnwalley/raw/e1d256b81e51da68f7feb632a53c3518/?raw=true
-  */
+   */
   addYearSlider(satellites) {
-
-    d3.select("#worldview")
-      .append("div")
-      .attr("id", "helper-text")
-      .append("p")
-      .html(
-        "Adjust the slider to see how many satellites were launched up through the selected year."
-      );
-
-    d3.select("#helper-text")
-      .append("p")
-      .html("Click the Earth to Reset the satellites.");
-
     // d3.select("#worldview").append("div").append("p").attr("id", "value-time");
 
     d3.select("#satDistance")
-    .append("g")
-    .append("text")
-    .attr("id", "slider-time")
-    .attr("transform", "translate(290, -235)")
-    .text("");
+      .append("g")
+      .append("text")
+      .attr("id", "slider-time")
+      .attr("transform", "translate(290, -235)")
+      .text("");
 
     let dataTime = this.getLaunchDates(satellites);
 
@@ -278,10 +229,8 @@ class Worldview {
 
     let gTime = d3
       .select("#satDistance")
-      // .append("svg")
-      // .attr("width", 500)
-      // .attr("height", 100)
       .append("g")
+      .attr("id", "time")
       .attr("transform", "translate(290,-215)");
 
     gTime.call(sliderTime);
@@ -289,21 +238,25 @@ class Worldview {
     d3.select("#slider-time").text(d3.timeFormat("%Y")(sliderTime.value()));
   }
 
-
-
   /** Method for creating the slider that allows for selection of satellites displayed on the chart.
    * Sourced from: https://bl.ocks.org/johnwalley/raw/e1d256b81e51da68f7feb632a53c3518/?raw=true
    */
   addSampleSlider() {
-    // d3.select("#worldview").append("div").attr("id", "slider-sample");
-
     d3.select("#satDistance")
+<<<<<<< HEAD
     .append("g")
     .append("text")
     .attr("id", "slider-sample")
     .attr("transform", "translate(-290, -235)")
-    .text("Sample of Total")
-    .text("Satellites");
+    .text("Sample of Total Satellites");
+=======
+      .append("g")
+      .append("text")
+      .attr("id", "slider-sample")
+      .attr("transform", "translate(-290, -235)")
+      .text("Sample of Total")
+      .text("Satellites");
+>>>>>>> main
 
     let dataTime = [0.05, 0.1, 0.2, 0.5, 1];
 
@@ -325,11 +278,8 @@ class Worldview {
 
     let gTime = d3
       .select("#satDistance")
-      // .append("svg")
-      // .attr("id", "slider-svg")
-      // .attr("width", 100)
-      // .attr("height", 500)
       .append("g")
+      .attr("id", "sample")
       .attr("transform", "translate(-290,-215)");
 
     gTime.call(sliderTime);
@@ -345,8 +295,8 @@ class Worldview {
     }
     return new Date(launchDate, 1, 0);
   }
-  /** Method that takes in a selection of satellite json objects 
-   * and generalizes their launch dates into a collection of launch years. 
+  /** Method that takes in a selection of satellite json objects
+   * and generalizes their launch dates into a collection of launch years.
    */
   getLaunchDates(satellites) {
     let cuttoff = new Date(1990, 0, 1);
@@ -366,31 +316,43 @@ class Worldview {
   }
 
   /**Draws the "globe" in the middle of the radial chart.  */
-  addGlobe(satellites) {
-
-
-  
-
+  addGlobe() {
     let globe = d3
       .select("#globe")
       .append("image")
-      .attr('xlink:href', 'assets/globe2.png')
-      .attr('width', 200)
-      .attr('height', 200)
+      .attr("xlink:href", "assets/globe2.png")
+      .attr("width", 200)
+      .attr("height", 200)
       .attr("transform", "translate(-100, -100)")
       .html("Click here to reset")
       .on("click", (event, d) => {
-        this.globalState.group = [];
+        this.globalState.cuttoffYear = 2022;
+        this.globalState.group = [
+          ["Type of Orbit", null],
+          ["Date of Launch", null],
+          ["Country of Operator/Owner", null],
+          ["Purpose", null],
+          ["Launch Site", null],
+          ["Launch Vehicle", null]
+      ];
+        
+        this.resetSliders(this.globalState.satelliteData);
+
         updateAllGroup();
+        
       });
+  }
+
+  resetSliders(satelites) {
+    d3.select("#time").remove();
+    this.addYearSlider(satelites);
   }
 
   /**Method for changing the visualization when new data is selected */
   redraw(satellites) {
-    if(satellites.length < 500){
+    if (satellites.length < 500) {
       this.animate = true;
-    }
-    else{
+    } else {
       this.animate = false;
     }
 
@@ -405,7 +367,6 @@ class Worldview {
     this.placeSatellites(satellites);
   }
 
-
   /** Helper method for redrawing the visualization based on the status of our filter*/
   updateGroup() {
     // if (this.globalState.group.length == 0) {
@@ -413,7 +374,7 @@ class Worldview {
     // } else {
     //   this.redraw(this.globalState.group);
     // }
-    this.redraw(applyGrouping())
+    this.redraw(applyGrouping());
   }
 
   /**Updates the visualization based on new sample size selections.  */
