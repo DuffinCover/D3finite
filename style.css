@@ -76,6 +76,11 @@ table, th, td {
 .tableRow {
     width: 5%;
 }
+.selected{
+    opacity: 1;
+    stroke: #111;
+    stroke-width: 5px;
+}
 /* h1 {
     background-color: #684dda;
 } */

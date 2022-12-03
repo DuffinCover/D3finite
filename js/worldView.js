@@ -181,7 +181,7 @@ class Worldview {
       // if we have no other filters applied, this sets the filter. Otherwise it additionally filters
       // our already selected Data.
       .on("click", (event, d) => {
-        this.globalState.group[0][1] = d["Class of Orbit"];
+        this.globalState.group[6][1] = d["Class of Orbit"];
         updateAllGroup();
       })
       .transition()
@@ -198,8 +198,6 @@ class Worldview {
    * sourced from: https://bl.ocks.org/johnwalley/raw/e1d256b81e51da68f7feb632a53c3518/?raw=true
    */
   addYearSlider(satellites) {
-    // d3.select("#worldview").append("div").append("p").attr("id", "value-time");
-
     d3.select("#satDistance")
       .append("g")
       .append("text")
@@ -243,20 +241,11 @@ class Worldview {
    */
   addSampleSlider() {
     d3.select("#satDistance")
-<<<<<<< HEAD
     .append("g")
     .append("text")
     .attr("id", "slider-sample")
     .attr("transform", "translate(-290, -235)")
     .text("Sample of Total Satellites");
-=======
-      .append("g")
-      .append("text")
-      .attr("id", "slider-sample")
-      .attr("transform", "translate(-290, -235)")
-      .text("Sample of Total")
-      .text("Satellites");
->>>>>>> main
 
     let dataTime = [0.05, 0.1, 0.2, 0.5, 1];
 
@@ -326,6 +315,7 @@ class Worldview {
       .attr("transform", "translate(-100, -100)")
       .html("Click here to reset")
       .on("click", (event, d) => {
+        this.globalState.selection = []
         this.globalState.cuttoffYear = 2022;
         this.globalState.group = [
           ["Type of Orbit", null],
@@ -369,17 +359,27 @@ class Worldview {
 
   /** Helper method for redrawing the visualization based on the status of our filter*/
   updateGroup() {
-    // if (this.globalState.group.length == 0) {
-    //   this.redraw(this.globalState.satelliteData);
-    // } else {
-    //   this.redraw(this.globalState.group);
-    // }
     this.redraw(applyGrouping());
+    this.updateSelection()
   }
 
   /**Updates the visualization based on new sample size selections.  */
   newSampleUpdate() {
-    // filterByYear();
+    
     updateAllGroup();
+  }
+
+  updateSelection(){
+    d3.selectAll("circle")
+    .classed("selected", false)
+    d3.selectAll("circle")
+    .classed("selected", (d)=> {
+      for(let i = 0; i < this.globalState.selection.length; i++){
+        if(d['Name of Satellite, Alternate Names'] == this.globalState.selection[i]){
+          return true;
+        }
+      }
+      
+    })
   }
 }
