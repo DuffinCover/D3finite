@@ -4,6 +4,7 @@ const globalState = {
     originalData: null,
     satelliteData: null,
     sampleSatellites: null,
+    detail: null,
     table: null,
     worldView: null,
     lineChart: null,
@@ -38,6 +39,7 @@ loadData().then(data => {
     globalState.table = new SatelliteTable(globalState);
     globalState.worldView = new Worldview(globalState);
     globalState.lineChart = new VisualSatelliteChart(globalState);
+    globalState.detail = new SatelliteDetails(globalState);
 
 });
 
@@ -55,12 +57,14 @@ function updateAllGroup() {
     globalState.table.updateGroup();
     globalState.worldView.updateGroup();
     globalState.lineChart.update();
+    globalState.detail.update();
 }
 
 function updateAllSelection() {
     //console.log("Updating Selection",globalState.selection);
     globalState.table.updateSelection();
     globalState.lineChart.update();
+    globalState.detail.update();
 }
 
 function updateSort() {

@@ -50,26 +50,31 @@ class VisualSatelliteChart{
                 name: 'Expected Lifetime (yrs.)',
                 scale: null,
                 //color: '#82d7d9'
+                axis: null,
                 color: colors[10]
             }, {
                 name: 'Dry Mass (kg.)',
                 scale: null,
                 //color: '#ebc48d'
+                axis: null,
                 color: colors[1]
             }, {
                 name: 'Launch Mass (kg.)',
                 scale: null,
                 //color: '#8d70ba'
+                axis: null,
                 color: colors[2]
             }, {
                 name: 'Period (minutes)',
                 scale: null,
                 //color: '#cf5f91'
+                axis: null,
                 color: colors[3]
             }, {
                 name: 'Inclination (degrees)',
                 scale: null,
                 //color: '#cf5f91'
+                axis: null,
                 color: colors[4]
             }];
 
@@ -98,11 +103,13 @@ class VisualSatelliteChart{
 
         headers.append('text')
             .attr('x', (d, i) => (i + .5) * this.vizWidth1)
-            .attr('y', 30)
+            .attr('y', 25)
             .text(d => d.name)
             .attr('text-anchor', 'middle')
             .attr('font-weight', 900)
             .style('font-size', '14px');
+
+        
 
         let visuals = cols.append('g')
             .attr('id', 'vsc_visual');
@@ -158,17 +165,38 @@ class VisualSatelliteChart{
         let VSC_svg = d3.select('#VSC_SVG')
             .attr('height', this.CHART_HEIGHT);
 
-        let cols = VSC_svg.selectAll('g');
+        
 
+        let cols = VSC_svg.selectAll('g');
+        let n = 0;
         this.xScales = [];
         for (let col of this.sat_columns) {
             let max_val = d3.max(satData.map(d => d[col.name]));
-
+            
             let scale = d3.scaleLinear()
                 .domain([0, max_val])
-                .range([this.v_border + this.h_pad, this.vizWidth1 - (this.h_Margin + this.v_border + this.h_pad)]);
+                .range([this.v_border + this.h_pad, this.vizWidth1 - (this.h_Margin + this.v_border + this.h_pad)])
+                .nice();
+
+            let base_axis = d3.axisTop()
+                .scale(scale)
+                .ticks(5);
+               
 
             col.scale = scale;
+            col.axis = base_axis;
+
+            let h = d3.select(`#top-${n}`).select('#vsc_header')
+
+            h.select('g').remove()
+
+            h.append('g')
+                .attr('transform', `translate(${n * this.vizWidth1},50)`)
+                .call(col.axis);
+
+
+            n++;
+
         }
 
         this.yScale = d3.scaleLinear()
@@ -192,8 +220,10 @@ class VisualSatelliteChart{
             .domain([0, satData.length])
             .range([this.v_Margin + this.v_border, this.CHART_HEIGHT - (this.v_border + sel_adjust)]);
 
-
-
+        this.alt_yScale2 = d3.scaleLinear()
+            .domain([0, satData.length])
+            .range([this.v_Margin + this.v_border, this.CHART_HEIGHT - (this.v_border + sel_adjust + sel_adjust)]);
+        
 
         let visuals = cols.select('#vsc_visual');
 
@@ -207,6 +237,15 @@ class VisualSatelliteChart{
         let selection = globalState.selection;
 
         let sel_finder = satData.map((d, i) => [d['Name of Satellite, Alternate Names'], i]).filter((d, i) => selection.includes(d[0]));
+        
+        //let header_axes = cols.selectAll('#vsc_header')
+        //    .data(this.sat_columns)
+        //    .join('g')
+        //    .call((d,i) => {
+        //        console.log('anything?',i)
+        //        return d.axis;
+        //    }
+        //    );
 
         
 
@@ -220,63 +259,216 @@ class VisualSatelliteChart{
         if (sel_finder.length > 0) {
             //console.log('sel finder', sel_finder);
 
-            let sel_idx = sel_finder[0][1];
-            //console.log(sel_idx);
-            //console.log(this.alt_yScale.invert(sel_idx))
+            
 
-            let sel_data = satData.filter((d, i) => i === sel_idx);
+            
 
-            let y_loc = this.alt_yScale.invert(sel_idx);
+            if (sel_finder.length > 1) {
+                let sel_idx1 = sel_finder[0][1];
+                let sel_idx2 = sel_finder[1][1];
 
-            let scroll = 0;
+                if (sel_idx1 > sel_idx2) {
+                    sel_idx1 = sel_idx2;
+                    sel_idx2 = sel_finder[0][1];
+                }
 
-            if (y_loc > this.MIN_HEIGHT) {
-                scroll = y_loc - (this.MIN_HEIGHT / 2);
+
+                //console.log(sel_idx);
+                //console.log(this.alt_yScale.invert(sel_idx))
+
+                let sel_data = satData.filter((d, i) => (i === sel_idx1 || i === sel_idx2));
+
+                console.log('multi: ',sel_data);
+
+                let y_loc = this.alt_yScale2.invert(sel_idx1);
+
+                let scroll = 0;
+
+                if (y_loc > this.MIN_HEIGHT) {
+                    scroll = y_loc - (this.MIN_HEIGHT / 2);
+                }
+
+                document.getElementById("chart-body").scrollTop = scroll;
+
+
+                let bars = barContainer.selectAll('rect')
+                    .data((d, i) => {
+                        let output = satData.map(n => {
+                            return [n[d.name], i]
+                        });
+                        //console.log(output);
+                        return output;
+                    })
+                    .join('rect')
+                    .attr('x', (d) => (d[1] * this.vizWidth1) + this.h_pad)
+                    .attr('y', (d, i) => {
+                        //(i > sel_idx) ? this.alt_yScale(i) + sel_adjust : this.alt_yScale(i))
+                        let res = 0;
+                        if (i > sel_idx2) {
+                            res = this.alt_yScale2(i) + sel_adjust + sel_adjust
+                        } else if (i > sel_idx1) {
+                            res = this.alt_yScale2(i) + sel_adjust 
+                        } else {
+                            res = this.alt_yScale2(i)
+                        }
+                        return res;
+                    })
+                    .attr('width', d => this.sat_columns[d[1]].scale(d[0]))
+                    .attr('height', expand)
+                    .attr('fill', d => this.sat_columns[d[1]].color)
+                    .attr('stroke-width', '0px')
+
+
+                let highlight1 = bars.filter((d, i) => i === sel_idx1)
+                    .attr('height', sel_height - 2)
+                    .attr('y', this.alt_yScale2(sel_idx1) + 1)
+                    .attr('stroke-width', '1px')
+                    .attr('stroke', 'black')
+
+                let highlight2 = bars.filter((d, i) => i === sel_idx2)
+                    .attr('height', sel_height - 2)
+                    .attr('y', this.alt_yScale2(sel_idx2) + 1 + sel_adjust)
+                    .attr('stroke-width', '1px')
+                    .attr('stroke', 'black')
+
+
+
+                let row_highlight1 = hlContainer.selectAll('rect')
+                    .data((d, i) => {
+                        let output = sel_data.map((n,j) => {
+                            return [n[d.name], i, j];
+                        });
+                        //console.log('hl',output);
+                        return output;
+                    })
+                    .join('rect')
+                    .attr('x', (d) => 1 + (d[1] * this.vizWidth1) + this.h_pad + this.sat_columns[d[1]].scale(d[0]))
+                    .attr('y', d=> d[2] > 0 ? this.alt_yScale2(sel_idx2) + 1 + sel_adjust: this.alt_yScale2(sel_idx1) + 1)
+                    .attr('height', sel_height - 2)
+                    .attr('width', d => this.vizWidth1 - (this.sat_columns[d[1]].scale(d[0]) + (2 * this.h_pad) + this.h_Margin))
+                    .attr('fill', '#EAEAEA')
+                    .attr('stroke-width', '0px')
+
+            } else {
+
+
+                let sel_idx = sel_finder[0][1];
+
+                //console.log(sel_idx);
+                //console.log(this.alt_yScale.invert(sel_idx))
+
+                let sel_data = satData.filter((d, i) => i === sel_idx);
+
+                let y_loc = this.alt_yScale.invert(sel_idx);
+
+                let scroll = 0;
+
+                if (y_loc > this.MIN_HEIGHT) {
+                    scroll = y_loc - (this.MIN_HEIGHT / 2);
+                }
+
+                document.getElementById("chart-body").scrollTop = scroll;
+
+
+                let bars = barContainer.selectAll('rect')
+                    .data((d, i) => {
+                        let output = satData.map(n => {
+                            return [n[d.name], i]
+                        });
+                        //console.log(output);
+                        return output;
+                    })
+                    .join('rect')
+                    .attr('x', (d) => (d[1] * this.vizWidth1) + this.h_pad)
+                    .attr('y', (d, i) => (i > sel_idx) ? this.alt_yScale(i) + sel_adjust : this.alt_yScale(i))
+                    .attr('width', d => this.sat_columns[d[1]].scale(d[0]))
+                    .attr('height', expand)
+                    .attr('fill', d => this.sat_columns[d[1]].color)
+                    .attr('stroke-width', '0px')
+
+
+                let highlight = bars.filter((d, i) => i === sel_idx)
+                    .attr('height', sel_height - 2)
+                    .attr('y', this.alt_yScale(sel_idx) + 1)
+                    .attr('stroke-width', '1px')
+                    .attr('stroke', 'black')
+
+
+
+                let row_highlight = hlContainer.selectAll('rect')
+                    .data((d, i) => {
+                        let output = sel_data.map(n => {
+                            return [n[d.name], i];
+                        });
+                        //console.log('hl',output);
+                        return output;
+                    })
+                    .join('rect')
+                    .attr('x', (d) => 1 + (d[1] * this.vizWidth1) + this.h_pad + this.sat_columns[d[1]].scale(d[0]))
+                    .attr('y', this.alt_yScale(sel_idx) + 1)
+                    .attr('height', sel_height - 2)
+                    .attr('width', d => this.vizWidth1 - (this.sat_columns[d[1]].scale(d[0]) + (2 * this.h_pad) + this.h_Margin))
+                    .attr('fill', '#EAEAEA')
+                    .attr('stroke-width', '0px')
+
             }
 
-            document.getElementById("chart-body").scrollTop = scroll;
+            ////console.log(sel_idx);
+            ////console.log(this.alt_yScale.invert(sel_idx))
+
+            //let sel_data = satData.filter((d, i) => i === sel_idx);
+
+            //let y_loc = this.alt_yScale.invert(sel_idx);
+
+            //let scroll = 0;
+
+            //if (y_loc > this.MIN_HEIGHT) {
+            //    scroll = y_loc - (this.MIN_HEIGHT / 2);
+            //}
+
+            //document.getElementById("chart-body").scrollTop = scroll;
 
 
-            let bars = barContainer.selectAll('rect')
-                .data((d, i) => {
-                    let output = satData.map(n => {
-                        return [n[d.name], i]
-                    });
-                    //console.log(output);
-                    return output;
-                })
-                .join('rect')
-                .attr('x', (d) => (d[1] * this.vizWidth1) + this.h_pad)
-                .attr('y', (d, i) => (i > sel_idx) ? this.alt_yScale(i) + sel_adjust : this.alt_yScale(i))
-                .attr('width', d => this.sat_columns[d[1]].scale(d[0]))
-                .attr('height', expand)
-                .attr('fill', d => this.sat_columns[d[1]].color)
-                .attr('stroke-width', '0px')
+            //let bars = barContainer.selectAll('rect')
+            //    .data((d, i) => {
+            //        let output = satData.map(n => {
+            //            return [n[d.name], i]
+            //        });
+            //        //console.log(output);
+            //        return output;
+            //    })
+            //    .join('rect')
+            //    .attr('x', (d) => (d[1] * this.vizWidth1) + this.h_pad)
+            //    .attr('y', (d, i) => (i > sel_idx) ? this.alt_yScale(i) + sel_adjust : this.alt_yScale(i))
+            //    .attr('width', d => this.sat_columns[d[1]].scale(d[0]))
+            //    .attr('height', expand)
+            //    .attr('fill', d => this.sat_columns[d[1]].color)
+            //    .attr('stroke-width', '0px')
 
 
-            let highlight = bars.filter((d, i) => i === sel_idx)
-                .attr('height', sel_height - 2)
-                .attr('y', this.alt_yScale(sel_idx) + 1)
-                .attr('stroke-width', '1px')
-                .attr('stroke', 'black')
+            //let highlight = bars.filter((d, i) => i === sel_idx)
+            //    .attr('height', sel_height - 2)
+            //    .attr('y', this.alt_yScale(sel_idx) + 1)
+            //    .attr('stroke-width', '1px')
+            //    .attr('stroke', 'black')
 
 
 
-            let row_highlight = hlContainer.selectAll('rect')
-                .data((d, i) => {
-                    let output = sel_data.map(n => {
-                        return [n[d.name], i];
-                    });
-                    //console.log('hl',output);
-                    return output;
-                })
-                .join('rect')
-                .attr('x', (d) => 1 + (d[1] * this.vizWidth1) + this.h_pad + this.sat_columns[d[1]].scale(d[0]))
-                .attr('y', this.alt_yScale(sel_idx) + 1)
-                .attr('height', sel_height - 2)
-                .attr('width', d => this.vizWidth1 - (this.sat_columns[d[1]].scale(d[0]) + (2 * this.h_pad) + this.h_Margin))
-                .attr('fill', '#EAEAEA')
-                .attr('stroke-width', '0px')
+            //let row_highlight = hlContainer.selectAll('rect')
+            //    .data((d, i) => {
+            //        let output = sel_data.map(n => {
+            //            return [n[d.name], i];
+            //        });
+            //        //console.log('hl',output);
+            //        return output;
+            //    })
+            //    .join('rect')
+            //    .attr('x', (d) => 1 + (d[1] * this.vizWidth1) + this.h_pad + this.sat_columns[d[1]].scale(d[0]))
+            //    .attr('y', this.alt_yScale(sel_idx) + 1)
+            //    .attr('height', sel_height - 2)
+            //    .attr('width', d => this.vizWidth1 - (this.sat_columns[d[1]].scale(d[0]) + (2 * this.h_pad) + this.h_Margin))
+            //    .attr('fill', '#EAEAEA')
+            //    .attr('stroke-width', '0px')
 
 
 
