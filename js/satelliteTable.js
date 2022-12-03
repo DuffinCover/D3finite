@@ -242,7 +242,7 @@ class SatelliteTable{
          * ***************************
          */
         d3.select('#FilterReset').on('click', event => {
-            for (let [key, value] of globalState.group.entries()) {
+            for (let [key, value] of globalState.group) {
                 globalState.group[key] = null;
             }; 
             updateAllGroup()});
@@ -556,36 +556,6 @@ class SatelliteTable{
                     el.filtered = true;
                     el.filterElement = filter;
                 }
-            }
-        }
-        updateAllGroup();
-    }
-
-    dropDownUpdate(event) {
-        let key = event.path[1].id;
-        for(let el of this.dropdownData) {
-            //console.log(el);
-            if(el.name === key) {
-                if(el.filtered) {
-                    if(el.clicks > 0) {
-                        this.resetFilter(key);
-                        //el.clicks = 0;
-                        el.filtered = false;
-                    }
-                    else{
-                        console.log(el.clicks)
-                        //el.clicks = el.clicks + 1;
-                    }
-                }
-            }
-        }
-    }
-
-    resetFilter(key) {
-
-        for(let g of globalState.group) {
-            if(g[0] === key) {
-                g[1] = null;
             }
         }
         updateAllGroup();
