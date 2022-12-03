@@ -50,26 +50,31 @@ class VisualSatelliteChart{
                 name: 'Expected Lifetime (yrs.)',
                 scale: null,
                 //color: '#82d7d9'
+                axis: null,
                 color: colors[10]
             }, {
                 name: 'Dry Mass (kg.)',
                 scale: null,
                 //color: '#ebc48d'
+                axis: null,
                 color: colors[1]
             }, {
                 name: 'Launch Mass (kg.)',
                 scale: null,
                 //color: '#8d70ba'
+                axis: null,
                 color: colors[2]
             }, {
                 name: 'Period (minutes)',
                 scale: null,
                 //color: '#cf5f91'
+                axis: null,
                 color: colors[3]
             }, {
                 name: 'Inclination (degrees)',
                 scale: null,
                 //color: '#cf5f91'
+                axis: null,
                 color: colors[4]
             }];
 
@@ -98,11 +103,13 @@ class VisualSatelliteChart{
 
         headers.append('text')
             .attr('x', (d, i) => (i + .5) * this.vizWidth1)
-            .attr('y', 30)
+            .attr('y', 25)
             .text(d => d.name)
             .attr('text-anchor', 'middle')
             .attr('font-weight', 900)
             .style('font-size', '14px');
+
+        
 
         let visuals = cols.append('g')
             .attr('id', 'vsc_visual');
@@ -158,17 +165,38 @@ class VisualSatelliteChart{
         let VSC_svg = d3.select('#VSC_SVG')
             .attr('height', this.CHART_HEIGHT);
 
-        let cols = VSC_svg.selectAll('g');
+        
 
+        let cols = VSC_svg.selectAll('g');
+        let n = 0;
         this.xScales = [];
         for (let col of this.sat_columns) {
             let max_val = d3.max(satData.map(d => d[col.name]));
-
+            
             let scale = d3.scaleLinear()
                 .domain([0, max_val])
-                .range([this.v_border + this.h_pad, this.vizWidth1 - (this.h_Margin + this.v_border + this.h_pad)]);
+                .range([this.v_border + this.h_pad, this.vizWidth1 - (this.h_Margin + this.v_border + this.h_pad)])
+                .nice();
+
+            let base_axis = d3.axisTop()
+                .scale(scale)
+                .ticks(5);
+               
 
             col.scale = scale;
+            col.axis = base_axis;
+
+            let h = d3.select(`#top-${n}`).select('#vsc_header')
+
+            h.select('g').remove()
+
+            h.append('g')
+                .attr('transform', `translate(${n * this.vizWidth1},50)`)
+                .call(col.axis);
+
+
+            n++;
+
         }
 
         this.yScale = d3.scaleLinear()
@@ -193,7 +221,7 @@ class VisualSatelliteChart{
             .range([this.v_Margin + this.v_border, this.CHART_HEIGHT - (this.v_border + sel_adjust)]);
 
 
-
+        
 
         let visuals = cols.select('#vsc_visual');
 
@@ -207,6 +235,15 @@ class VisualSatelliteChart{
         let selection = globalState.selection;
 
         let sel_finder = satData.map((d, i) => [d['Name of Satellite, Alternate Names'], i]).filter((d, i) => selection.includes(d[0]));
+        
+        //let header_axes = cols.selectAll('#vsc_header')
+        //    .data(this.sat_columns)
+        //    .join('g')
+        //    .call((d,i) => {
+        //        console.log('anything?',i)
+        //        return d.axis;
+        //    }
+        //    );
 
         
 
