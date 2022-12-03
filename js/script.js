@@ -15,7 +15,8 @@ const globalState = {
         ["Country of Operator/Owner", null],
         ["Purpose", null],
         ["Launch Site", null],
-        ["Launch Vehicle", null]
+        ["Launch Vehicle", null],
+        ["Class of Orbit", null]
     ],
     selection: [],
     color_pallette: [
@@ -61,7 +62,9 @@ function updateAllGroup() {
 }
 
 function updateAllSelection() {
-    //console.log("Updating Selection",globalState.selection);
+    console.log("Updating Selection",globalState.selection);
+
+    globalState.worldView.updateSelection();
     globalState.table.updateSelection();
     globalState.lineChart.update();
     globalState.detail.update();

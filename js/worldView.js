@@ -181,7 +181,7 @@ class Worldview {
       // if we have no other filters applied, this sets the filter. Otherwise it additionally filters
       // our already selected Data.
       .on("click", (event, d) => {
-        this.globalState.group[0][1] = d["Class of Orbit"];
+        this.globalState.group[6][1] = d["Class of Orbit"];
         updateAllGroup();
       })
       .transition()
@@ -315,6 +315,7 @@ class Worldview {
       .attr("transform", "translate(-100, -100)")
       .html("Click here to reset")
       .on("click", (event, d) => {
+        this.globalState.selection = []
         this.globalState.cuttoffYear = 2022;
         this.globalState.group = [
           ["Type of Orbit", null],
@@ -359,10 +360,26 @@ class Worldview {
   /** Helper method for redrawing the visualization based on the status of our filter*/
   updateGroup() {
     this.redraw(applyGrouping());
+    this.updateSelection()
   }
 
   /**Updates the visualization based on new sample size selections.  */
   newSampleUpdate() {
+    
     updateAllGroup();
+  }
+
+  updateSelection(){
+    d3.selectAll("circle")
+    .classed("selected", false)
+    d3.selectAll("circle")
+    .classed("selected", (d)=> {
+      for(let i = 0; i < this.globalState.selection.length; i++){
+        if(d['Name of Satellite, Alternate Names'] == this.globalState.selection[i]){
+          return true;
+        }
+      }
+      
+    })
   }
 }
