@@ -25,27 +25,32 @@ class SatelliteTable{
             {
                 name: 'Country of Operator/Owner',
                 filtered: false,
-                clicks: 0
+                clicks: 0,
+                filterElement: null
             },
             {
                 name: 'Purpose',
                 filtered: false,
-                clicks: 0
+                clicks: 0,
+                filterElement: null
             },
             {
                 name: 'Type of Orbit',
                 filtered: false,
-                clicks: 0
+                clicks: 0,
+                filterElement: null
             },
             {
                 name: 'Launch Site',
                 filtered: false,
-                clicks: 0
+                clicks: 0,
+                filterElement: null
             }, 
             {
                 name: 'Launch Vehicle',
                 filtered: false,
-                clicks: 0
+                clicks: 0,
+                filterElement: null
             }
         ];
 
@@ -151,11 +156,11 @@ class SatelliteTable{
          * FIX THIS
          * **************************
          */
-        d3.select('#Country').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
-        d3.select('#Use').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
-        d3.select('#Orbit').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
-        d3.select('#LaunchSite').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
-        d3.select('#LaunchVehicle').on('change', event => this.update(event)).on('click', event => this.dropDownUpdate(event));
+        d3.select('#Country').on('change', event => this.update(event));
+        d3.select('#Use').on('change', event => this.update(event));
+        d3.select('#Orbit').on('change', event => this.update(event));
+        d3.select('#LaunchSite').on('change', event => this.update(event));
+        d3.select('#LaunchVehicle').on('change', event => this.update(event));
     }
 
     /**
@@ -189,8 +194,9 @@ class SatelliteTable{
                 globalState.selection = globalState.selection.filter((el) => el !== d['Name of Satellite, Alternate Names']);
                 updateAllSelection();
             } else {
-                if(globalState.selection.length > 0) {
-                    globalState.selection = [];
+                // If there are 2 items selected then remove the first
+                if(globalState.selection.length > 1) {
+                    globalState.selection = globalState.selection.splice(1);
                 }
                 globalState.selection.push(d['Name of Satellite, Alternate Names']);
                 updateAllSelection();
@@ -219,6 +225,8 @@ class SatelliteTable{
         cellSelect.filter(d => d.type === 'Period').text(d=>d.value === '' ? 'N/A' : d.value);
         cellSelect.filter(d => d.type === 'Inclination').text(d=>d.value === '' ? 'N/A' : d.value);
         cellSelect.filter(d => d.type === 'LaunchDate').text(d=>d.value ? 'N/A' : d.value);
+
+        //this.attachSortHandlers();
     }
 
     /**
@@ -248,10 +256,11 @@ class SatelliteTable{
                 .attr('id', item.key)
                 .append('select')
                 .attr('id', item.id);
+
+                
             }
         }
         this.addFilters();
-
 
 
         d3.select('#columnHeaders')
@@ -451,34 +460,62 @@ class SatelliteTable{
         let LaunchSselect = d3.select('#LaunchSite');
         let LaunchVSelect = d3.select('#LaunchVehicle');
 
-        
+        let CountryData = [...new Set(this.data.map(d => d['Country of Operator/Owner'] === '' ? 'Unknown' : d['Country of Operator/Owner'])), ' All'].sort();
+        let PurposeData = [...new Set(this.data.map(d => d['Purpose'] === '' ? 'Unknown' : d['Purpose'])), ' All'].sort();
+        let OrbitData = [...new Set(this.data.map(d => d['Type of Orbit'] === '' ? 'Unknown' : d['Type of Orbit'])), ' All'].sort();
+        let LaunchSData = [...new Set(this.data.map(d => d['Launch Site'] === '' ? 'Unknown' : d['Launch Site'])), ' All'].sort();
+        let LaunchVData = [...new Set(this.data.map(d => d['Launch Vehicle'] === '' ? 'Unknown' : d['Launch Vehicle'])), ' All'].sort();
+
+        // If the data is filterd, set the dropdown menu to only display the selected filter and an 'all' element
+        if(this.dropdownData.find(el => el.name === 'Country of Operator/Owner').filtered){
+            let value = this.dropdownData.find(el => el.name === 'Country of Operator/Owner').filterElement;
+            CountryData = [value, 'All'];
+        }
+        if(this.dropdownData.find(el => el.name === 'Purpose').filtered){
+            let value = this.dropdownData.find(el => el.name === 'Purpose').filterElement;
+            console.log(value);
+            PurposeData = [value, 'All'];
+        }
+        if(this.dropdownData.find(el => el.name === 'Type of Orbit').filtered){
+            let value = this.dropdownData.find(el => el.name === 'Type of Orbit').filterElement;
+            OrbitData = [value, 'All'];
+        }
+        if(this.dropdownData.find(el => el.name === 'Launch Site').filtered){
+            let value = this.dropdownData.find(el => el.name === 'Launch Site').filterElement;
+            LaunchSData = [value, 'All'];
+        }
+        if(this.dropdownData.find(el => el.name === 'Launch Vehicle').filtered){
+            let value = this.dropdownData.find(el => el.name === 'Launch Vehicle').filterElement;
+            LaunchVData = [value, 'All'];
+        }
+
         CountrySelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Country of Operator/Owner'] === '' ? 'Unknown' : d['Country of Operator/Owner']))].sort())
+        .data(CountryData)
         .join('option')
         .text(d=> d);
 
         PurposeSelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Purpose'] === '' ? 'Unknown' : d['Purpose']))].sort())
+        .data(PurposeData)
         .join('option')
         .text(d=> d);
 
         OrbitSelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Type of Orbit'] === '' ? 'Unknown' : d['Type of Orbit']))].sort())
+        .data(OrbitData)
         .join('option')
         .text(d=> d);
 
         LaunchSselect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Launch Site'] === '' ? 'Unknown' : d['Launch Site']))].sort())
+        .data(LaunchSData)
         .join('option')
         .text(d=> d);
 
         LaunchVSelect
         .selectAll('option')
-        .data([...new Set(this.data.map(d => d['Launch Vehicle'] === '' ? 'Unknown' : d['Launch Vehicle']))].sort())
+        .data(LaunchVData)
         .join('option')
         .text(d=> d);
 
@@ -499,7 +536,7 @@ class SatelliteTable{
 
         for(let g of globalState.group) {
             if(g[0] === tempKey) {
-                if(filter === 'All') {
+                if(filter === 'All' || filter === ' All') {
                     g[1] = null;
                 }
                 else {
@@ -511,7 +548,14 @@ class SatelliteTable{
 
         for(let el of this.dropdownData) {
             if(el.name === tempKey) {
-                el.filtered = true;
+                if(filter === 'All') {
+                    el.filtered = false;
+                    el.filtereElement = null;
+                }
+                else {
+                    el.filtered = true;
+                    el.filterElement = filter;
+                }
             }
         }
         updateAllGroup();
@@ -525,11 +569,12 @@ class SatelliteTable{
                 if(el.filtered) {
                     if(el.clicks > 0) {
                         this.resetFilter(key);
-                        el.clicks = 0;
+                        //el.clicks = 0;
+                        el.filtered = false;
                     }
                     else{
                         console.log(el.clicks)
-                        el.clicks = el.clicks + 1;
+                        //el.clicks = el.clicks + 1;
                     }
                 }
             }
