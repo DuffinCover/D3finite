@@ -23,7 +23,6 @@ const globalState = {
         '#261a5a', '#1a1044', '#4c5c87',
         '#69809e','#95c5ac'
     ], 
-    comparedSatellites:[]
 };
 
 

@@ -198,8 +198,6 @@ class Worldview {
    * sourced from: https://bl.ocks.org/johnwalley/raw/e1d256b81e51da68f7feb632a53c3518/?raw=true
    */
   addYearSlider(satellites) {
-    // d3.select("#worldview").append("div").append("p").attr("id", "value-time");
-
     d3.select("#satDistance")
       .append("g")
       .append("text")
@@ -243,12 +241,11 @@ class Worldview {
    */
   addSampleSlider() {
     d3.select("#satDistance")
-      .append("g")
-      .append("text")
-      .attr("id", "slider-sample")
-      .attr("transform", "translate(-290, -235)")
-      .text("Sample of Total")
-      .text("Satellites");
+    .append("g")
+    .append("text")
+    .attr("id", "slider-sample")
+    .attr("transform", "translate(-290, -235)")
+    .text("Sample of Total Satellites");
 
     let dataTime = [0.05, 0.1, 0.2, 0.5, 1];
 
