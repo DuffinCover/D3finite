@@ -172,6 +172,7 @@ class Worldview {
   * perigee. Satellites are colored by type of orbit. When a satellite is clicked, the chart focuses on satelites in the same orbit. 
   */
   placeSatellites(satellites) {
+
   
     let svg = d3.select("#satellites");
     let angles = satellites.map((d) => Math.random() * Math.PI * 2);
@@ -188,7 +189,8 @@ class Worldview {
       })
       // if we have no other filters applied, this sets the filter. Otherwise it additionally filters
       // our already selected Data. 
-      .on("click", (event, d) => {
+        .on("click", (event, d) => {
+
         this.globalState.group[0][1] = d["Class of Orbit"] 
         updateAllGroup();
       })

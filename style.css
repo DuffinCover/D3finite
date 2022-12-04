@@ -76,3 +76,18 @@ table, th, td {
 .tableRow {
     width: 5%;
 }
+
+.detail {
+    word-break: normal;
+    word-wrap: break-word;
+    line-break: auto;
+    font-weight:600;
+    line-height: 1.5;
+}
+.detail_title {
+    font-size: 20px;
+    font-weight: 700;
+}
+.hr_line {
+    border-style: double;
+}
