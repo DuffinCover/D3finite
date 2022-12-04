@@ -53,9 +53,10 @@ function takeSample(sampleSize){
     return [...sampleSet]
 }
 
-function updateAllGroup() {
+function updateAllGroup(reset = false) {
     //console.log("Apply Grouping");
-    globalState.table.updateGroup();
+    console.log(reset);
+    globalState.table.updateGroup(reset);
     globalState.worldView.updateGroup();
     globalState.lineChart.update();
     globalState.detail.update();
@@ -112,7 +113,7 @@ function filterByYear(groupData) {
       return parseInt(thisLaunch) <= parseInt(globalState.cuttoffYear);
     });
 
-    //console.log(selectedYear)
+    console.log(selectedYear)
     return selectedYear;
 
   }
