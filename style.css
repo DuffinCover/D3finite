@@ -8,29 +8,29 @@ html {
     grid-gap: 40px;
 }
 .LEO{
-color:#684dda;
-fill:#684dda;
-stroke: black;
-stroke-opacity: 0.5;
-}
-.GEO{
-color:#da3182;
-fill:#da3182;
+color:#4895EF;
+fill:#4895EF;
 stroke: black;
 stroke-opacity: 0.5;
 }
 .Elliptical{
-color:#69809e;
-fill:#69809e;
+color:#4361EE;
+fill:#4361EE;
 stroke: black;
 stroke-opacity: 0.5;
 }
 .MEO{
-color:#95c5ac;
-fill: #95c5ac;
+color:#560BAD;
+fill: #560BAD;
 stroke: black;
 stroke-opacity: 0.5; 
 }
+.GEO{
+    color:#F72585;
+    fill:#F72585;
+    stroke: black;
+    stroke-opacity: 0.5;
+    }
 
 .scrollable2 {
     height: 600px;
@@ -154,9 +154,7 @@ td {
     stroke: #111;
     stroke-width: 5px;
 }
-/* h1 {
-    background-color: #684dda;
-} */
+
 /* https://www.w3schools.com/css/css_navbar_horizontal.asp */
 ul {
     list-style-type: none;
