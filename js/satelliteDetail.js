@@ -87,8 +87,8 @@ class SatelliteDetails {
 
 
         let resize = function (h, w) {
-            let maxh = 200;
-            let maxw = 200;
+            let maxh = 240;
+            let maxw = 240;
             let maxd = h > w ? h : w;
 
 

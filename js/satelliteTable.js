@@ -265,6 +265,7 @@ class SatelliteTable{
                 d.ascending = sortAscending;
                 this.buildTable();
                 this.updateRows();
+                updateSort();
             });
     }
 
