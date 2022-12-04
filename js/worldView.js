@@ -323,12 +323,13 @@ class Worldview {
           ["Country of Operator/Owner", null],
           ["Purpose", null],
           ["Launch Site", null],
-          ["Launch Vehicle", null]
+          ["Launch Vehicle", null],
+          ["Class of Orbit", null]
       ];
         
         this.resetSliders(this.globalState.satelliteData);
 
-        updateAllGroup();
+        updateAllGroup(true);
         
       });
   }
