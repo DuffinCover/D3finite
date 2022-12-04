@@ -28,22 +28,71 @@ stroke: black;
 stroke-opacity: 0.5; 
 }
 
-.scrollable {
-	height:500px;
-	width:1000px;		
-    overflow-y:auto;
-	float:left;
-	position:relative;
-	margin-left:-5px;
-}
-
 .scrollable2 {
     height: 600px;
-    width: 1000px;
+    width: 1300px;
     overflow-y: auto;
     float: left;
     position: relative;
     /*margin-left: -5px;*/
+}
+
+table,
+th,
+td {
+  border: 1px solid;
+  cursor:pointer;
+}
+
+table {
+    width: 100%;
+    max-width: 1000px;
+    height: 600px;
+    margin: 25px;
+    display: block;
+    overflow-x: auto;
+    border-spacing: 0;
+    position:relative;
+    float: left;
+}
+
+tbody {
+    white-space: normal;
+}
+
+th,
+td {
+    padding: 5px 10px;
+    border-top-width: 0;
+    border-left-width: 0;
+}
+
+th {
+    position: sticky;
+    top: 0;
+    vertical-align: bottom;
+    width:100px;
+    background-color: #34495e;
+    color: white;
+    text-align: center;
+}
+
+th:last-child,
+td:last-child {
+    border-right-width: 0;
+}
+
+tr:last-child td {
+    border-bottom-width: 0;
+}
+
+td {
+    font-family:'Times New Roman';
+    font-size:10pt;
+}
+
+.colHead {
+    height:80px;
 }
 
 .unselectedTable {
@@ -55,27 +104,19 @@ stroke-opacity: 0.5;
 .selectedTable {
     background-color: #69809e;
     text-align: center;
-    border: 3px solid black;
+    border: 3pt solid black;
 }
 
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-    cursor: pointer;
-}
-
-.colHead {
-    background-color: #34495e;
-    color: white;
-    text-align: center;
-}
 #slider-sample{
     float: right;
 }
 
-.tableRow {
-    width: 5%;
+.FilterButton {
+    margin-top: 0;
+    margin-left:25px;
+    position:absolute;
 }
+
 
 .detail {
     word-break: normal;
@@ -91,3 +132,36 @@ table, th, td {
 .hr_line {
     border-style: double;
 }
+.selected{
+    opacity: 1;
+    stroke: #111;
+    stroke-width: 5px;
+}
+/* h1 {
+    background-color: #684dda;
+} */
+/* https://www.w3schools.com/css/css_navbar_horizontal.asp */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color:#684dda;
+  }
+  
+  li {
+    float: left;
+  }
+  
+  li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  
+  li a:hover {
+    background-color: #111;
+  }
+

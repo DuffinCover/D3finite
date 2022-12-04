@@ -15,7 +15,8 @@ const globalState = {
         ["Country of Operator/Owner", null],
         ["Purpose", null],
         ["Launch Site", null],
-        ["Launch Vehicle", null]
+        ["Launch Vehicle", null],
+        ["Class of Orbit", null]
     ],
     selection: [],
     color_pallette: [
@@ -24,7 +25,6 @@ const globalState = {
         '#261a5a', '#1a1044', '#4c5c87',
         '#69809e','#95c5ac'
     ], 
-    comparedSatellites:[]
 };
 
 
@@ -54,8 +54,6 @@ async function loadData() {
 }
 
 loadData().then(data => {
-    //console.log(data);
-
     globalState.originalData = data; 
     globalState.satelliteData = takeSample(200);
     globalState.table = new SatelliteTable(globalState);
@@ -74,16 +72,19 @@ function takeSample(sampleSize){
     return [...sampleSet]
 }
 
-function updateAllGroup() {
+function updateAllGroup(reset = false) {
     //console.log("Apply Grouping");
-    globalState.table.updateGroup();
+    console.log(reset);
+    globalState.table.updateGroup(reset);
     globalState.worldView.updateGroup();
     globalState.lineChart.update();
     globalState.detail.update();
 }
 
 function updateAllSelection() {
-    //console.log("Updating Selection",globalState.selection);
+    console.log("Updating Selection",globalState.selection);
+
+    globalState.worldView.updateSelection();
     globalState.table.updateSelection();
     globalState.lineChart.update();
     globalState.detail.update();
@@ -96,21 +97,20 @@ function updateSort() {
 function applyGrouping() {
     let group = globalState.group;
 
-    //let groupedData = globalState.satelliteData.filter( d => )
+
     let groupedData = [...globalState.satelliteData]
-    //console.log(groupedData);
+
     for (let [key, value] of group) {
-        //console.log(key);
-        //console.log(value);
+
         if (value === null) {
 
         } else {
             let newData = groupedData.filter(d => d[key] === value);
-            //console.log(newData);
+
             groupedData = newData;
         }
     }
-    // console.log(groupedData);
+
     return filterByYear(groupedData);
 
 
@@ -132,7 +132,7 @@ function filterByYear(groupData) {
       return parseInt(thisLaunch) <= parseInt(globalState.cuttoffYear);
     });
 
-    //console.log(selectedYear)
+    console.log(selectedYear)
     return selectedYear;
 
   }

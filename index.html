@@ -18,14 +18,32 @@
 
   <body>
     <header>
-      <h1>D3FINITE Visual Satellites</h1>
+      <h1>D3FINITE Satellite Explorer</h1>
+      <!-- <h3>Welcome to the D3finite Satellite explorer. 
+      </h3> -->
+      <ul>
+        <li><a class="active" href="#home">Home</a></li>
+        <li><a href="#Design">Process Book</a></li>
+        <li><a href="#Demo">Demo Video</a></li>
+      </ul>
     </header>
+    <div class="instructions">
+      <p>
+        Welcome to the D3finte Satellite Explorer! We have nearly 6000 different
+        satellites for you to learn about. Feel free to filter them by their
+        country of origin, orbit type, and more using the table drop downs. Use
+        the sliders to choose how many satellites are displayed, or limit the latest launch year. Interested in exploring a specific orbit
+        more closely? Click on any satellite in that orbit. Want to compare two differents
+        satellites? Simply click on them on the table, and further details will be shown below. You can see trends in your 
+        satellite selection by consulting the chart to the bottom right. Want to start over? Simply click the earth and start fresh. 
+      </p>
+    </div>
     <div class="grid-container">
       <!-- DUFFY  -->
       <div id="worldview"></div>
       <!-- AARON -->
-     <div id="table" class="scrollable">
-      <button id="FilterReset">ResetFilters</button>
+     <div id="table" class="grid-child2">
+        <button id="FilterReset" class="FilterButton">ResetFilters</button>
         <table>
           <thead>
             <tr id="columnHeaders">
@@ -44,19 +62,19 @@
               <th class="colHead">Launch Date</th>
             </tr>
             <tr id="groupButtons">
-              <td class="colHead"></td>
-              <td id="DropCountry" class="colHead"></td>
-              <td class="colHead"></td>
-              <td id="DropUse" class="colHead"></td>
-              <td id="DropOrbit" class="colHead"></td>
-              <td class="colHead"></td>
-              <td class="colHead"></td>
-              <td id="DropSite" class="colHead"></td>
-              <td id="DropVehicle" class="colHead"></td>
-              <td class="colHead"></td>
-              <td class="colHead"></td>
-              <td class="colHead"></td>
-              <td class="colHead"></td>
+              <th></th>
+              <th id="DropCountry"></th>
+              <th></th>
+              <th id="DropUse"></th>
+              <th id="DropOrbit"></th>
+              <th></th>
+              <th></th>
+              <th id="DropSite"></th>
+              <th id="DropVehicle"></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
@@ -74,8 +92,8 @@
 
       <!-- JORDAN -->
       <div id="chart" class="grid-child">
-          <div id="chart-header"></div>
-          <div id="chart-body" class="scrollable2"></div>
+        <div id="chart-header"></div>
+        <div id="chart-body" class="scrollable2"></div>
       </div>
     </div>
   </body>
