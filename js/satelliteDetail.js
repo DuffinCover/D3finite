@@ -214,7 +214,7 @@ class SatelliteDetails{
                     .classed('hr_line', true);
 
 
-                raw = sel_finder[0][8].split(" ")[0].split(".")[0]
+                raw = sel_finder[1][8].split(" ")[0].split(".")[0]
                 pic_src2 = `images/${raw.split("-")[0]}.png`;
                 console.log(pic_src2);
 
