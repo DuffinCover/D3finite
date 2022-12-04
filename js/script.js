@@ -109,7 +109,7 @@ function filterByYear(groupData) {
       return parseInt(thisLaunch) <= parseInt(globalState.cuttoffYear);
     });
 
-    //console.log(selectedYear)
+    console.log(selectedYear)
     return selectedYear;
 
   }
