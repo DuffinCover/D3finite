@@ -121,6 +121,22 @@ td {
     position:absolute;
 }
 
+
+.detail {
+    word-break: normal;
+    word-wrap: break-word;
+    line-break: auto;
+    font-weight:600;
+    line-height: 1.5;
+}
+.detail_title {
+    font-size: 20px;
+    font-weight: 700;
+}
+.hr_line {
+    border-style: double;
+}
+
 .TableTip {
     margin-top: 0;
     margin-left: 50px;
@@ -165,3 +181,4 @@ ul {
   li a:hover {
     background-color: #111;
   }
+

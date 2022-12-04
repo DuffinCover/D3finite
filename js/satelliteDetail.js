@@ -9,7 +9,7 @@ class SatelliteDetails{
 
         this.global_state = global_state;
 
-        let colors = global_state.color_pallette;
+        this.colors = global_state.color_pallette;
 
         this.details = [
             {
@@ -28,57 +28,107 @@ class SatelliteDetails{
             }
             ,
             {
+                key: 'Users',
+                title: 'User',
+            }
+            ,
+            {
+                key: 'Launch Site',
+                title: 'Launch Site',
+            }
+            ,
+            {
+                key: 'Date of Launch',
+                title: 'Launch Date',
+            }
+            ,
+            {
                 key: 'Comments',
                 title: 'Notes',
             }
+            ,
+            {
+                key: 'Launch Vehicle',
+                title: 'Launch Vehicle',
+            }
         ]
 
-        let details_div = d3.select('#detail_div').append('svg')
-            .attr('id', 'details_svg')
-            .attr('height', '400')
-            .attr('width', 600)
+        let details_div = d3.select('#detail_div')
+            .attr('class', 'detail')
 
-        this.containers = details_div.selectAll('g')
+        let title_div = d3.select('#title_div')
+            .attr('class', 'detail_title')
+
+        this.split1 = details_div.append('div')
+            .attr('id', 'split1')
+            .style('width', '100%')
+            .style('float', 'left');
+        this.split2 = details_div.append('div')
+            .attr('id', 'split2')
+            .style('width', '0%')
+            .style('float', 'right');
+
+        this.fields1 = this.split1.selectAll('#div')
             .data(this.details)
-            .join('g')
-            .attr('transform', (d, i) => `translate(10,${(i * 40)+50})`)
+            .join('div')
+            //.attr('id', '1-div')
 
-        let underline = this.containers.append('rect')
-            .attr('height', 5)
-            .attr('width', 200)
-            .attr('fill', (d, i) => colors[i + 2])
+        this.fields2 = this.split2.selectAll('#div')
+            .data(this.details)
+            .join('div')
+            /*.attr('id', '2-div')*/
+            
 
 
-        this.fields = this.containers.append('text')
-            .attr('x', 5)
-            .attr('y', -2)
-            .style('font-size', '20px');
+        
+
+        //let details_div = d3.select('#detail_div').append('')
+        //    .attr('id', 'details_svg')
+        //    .attr('height', '400')
+        //    .attr('width', 600)
+
+        //this.containers = details_div.selectAll('g')
+        //    .data(this.details)
+        //    .join('g')
+        //    .attr('transform', (d, i) => `translate(10,${(i * 40)+50})`)
+
+        //let underline = this.containers.append('rect')
+        //    .attr('height', 5)
+        //    .attr('width', 200)
+        //    .attr('fill', (d, i) => colors[i + 2])
+
+
+        //this.fields = this.containers.append('text')
+        //    .attr('x', 5)
+        //    .attr('y', -2)
+        //    .attr('dy',5)
+        //    .style('font-size', '20px');
 
     }
 
-    wrap(text, width) {
-    text.each(function () {
-        var text = d3.select(this),
-            words = text.text().split(/\s+/).reverse(),
-            word,
-            line = [],
-            lineNumber = 0,
-            lineHeight = 1.1, // ems
-            y = text.attr("y"),
-            dy = parseFloat(text.attr("dy")),
-            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-        while (word = words.pop()) {
-            line.push(word);
-            tspan.text(line.join(" "));
-            if (tspan.node().getComputedTextLength() > width) {
-                line.pop();
-                tspan.text(line.join(" "));
-                line = [word];
-                tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-            }
-        }
-    });
-}
+//    wrap(text, width) {
+//    text.each(function () {
+//        var text = d3.select(this),
+//            words = text.text().split(/\s+/).reverse(),
+//            word,
+//            line = [],
+//            lineNumber = 0,
+//            lineHeight = 2.1, // ems
+//            y = text.attr("y"),
+//            dy = parseFloat(text.attr("dy")),
+//            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+//        while (word = words.pop()) {
+//            line.push(word);
+//            tspan.text(line.join(" "));
+//            if (tspan.node().getComputedTextLength() > width) {
+//                line.pop();
+//                tspan.text(line.join(" "));
+//                line = [word];
+//                tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+//            }
+//        }
+//    });
+//}
 
     update() {
         let sel = this.global_state.selection;
@@ -86,21 +136,178 @@ class SatelliteDetails{
 
         let details = this.details;
 
+
+        let resize = function (h, w) {
+            let maxh = 200;
+            let maxw = 200;
+            let maxd = h > w ? h : w;
+
+
+            //if (maxd > maxh) {
+
+            //} else if (w > maxw) {
+
+            //}
+
+            if (maxd > maxh) {
+                let scale = maxh/maxd;
+                h = scale * h;
+                w = scale * w;
+
+            }
+
+
+            return([h,w])
+        }
+
+
         if (sel.length > 0) {
-            let sel_finder = satData.map((d, i) => [i, d[details[0].key], d[details[1].key], d[details[2].key], d[details[3].key]]).filter((d, i) => sel.includes(d[1]));
+            let sel_finder = satData.map((d, i) =>
+                [i, d[details[0].key], d[details[1].key], d[details[2].key], d[details[3].key], d[details[4].key], d[details[5].key], d[details[6].key], d[details[7].key]]
+                    ).filter((d, i) => sel.includes(d[1]));
 
-            //let details = d3.select('#details_svg').selectAll('text')
-            this.fields.text((d,i) => {
-                //console.log(d)
-                //console.log(sel_finder[0], '0i: ', sel_finder[0][0])
+            let img1 = null;
+            let img2 = null;
+            let pic_src1 = '';
+            let pic_src2 = '';
+            let h = 0;
+            let w = 0;
 
-                //return this.wrap(`${d.title}: ${(sel_finder[0][i+1])}`,40);
-                return (`${d.title}: ${(sel_finder[0][i + 1])}`);
-            })
-                //.call(this.wrap,40);
+            let raw = '';
+
+            let target1 = null;
+            let target2 = null;
+
+            if (sel_finder.length > 1) {
+                this.fields1.html((d, i) => {
+
+                    return (`${d.title}: ${(sel_finder[0][i + 1])}`);
+                })
+                    .style('background-color', (d, i) => color_shift(this.colors[i + 2], 150))
+                    .append('hr')
+                    .classed('hr_line', true);
+
+                raw = sel_finder[0][8].split(" ")[0].split(".")[0]
+                pic_src1 = `images/${raw.split("-")[0]}.png`;
+                console.log(pic_src1);
+
+                target1 = this.fields1.filter(d => d.title === 'Launch Vehicle');
+
+                img1 = new Image();
+                img1.src = pic_src1;
+                img1.onload = function () {
+                    h = img1.height;
+                    w = img1.width;
+                    console.log('loaded', h, w);
+                    target1.insert('div', 'hr')
+                        .append('img')
+                        .attr('src', pic_src1)
+                        .attr('width', resize(h, w)[1])
+                        .attr('height', resize(h, w)[0]);
+                }
+                this.fields2.html((d, i) => {
+
+                    return (`${d.title}: ${(sel_finder[1][i + 1])}`);
+                })
+                    .style('background-color', (d, i) => color_shift(this.colors[i + 2], 150))
+                    .append('hr')
+                    .classed('hr_line', true);
+
+
+                raw = sel_finder[0][8].split(" ")[0].split(".")[0]
+                pic_src2 = `images/${raw.split("-")[0]}.png`;
+                console.log(pic_src2);
+
+                target2 = this.fields2.filter(d => d.title === 'Launch Vehicle');
+
+                img2 = new Image();
+                img2.src = pic_src2;
+                img2.onload = function() {
+                    h = img2.height;
+                    w = img2.width;
+                    console.log('loaded', h, w);
+                    target2.insert('div', 'hr')
+                        .append('img')
+                        .attr('src', pic_src2)
+                        .attr('width', resize(h, w)[1])
+                        .attr('height', resize(h, w)[0]);;
+                }
+
+                //this.fields2
+                //    .style('background-color', (d, i) => color_shift(this.colors[i + 2], 150))
+                //    .append('hr')
+                //    .classed('hr_line', true);
+                //}
+
+                this.split1.style('width', '49%')
+                    .style('border-right', 'solid')
+                this.split2.style('width', '49%')
+                    .style('border-left', 'solid')
+
+
+
+            } else {
+                this.fields1.html((d, i) => {
+
+                    return (`${d.title}: ${(sel_finder[0][i + 1])}`);
+                })
+                    .style('background-color', (d, i) => color_shift(this.colors[i + 2], 150))
+                    .append('hr')
+                    .classed('hr_line', true);
+
+                this.fields2.html('')
+                this.split1.style('width', '100%')
+                    .style('border', 'none')
+                this.split2.style('width', '0%')
+                    .style('border', 'none')
+
+                
+                raw = sel_finder[0][8].split(" ")[0].split(".")[0]
+                pic_src1 = `images/${raw.split("-")[0]}.png`;
+                console.log(pic_src1);
+
+                target1 = this.fields1.filter(d => d.title === 'Launch Vehicle');
+
+                img1 = new Image();
+                img1.src = pic_src1;
+                img1.onload = function (){
+                    h = img1.height;
+                    w = img1.width;
+
+                    console.log('loaded', h, w);
+
+                    //if (img.complete) {
+                    /*                    console.log('FOUND')*/
+                    target1.insert('div', 'hr')
+                        .append('img')
+                        .attr('src', pic_src1)
+                        .attr('width', resize(h, w)[1])
+                        .attr('height', resize(h, w)[0]);;
+                }
+
+                //this.fields1
+                //    .style('background-color', (d, i) => color_shift(this.colors[i + 2], 150))
+                //    .append('hr')
+                //    .classed('hr_line', true);
+
+
+                
+            }
+            
+            /*.call(this.wrap,480);*/
 
         } else {
-            this.fields.text('N/A');
+            this.fields1.html('')
+                .style('background-color', "white");
+            this.fields1.selectAll('hr').remove;
+            this.fields2.html('')
+                .style('background-color', "white");
+            this.fields2.selectAll('hr').remove;
+            this.split1.style('width', '100%')
+                .style('border', 'none')
+            this.split2.style('width', '0%')
+                .style('border', 'none')
+
 
         }
 
