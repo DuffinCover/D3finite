@@ -112,6 +112,7 @@ td {
 }
 
 .FilterButton {
+    top:0;
     float: left;
     position:relative;
     
