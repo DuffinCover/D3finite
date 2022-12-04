@@ -313,21 +313,23 @@ class VisualSatelliteChart{
                         }
                         return res;
                     })
-                    .attr('width', d => this.sat_columns[d[1]].scale(d[0]))
+                    .attr('width', d => d[0] === "" ? 0 : this.sat_columns[d[1]].scale(d[0]))
                     .attr('height', expand)
-                    .attr('fill', d => this.sat_columns[d[1]].color)
+                    .attr('fill', d => color_shift(this.sat_columns[d[1]].color,30))
                     .attr('stroke-width', '0px')
 
 
                 let highlight1 = bars.filter((d, i) => i === sel_idx1)
                     .attr('height', sel_height - 2)
                     .attr('y', this.alt_yScale2(sel_idx1) + 1)
+                    .attr('fill', d => this.sat_columns[d[1]].color)
                     .attr('stroke-width', '1px')
                     .attr('stroke', 'black')
 
                 let highlight2 = bars.filter((d, i) => i === sel_idx2)
                     .attr('height', sel_height - 2)
                     .attr('y', this.alt_yScale2(sel_idx2) + 1 + sel_adjust)
+                    .attr('fill', d => this.sat_columns[d[1]].color)
                     .attr('stroke-width', '1px')
                     .attr('stroke', 'black')
 
@@ -342,10 +344,10 @@ class VisualSatelliteChart{
                         return output;
                     })
                     .join('rect')
-                    .attr('x', (d) => 1 + (d[1] * this.vizWidth1) + this.h_pad + this.sat_columns[d[1]].scale(d[0]))
+                    .attr('x', (d) => d[0] === "" ? 1 + (d[1] * this.vizWidth1) + this.h_pad : 1 + (d[1] * this.vizWidth1) + this.h_pad + this.sat_columns[d[1]].scale(d[0]))
                     .attr('y', d=> d[2] > 0 ? this.alt_yScale2(sel_idx2) + 1 + sel_adjust: this.alt_yScale2(sel_idx1) + 1)
                     .attr('height', sel_height - 2)
-                    .attr('width', d => this.vizWidth1 - (this.sat_columns[d[1]].scale(d[0]) + (2 * this.h_pad) + this.h_Margin))
+                    .attr('width', d => d[0] === "" ? this.vizWidth1 - ((2 * this.h_pad) + this.h_Margin) : this.vizWidth1 - (this.sat_columns[d[1]].scale(d[0]) + (2 * this.h_pad) + this.h_Margin))
                     .attr('fill', '#EAEAEA')
                     .attr('stroke-width', '0px')
 
@@ -381,9 +383,10 @@ class VisualSatelliteChart{
                     .join('rect')
                     .attr('x', (d) => (d[1] * this.vizWidth1) + this.h_pad)
                     .attr('y', (d, i) => (i > sel_idx) ? this.alt_yScale(i) + sel_adjust : this.alt_yScale(i))
-                    .attr('width', d => this.sat_columns[d[1]].scale(d[0]))
+                    //.attr('width', d => this.sat_columns[d[1]].scale(d[0]))
+                    .attr('width', d => d[0] === "" ? 0 : this.sat_columns[d[1]].scale(d[0]))
                     .attr('height', expand)
-                    .attr('fill', d => this.sat_columns[d[1]].color)
+                    .attr('fill', d => color_shift(this.sat_columns[d[1]].color, 30))
                     .attr('stroke-width', '0px')
 
 
@@ -404,10 +407,10 @@ class VisualSatelliteChart{
                         return output;
                     })
                     .join('rect')
-                    .attr('x', (d) => 1 + (d[1] * this.vizWidth1) + this.h_pad + this.sat_columns[d[1]].scale(d[0]))
+                    .attr('x', (d) => d[0] === "" ? 1 + (d[1] * this.vizWidth1) + this.h_pad : 1 + (d[1] * this.vizWidth1) + this.h_pad + this.sat_columns[d[1]].scale(d[0]))
                     .attr('y', this.alt_yScale(sel_idx) + 1)
                     .attr('height', sel_height - 2)
-                    .attr('width', d => this.vizWidth1 - (this.sat_columns[d[1]].scale(d[0]) + (2 * this.h_pad) + this.h_Margin))
+                    .attr('width', d => d[0] === "" ? this.vizWidth1 - ((2 * this.h_pad) + this.h_Margin) : this.vizWidth1 - (this.sat_columns[d[1]].scale(d[0]) + (2 * this.h_pad) + this.h_Margin))
                     .attr('fill', '#EAEAEA')
                     .attr('stroke-width', '0px')
 
@@ -491,7 +494,8 @@ class VisualSatelliteChart{
                 .join('rect')
                 .attr('x', (d) => (d[1] * this.vizWidth1) + this.h_pad)
                 .attr('y', (d, i) => this.yScale(i))
-                .attr('width', d => this.sat_columns[d[1]].scale(d[0]))
+                //.attr('width', d => this.sat_columns[d[1]].scale(d[0]))
+                .attr('width', d => d[0] === "" ? 0 : this.sat_columns[d[1]].scale(d[0]))
                 .attr('height', expand)
                 .attr('fill', d => this.sat_columns[d[1]].color)
                 .attr('stroke-width', '0px')
