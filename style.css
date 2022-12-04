@@ -139,13 +139,13 @@ td {
 
 .TableTip {
     margin-top: 0;
-    margin-left: 50px;
+    margin-left: 120px;
     position: absolute;
 }
 
 .TableTipText {
     margin-top:0;
-    margin-left: 70px;
+    margin-left: 0;
     color: #34495e;
 }
 
