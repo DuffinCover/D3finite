@@ -328,7 +328,7 @@ class Worldview {
         
         this.resetSliders(this.globalState.satelliteData);
 
-        updateAllGroup();
+        updateAllGroup(true);
         
       });
   }

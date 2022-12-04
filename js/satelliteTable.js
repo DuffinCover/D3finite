@@ -230,17 +230,7 @@ class SatelliteTable{
     attachSortHandlers() 
     {
         // Attaching on click handler for the reset button
-        d3.select('#FilterReset').on('click', event => {
-            for (let el of globalState.group) {
-                el[1] = null;
-            };
-            for(let el of this.dropdownData) {
-                el.filtered = false;
-                el.filterElement = null;
-            }
-            updateAllGroup();
-            this.addFilters();
-        });
+        d3.select('#FilterReset').on('click', event => this.resetFilters());
         
         // Attaches a dropdown menu to the appropriate columns of the table
         const dropData = this.dropdownData.map(d => d.name);
@@ -417,7 +407,10 @@ class SatelliteTable{
     /**
      * Updates the table to show the data with a filter applied
      */
-    updateGroup() {
+    updateGroup(reset) {
+        if(reset) { 
+            this.resetFilters();
+        }
         this.buildTable();
         this.updateRows();
         this.attachSortHandlers();
@@ -533,16 +526,29 @@ class SatelliteTable{
                 if(filter === 'All') {
                     el.filtered = false;
                     el.filterElement = null;
-                    console.log(el);
                 }
                 else {
-                    console.log(filter);
                     el.filtered = true;
                     el.filterElement = filter;
                 }
             }
         }
         updateAllGroup();
+    }
+
+    /**
+     * Resets all dropdown menus
+     */
+    resetFilters() {
+        for (let el of globalState.group) {
+            el[1] = null;
+        };
+        for(let el of this.dropdownData) {
+            el.filtered = false;
+            el.filterElement = null;
+        }
+        updateAllGroup();
+        this.addFilters();
     }
     
 }
