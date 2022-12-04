@@ -278,7 +278,7 @@ class VisualSatelliteChart{
 
                 let sel_data = satData.filter((d, i) => (i === sel_idx1 || i === sel_idx2));
 
-                console.log('multi: ',sel_data);
+                //console.log('multi: ',sel_data);
 
                 let y_loc = this.alt_yScale2.invert(sel_idx1);
 

@@ -445,11 +445,9 @@ class SatelliteTable{
         if(this.dropdownData.find(el => el.name === 'Country of Operator/Owner').filtered){
             let value = this.dropdownData.find(el => el.name === 'Country of Operator/Owner').filterElement;
             CountryData = [value, ' All'];
-            console.log(CountryData);
         }
         if(this.dropdownData.find(el => el.name === 'Purpose').filtered){
             let value = this.dropdownData.find(el => el.name === 'Purpose').filterElement;
-            console.log(value);
             PurposeData = [value, ' All'];
         }
         if(this.dropdownData.find(el => el.name === 'Type of Orbit').filtered){

@@ -74,7 +74,6 @@ function takeSample(sampleSize){
 
 function updateAllGroup(reset = false) {
     //console.log("Apply Grouping");
-    console.log(reset);
     globalState.table.updateGroup(reset);
     globalState.worldView.updateGroup();
     globalState.lineChart.update();
@@ -82,7 +81,7 @@ function updateAllGroup(reset = false) {
 }
 
 function updateAllSelection() {
-    console.log("Updating Selection",globalState.selection);
+    //console.log("Updating Selection",globalState.selection);
 
     globalState.worldView.updateSelection();
     globalState.table.updateSelection();
@@ -111,7 +110,16 @@ function applyGrouping() {
         }
     }
 
-    return filterByYear(groupedData);
+    // Filters data by year
+    groupedData = filterByYear(groupedData);
+    // Removes item from the selection if the filtering no longer contains that item
+    for(let el of globalState.selection) {
+        let groupNameMapping = groupedData.map(d => d['Name of Satellite, Alternate Names']);
+        if(!groupNameMapping.includes(el)) {
+            globalState.selection.splice(el);
+        } 
+    }
+    return groupedData;
 
 
     // Map of pairs {key , condition}
@@ -132,7 +140,7 @@ function filterByYear(groupData) {
       return parseInt(thisLaunch) <= parseInt(globalState.cuttoffYear);
     });
 
-    console.log(selectedYear)
+    //console.log(selectedYear)
     return selectedYear;
 
   }
