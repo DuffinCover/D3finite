@@ -189,7 +189,7 @@ class SatelliteDetails{
 
                 raw = sel_finder[0][8].split(" ")[0].split(".")[0]
                 pic_src1 = `images/${raw.split("-")[0]}.png`;
-                console.log(pic_src1);
+                //console.log(pic_src1);
 
                 target1 = this.fields1.filter(d => d.title === 'Launch Vehicle');
 
@@ -198,7 +198,7 @@ class SatelliteDetails{
                 img1.onload = function () {
                     h = img1.height;
                     w = img1.width;
-                    console.log('loaded', h, w);
+                    //console.log('loaded', h, w);
                     target1.insert('div', 'hr')
                         .append('img')
                         .attr('src', pic_src1)
@@ -216,7 +216,7 @@ class SatelliteDetails{
 
                 raw = sel_finder[0][8].split(" ")[0].split(".")[0]
                 pic_src2 = `images/${raw.split("-")[0]}.png`;
-                console.log(pic_src2);
+                //console.log(pic_src2);
 
                 target2 = this.fields2.filter(d => d.title === 'Launch Vehicle');
 
@@ -225,7 +225,7 @@ class SatelliteDetails{
                 img2.onload = function() {
                     h = img2.height;
                     w = img2.width;
-                    console.log('loaded', h, w);
+                    //console.log('loaded', h, w);
                     target2.insert('div', 'hr')
                         .append('img')
                         .attr('src', pic_src2)
@@ -264,7 +264,7 @@ class SatelliteDetails{
                 
                 raw = sel_finder[0][8].split(" ")[0].split(".")[0]
                 pic_src1 = `images/${raw.split("-")[0]}.png`;
-                console.log(pic_src1);
+                //console.log(pic_src1);
 
                 target1 = this.fields1.filter(d => d.title === 'Launch Vehicle');
 
@@ -274,7 +274,7 @@ class SatelliteDetails{
                     h = img1.height;
                     w = img1.width;
 
-                    console.log('loaded', h, w);
+                    //console.log('loaded', h, w);
 
                     //if (img.complete) {
                     /*                    console.log('FOUND')*/

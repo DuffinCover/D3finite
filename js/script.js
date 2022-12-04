@@ -110,7 +110,16 @@ function applyGrouping() {
         }
     }
 
-    return filterByYear(groupedData);
+    // Filters data by year
+    groupedData = filterByYear(groupedData);
+    // Removes item from the selection if the filtering no longer contains that item
+    for(let el of globalState.selection) {
+        let groupNameMapping = groupedData.map(d => d['Name of Satellite, Alternate Names']);
+        if(!groupNameMapping.includes(el)) {
+            globalState.selection.splice(el);
+        } 
+    }
+    return groupedData;
 
 
     // Map of pairs {key , condition}
