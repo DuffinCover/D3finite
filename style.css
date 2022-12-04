@@ -116,3 +116,35 @@ td {
     margin-left:25px;
     position:absolute;
 }
+.selected{
+    opacity: 1;
+    stroke: #111;
+    stroke-width: 5px;
+}
+/* h1 {
+    background-color: #684dda;
+} */
+/* https://www.w3schools.com/css/css_navbar_horizontal.asp */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color:#684dda;
+  }
+  
+  li {
+    float: left;
+  }
+  
+  li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  
+  li a:hover {
+    background-color: #111;
+  }
