@@ -1,4 +1,4 @@
-class SatelliteDetails{
+class SatelliteDetails {
     /*TODO
     This needs a picture of that type of satellite 
     show detail about it
@@ -71,64 +71,13 @@ class SatelliteDetails{
         this.fields1 = this.split1.selectAll('#div')
             .data(this.details)
             .join('div')
-            //.attr('id', '1-div')
+
 
         this.fields2 = this.split2.selectAll('#div')
             .data(this.details)
             .join('div')
-            /*.attr('id', '2-div')*/
-            
-
-
-        
-
-        //let details_div = d3.select('#detail_div').append('')
-        //    .attr('id', 'details_svg')
-        //    .attr('height', '400')
-        //    .attr('width', 600)
-
-        //this.containers = details_div.selectAll('g')
-        //    .data(this.details)
-        //    .join('g')
-        //    .attr('transform', (d, i) => `translate(10,${(i * 40)+50})`)
-
-        //let underline = this.containers.append('rect')
-        //    .attr('height', 5)
-        //    .attr('width', 200)
-        //    .attr('fill', (d, i) => colors[i + 2])
-
-
-        //this.fields = this.containers.append('text')
-        //    .attr('x', 5)
-        //    .attr('y', -2)
-        //    .attr('dy',5)
-        //    .style('font-size', '20px');
-
     }
 
-//    wrap(text, width) {
-//    text.each(function () {
-//        var text = d3.select(this),
-//            words = text.text().split(/\s+/).reverse(),
-//            word,
-//            line = [],
-//            lineNumber = 0,
-//            lineHeight = 2.1, // ems
-//            y = text.attr("y"),
-//            dy = parseFloat(text.attr("dy")),
-//            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-//        while (word = words.pop()) {
-//            line.push(word);
-//            tspan.text(line.join(" "));
-//            if (tspan.node().getComputedTextLength() > width) {
-//                line.pop();
-//                tspan.text(line.join(" "));
-//                line = [word];
-//                tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-//            }
-//        }
-//    });
-//}
 
     update() {
         let sel = this.global_state.selection;
@@ -150,21 +99,21 @@ class SatelliteDetails{
             //}
 
             if (maxd > maxh) {
-                let scale = maxh/maxd;
+                let scale = maxh / maxd;
                 h = scale * h;
                 w = scale * w;
 
             }
 
 
-            return([h,w])
+            return ([h, w])
         }
 
 
         if (sel.length > 0) {
             let sel_finder = satData.map((d, i) =>
                 [i, d[details[0].key], d[details[1].key], d[details[2].key], d[details[3].key], d[details[4].key], d[details[5].key], d[details[6].key], d[details[7].key]]
-                    ).filter((d, i) => sel.includes(d[1]));
+            ).filter((d, i) => sel.includes(d[1]));
 
             let img1 = null;
             let img2 = null;
@@ -222,7 +171,7 @@ class SatelliteDetails{
 
                 img2 = new Image();
                 img2.src = pic_src2;
-                img2.onload = function() {
+                img2.onload = function () {
                     h = img2.height;
                     w = img2.width;
                     console.log('loaded', h, w);
@@ -261,7 +210,7 @@ class SatelliteDetails{
                 this.split2.style('width', '0%')
                     .style('border', 'none')
 
-                
+
                 raw = sel_finder[0][8].split(" ")[0].split(".")[0]
                 pic_src1 = `images/${raw.split("-")[0]}.png`;
                 console.log(pic_src1);
@@ -270,7 +219,7 @@ class SatelliteDetails{
 
                 img1 = new Image();
                 img1.src = pic_src1;
-                img1.onload = function (){
+                img1.onload = function () {
                     h = img1.height;
                     w = img1.width;
 
@@ -285,16 +234,9 @@ class SatelliteDetails{
                         .attr('height', resize(h, w)[0]);;
                 }
 
-                //this.fields1
-                //    .style('background-color', (d, i) => color_shift(this.colors[i + 2], 150))
-                //    .append('hr')
-                //    .classed('hr_line', true);
 
-
-                
             }
-            
-            /*.call(this.wrap,480);*/
+
 
         } else {
             this.fields1.html('')
