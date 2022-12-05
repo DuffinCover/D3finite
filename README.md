@@ -31,7 +31,7 @@ https://duffincover.github.io/D3finite/
 
 ## Screencast
 
-The youtubes
+https://youtu.be/I_rAcoaBk5g
 
 ## Non-obvious Features (Or - A more complete feature list)
  1. It is included in the directions, but clicking on any satellite on the radial chart will focus the chart to that satellite's orbit. 
