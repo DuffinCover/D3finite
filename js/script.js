@@ -1,5 +1,4 @@
-
-
+// Represents the global state object that all 4 views use
 const globalState = {
     originalData: null,
     satelliteData: null,
@@ -27,7 +26,7 @@ const globalState = {
     ], 
 };
 
-
+// Provides color gradient for the details chart
 function color_shift(hexColor, magnitude) {
     hexColor = hexColor.replace(`#`, ``);
     if (hexColor.length === 6) {
@@ -47,12 +46,13 @@ function color_shift(hexColor, magnitude) {
     }
 }
 
-
+// Loads in our data from the json file
 async function loadData() {
     const satData = await d3.json('data/satellites.json');
     return satData;
 }
 
+// Sets the global state parameters after loading data
 loadData().then(data => {
     globalState.originalData = data; 
     globalState.satelliteData = takeSample(200);
@@ -63,6 +63,11 @@ loadData().then(data => {
     d3.select('#title_div').html(`Selected Satellite Details (${applyGrouping().length} total satellites displayed)`)
 });
 
+/**
+ * Computes a random subset of the data for display use
+ * @param {*} sampleSize 
+ * @returns 
+ */
 function takeSample(sampleSize){
     let sampleSet = new Set()
     for( let i = 0; i < sampleSize; i++){
@@ -72,8 +77,11 @@ function takeSample(sampleSize){
     return [...sampleSet]
 }
 
+/**
+ * Sends an update trigger to each view for filtering
+ * @param {*} reset 
+ */
 function updateAllGroup(reset = false) {
-    //console.log("Apply Grouping");
     globalState.table.updateGroup(reset);
     globalState.worldView.updateGroup();
     globalState.lineChart.update();
@@ -82,19 +90,26 @@ function updateAllGroup(reset = false) {
     d3.select('#title_div').html(`Selected Satellite Details (${applyGrouping().length} total satellites displayed)`)
 }
 
+/**
+ * Sends an update trigger to each view for selection
+ */
 function updateAllSelection() {
-    //console.log("Updating Selection",globalState.selection);
-
     globalState.worldView.updateSelection();
     globalState.table.updateSelection();
     globalState.lineChart.update();
     globalState.detail.update();
 }
 
+/**
+ * Sends an update trigger to the bar chart
+ */
 function updateSort() {
     globalState.lineChart.update();
 }
 
+/**
+ * Computes the new subset of data based on applied filters
+ */
 function applyGrouping() {
     let group = globalState.group;
 
@@ -122,15 +137,13 @@ function applyGrouping() {
         } 
     }
     return groupedData;
-
-
-    // Map of pairs {key , condition}
-
-
-    // E.g. ['Class of Orbit','LEO']
-
-
 }
+
+/**
+ * Orders data by year for use in the radial chart 
+ * @param {*} groupData 
+ * @returns 
+ */
 function filterByYear(groupData) {
     let selectedYear = groupData.filter((d) => {
       let thisLaunch = d["Date of Launch"].slice(-2);
@@ -141,13 +154,14 @@ function filterByYear(groupData) {
       }
       return parseInt(thisLaunch) <= parseInt(globalState.cuttoffYear);
     });
-
-    //console.log(selectedYear)
     return selectedYear;
 
   }
 
-
+/**
+ * Takes a new sample based on teh user input percentage
+ * @param {*} percent 
+ */
 function updateSample(percent){
     globalState.cuttoffYear = 2022
     globalState.satelliteData = takeSample(globalState.originalData.length*percent)
