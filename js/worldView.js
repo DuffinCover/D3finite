@@ -241,11 +241,11 @@ class Worldview {
    */
   addSampleSlider() {
     d3.select("#satDistance")
-    .append("g")
-    .append("text")
-    .attr("id", "slider-sample")
-    .attr("transform", "translate(-290, -235)")
-    .text("Sample of Total Satellites");
+      .append("g")
+      .append("text")
+      .attr("id", "slider-sample")
+      .attr("transform", "translate(-290, -235)")
+      .text("Sample of Total Satellites");
 
     let dataTime = [0.05, 0.1, 0.2, 0.5, 1];
 
@@ -315,7 +315,7 @@ class Worldview {
       .attr("transform", "translate(-100, -100)")
       .html("Click here to reset")
       .on("click", (event, d) => {
-        this.globalState.selection = []
+        this.globalState.selection = [];
         this.globalState.cuttoffYear = 2022;
         this.globalState.group = [
           ["Type of Orbit", null],
@@ -324,13 +324,12 @@ class Worldview {
           ["Purpose", null],
           ["Launch Site", null],
           ["Launch Vehicle", null],
-          ["Class of Orbit", null]
-      ];
-        
+          ["Class of Orbit", null],
+        ];
+
         this.resetSliders(this.globalState.satelliteData);
 
         updateAllGroup(true);
-        
       });
   }
 
@@ -361,26 +360,28 @@ class Worldview {
   /** Helper method for redrawing the visualization based on the status of our filter*/
   updateGroup() {
     this.redraw(applyGrouping());
-    this.updateSelection()
+    this.updateSelection();
   }
 
   /**Updates the visualization based on new sample size selections.  */
   newSampleUpdate() {
-    
     updateAllGroup();
   }
 
-  updateSelection(){
-    d3.selectAll("circle")
-    .classed("selected", false)
-    d3.selectAll("circle")
-    .classed("selected", (d)=> {
-      for(let i = 0; i < this.globalState.selection.length; i++){
-        if(d['Name of Satellite, Alternate Names'] == this.globalState.selection[i]){
+  updateSelection() {
+    let circles = d3.selectAll("circle");
+    circles.classed("selected", false);
+    circles.classed("selected", (d) => {
+      for (let i = 0; i < this.globalState.selection.length; i++) {
+        if (
+          d["Name of Satellite, Alternate Names"] ==
+          this.globalState.selection[i]
+        ) {
           return true;
         }
       }
-      
-    })
+    });
+
+
   }
 }
