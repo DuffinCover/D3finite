@@ -10,19 +10,41 @@
       href="https://fonts.googleapis.com/css?family=Work+Sans:400,700&display=swap"
       rel="stylesheet"
     />
-
+    <!--
+       Bootstrap styling if you want to use it:
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
   </head>
 
   <body>
     <header>
-      <h1>D3FINITE Visual Satellites</h1>
+      <h1>D3FINITE Satellite Explorer</h1>
+      <!-- <h3>Welcome to the D3finite Satellite explorer. 
+      </h3> -->
+      <ul>
+        <li><a class="active" href="#home">Home</a></li>
+        <li><a href="#Design">Process Book</a></li>
+        <li><a href="#Demo">Demo Video</a></li>
+      </ul>
     </header>
+    <div class="instructions">
+      <p>
+        Welcome to the D3finte Satellite Explorer! We have nearly 6000 different
+        satellites for you to learn about. Feel free to filter them by their
+        country of origin, orbit type, and more using the table drop downs. Use
+        the sliders to choose how many satellites are displayed, or limit the latest launch year. Interested in exploring a specific orbit
+        more closely? Click on any satellite in that orbit. Want to compare two differents
+        satellites? Simply click on them on the table, and further details will be shown below. You can see trends in your 
+        satellite selection by consulting the chart to the bottom right. Want to start over? Simply click the earth and start fresh. 
+      </p>
+    </div>
     <div class="grid-container">
-
-      <div id="worldview">
-      </div>
-
-     <div id="table" class="scrollable">
+      <!-- DUFFY  -->
+      <div id="worldview"></div>
+      <!-- AARON -->
+     <div id="table" class="grid-child2">
+        <button id="FilterReset" class="FilterButton">ResetFilters</button>
+        <div class="TableTip"><p class="TableTipText">Tip: Click on any of the column headers to sort!</p></div>
         <table>
           <thead>
             <tr id="columnHeaders">
@@ -35,37 +57,50 @@
               <th class="colHead">Expected Lifetime</th>
               <th class="colHead">Launch Site</th>
               <th class="colHead">Launch Vehicle</th>
+              <th class="colHead">Dry Mass (kg.)</th>
+              <th class="colHead">Period (Minutes)</th>
+              <th class="colHead">Inclination (degrees)</th>
+              <th class="colHead">Launch Date</th>
             </tr>
             <tr id="groupButtons">
-              <td class="colHead"></td>
-              <td class="colHead"></td>
-              <td class="colHead"></td>
-              <td class="colHead"></td>
-              <td class="colHead"></td>
-              <td class="colHead"></td>
-              <td class="colHead"></td>
-              <td class="colHead"></td>
-              <td class="colHead"></td>
+              <th></th>
+              <th id="DropCountry"></th>
+              <th></th>
+              <th id="DropUse"></th>
+              <th id="DropOrbit"></th>
+              <th></th>
+              <th></th>
+              <th id="DropSite"></th>
+              <th id="DropVehicle"></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
         </table>
       </div>
+      <!-- DUFF? -->
+     <div id="details" class="grid-child">
+         <div id="title_div" style="width: 600px; height: 25px; border: 1px solid #000">
+             Selected Satellite Details
+         </div>
+         <div id="detail_div" style="width: 600px; height: 500px; border: 1px solid #000">
+             <!--This is a (details) rectangle!-->
+         </div>
+     </div>
 
-      <div id="details" class="grid-child">
-        <div style="width: 600px; height: 100px; border: 1px solid #000">
-          This is a (details) rectangle!
-        </div>
-      </div>
-
+      <!-- JORDAN -->
       <div id="chart" class="grid-child">
-          <div id="chart-header"></div>
-          <div id="chart-body" class="scrollable2"></div>
+        <div id="chart-header"></div>
+        <div id="chart-body" class="scrollable2"></div>
       </div>
     </div>
   </body>
   <script src="js/worldView.js"></script>
   <script src="js/visualSatelliteChart.js"></script>
   <script src="js/satelliteTable.js"></script>
+  <script src="js/satelliteDetail.js"></script>
   <script src="js/script.js"></script>
 </html>

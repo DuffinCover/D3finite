@@ -1,49 +1,102 @@
+html {
+    background-color: #ffffff;
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 40px;
 }
 .LEO{
-color:#684dda;
-fill:#684dda;
-stroke: black;
-stroke-opacity: 0.5;
-}
-.GEO{
-color:#da3182;
-fill:#da3182;
+color:#4895EF;
+fill:#4895EF;
 stroke: black;
 stroke-opacity: 0.5;
 }
 .Elliptical{
-color:#69809e;
-fill:#69809e;
+color:#4361EE;
+fill:#4361EE;
 stroke: black;
 stroke-opacity: 0.5;
 }
 .MEO{
-color:#95c5ac;
-fill: #95c5ac;
+color:#560BAD;
+fill: #560BAD;
 stroke: black;
 stroke-opacity: 0.5; 
 }
-
-.scrollable {
-	height:500px;
-	width:1000px;		
-    overflow-y:auto;
-	float:left;
-	position:relative;
-	margin-left:-5px;
-}
+.GEO{
+    color:#F72585;
+    fill:#F72585;
+    stroke: black;
+    stroke-opacity: 0.5;
+    }
 
 .scrollable2 {
     height: 600px;
-    width: 1000px;
+    width: 1018px;
     overflow-y: auto;
     float: left;
     position: relative;
     /*margin-left: -5px;*/
+}
+
+table,
+th,
+td {
+  border: 1px solid;
+  cursor:pointer;
+}
+
+table {
+    width: 100%;
+    max-width: 1000px;
+    height: 600px;
+    margin: 25px;
+    display: block;
+    overflow-x: auto;
+    border-spacing: 0;
+    position:relative;
+    float: left;
+}
+
+tbody {
+    white-space: normal;
+}
+
+th,
+td {
+    padding: 5px 10px;
+    border-top-width: 0;
+    border-left-width: 0;
+}
+
+th {
+    position: sticky;
+    top: 0;
+    vertical-align: bottom;
+    width:100px;
+    background-color: #34495e;
+    color: white;
+    text-align: center;
+}
+
+th:last-child,
+td:last-child {
+    border-right-width: 0;
+}
+
+tr:last-child td {
+    border-bottom-width: 0;
+}
+
+td {
+    font-family:'Times New Roman';
+    font-size:10pt;
+}
+
+.colHead {
+    height:80px;
 }
 
 .unselectedTable {
@@ -55,21 +108,75 @@ stroke-opacity: 0.5;
 .selectedTable {
     background-color: #69809e;
     text-align: center;
-    border: 3px solid black;
+    border: 3pt solid black;
 }
 
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-    cursor: pointer;
-}
-
-.colHead {
-    background-color: #34495e;
-    color: white;
-    text-align: center;
-}
 #slider-sample{
     float: right;
 }
+
+.FilterButton {
+    margin-top: 0;
+    margin-left:25px;
+    position:absolute;
+}
+
+
+.detail {
+    word-break: normal;
+    word-wrap: break-word;
+    line-break: auto;
+    font-weight:600;
+    line-height: 1.5;
+}
+.detail_title {
+    font-size: 20px;
+    font-weight: 700;
+}
+.hr_line {
+    border-style: double;
+}
+
+.TableTip {
+    margin-top: 0;
+    margin-left: 120px;
+    position: absolute;
+}
+
+.TableTipText {
+    margin-top:0;
+    margin-left: 0;
+    color: #34495e;
+}
+
+.selected{
+    opacity: 1;
+    stroke: #111;
+    stroke-width: 4px;
+}
+
+/* https://www.w3schools.com/css/css_navbar_horizontal.asp */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color:#684dda;
+  }
+  
+  li {
+    float: left;
+  }
+  
+  li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  
+  li a:hover {
+    background-color: #111;
+  }
 
