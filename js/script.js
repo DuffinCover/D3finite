@@ -60,7 +60,7 @@ loadData().then(data => {
     globalState.worldView = new Worldview(globalState);
     globalState.lineChart = new VisualSatelliteChart(globalState);
     globalState.detail = new SatelliteDetails(globalState);
-
+    d3.select('#title_div').html(`Selected Satellite Details (${applyGrouping().length} total satellites displayed)`)
 });
 
 function takeSample(sampleSize){
@@ -78,6 +78,8 @@ function updateAllGroup(reset = false) {
     globalState.worldView.updateGroup();
     globalState.lineChart.update();
     globalState.detail.update();
+
+    d3.select('#title_div').html(`Selected Satellite Details (${applyGrouping().length} total satellites displayed)`)
 }
 
 function updateAllSelection() {
@@ -90,7 +92,7 @@ function updateAllSelection() {
 }
 
 function updateSort() {
-    //globalState.lineChart.update();
+    globalState.lineChart.update();
 }
 
 function applyGrouping() {
@@ -151,4 +153,5 @@ function updateSample(percent){
     globalState.satelliteData = takeSample(globalState.originalData.length*percent)
     globalState.lineChart.update()
     globalState.worldView.newSampleUpdate()
+    d3.select('#title_div').html(`Selected Satellite Details (${applyGrouping().length} total satellites displayed)`)
 };
